@@ -1,0 +1,19 @@
+/* src/components/LoadingOverlay.css */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999; /* Ensure it covers everything */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Prevent interactions */
+  }
+  
+  .loading-overlay .ant-spin {
+    pointer-events: all; /* Allow interaction with the spinner */
+  }
+  
