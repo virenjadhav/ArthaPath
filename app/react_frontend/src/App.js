@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import { AuthContext } from './hooks/contexts/AuthContext';
 import LoadingOverlay from './components/LoadingOverlay';
 import { useAxiosInterceptor } from './apis/axiosService';
+import Header from './components/Header';
 
 
 
@@ -31,7 +32,7 @@ const App = () => {
   <>
   <LoadingOverlay />
     <BrowserRouter>
-      {/* <Header /> */}
+      <Header />
       <Routes>
         <Route path="/" element={
           authState.isAuthenticated ? <Home /> : <Navigate to="/login" />
