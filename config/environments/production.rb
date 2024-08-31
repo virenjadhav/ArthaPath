@@ -3,6 +3,9 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Ensure session management is not disabled
+  config.session_store :cookie_store, key: '_finance_app_session', httponly: true, secure: Rails.env.production?, expire_after: 2.hours
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
