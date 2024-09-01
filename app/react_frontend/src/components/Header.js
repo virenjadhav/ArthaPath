@@ -5,18 +5,20 @@ import { Layout, Menu, Dropdown, Button, Avatar } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 // import { AuthContext } from "../hooks/contexts/AuthContext.js";
 
-import Translate from "./Transactions.js";
+// import Translate from "./Transactions.js";
 // import './Header.css';
 import "../assets/css/Header.css";
 import { useDispatch, useSelector } from "react-redux";
 // import { logout } from "../redux/features/generic/genericSlice.js";
 
-import { logout } from "../redux/features/thunkAPI/genericApiThunk.js";
+import { logout } from "../redux/features/generic/genericApiThunk";
 import { setLoggedIn } from "../redux/features/generic/genericSlice.js";
+import { setSelectedModel } from "../redux/features/generic/genericSlice.js";
+import { useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
 
-const HeaderComponent = ({ selectedTab, setSelectedTab }) => {
+const HeaderComponent = () => {
   // Example state variables
   // const isLoggedIn = true; // Replace with actual login state
   // const [selectedTab, setSelectedTab] = useState(1);
@@ -26,11 +28,30 @@ const HeaderComponent = ({ selectedTab, setSelectedTab }) => {
   const dispatch = useDispatch();
   const { logged_in, user } = useSelector((state) => state.generic);
   useEffect(() => {}, [logged_in]);
+  const selectedModel = useSelector((state) => state.generic.selectedModel);
+  const navigate = useNavigate();
 
+  useEffect(()=> {
+    let path = '/';
+      
+      switch(selectedModel){
+        case '1':
+          path = '/dashboard';
+          break;
+        case '2':
+          path = '/transaction';
+          break;
+        defalut: 
+          path = '/';
+      }
+      
+      navigate(path);
+  }, [selectedModel])
   const handleMenuClick = (e) => {
-    console.log(e);
-    if (e.key !== selectedTab) {
-      setSelectedTab(e.key);
+    // console.log(e);
+    if (e.key !== selectedModel) {
+      dispatch(setSelectedModel(e.key));
+      
     }
     if (e.key === "logout") {
       // Handle logout action
@@ -55,7 +76,7 @@ const HeaderComponent = ({ selectedTab, setSelectedTab }) => {
         theme="dark"
         mode="horizontal"
         className="menu"
-        defaultSelectedKeys={[`${selectedTab}`]}
+        defaultSelectedKeys={[`${selectedModel}`]}
         onClick={handleMenuClick}
       >
         <Menu.Item key="1">Dashboard</Menu.Item>

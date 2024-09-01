@@ -1,0 +1,24 @@
+[
+  {
+    "title": "",
+    "dataIndex": "radio",
+    "key": "radio",
+    "width": 10
+  },
+    {
+      "title": "Name",
+      "dataIndex": "name",
+      "key": "name"
+    },
+    {
+      "title": "Amount",
+      "dataIndex": "amount",
+      "key": "amount"
+    },
+    {
+      "title": "Date",
+      "dataIndex": "date",
+      "key": "date"
+    }
+   
+  ]
