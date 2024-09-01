@@ -1,4 +1,4 @@
-import apiThunk from "./apiThunk";
+import apiThunk from "../thunkAPI/apiThunk";
 
 export const isUserLoggedIn = apiThunk(
   "generic/isUserLoggedIn",

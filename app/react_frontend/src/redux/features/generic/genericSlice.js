@@ -126,7 +126,7 @@ import axiosService from "../../../apis/axiosService";
 const genericSlice = createSlice({
   name: "generic",
   initialState: {
-    selectedModel: "",
+    selectedModel: null,
     user: null,
     error: "",
     logged_in: false,

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoggedIn, setUser } from "./redux/features/generic/genericSlice";
-import { isUserLoggedIn } from "./redux/features/thunkAPI/genericApiThunk";
+import { isUserLoggedIn } from "./redux/features/generic/genericApiThunk";
 import {
   BrowserRouter,
   Route,
@@ -13,6 +13,9 @@ import LoginPage from "./pages/LoginPage";
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import LoadingOverlay from "./components/LoadingOverlay";
+
+import Dashboard from "./pages/Dashboard";
+import Transactions from "./pages/transaction/Transactions";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -60,6 +63,8 @@ const App = () => {
           // element={<Home />}
         />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/transaction" element={<Transactions />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route
           path="*"
           element={

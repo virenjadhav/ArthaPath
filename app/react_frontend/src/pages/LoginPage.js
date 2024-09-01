@@ -8,7 +8,7 @@ import { message } from "antd";
 //   setLoggedIn,
 //   signup,
 // } from "../redux/features/generic/genericSlice";
-import { login, signup } from "../redux/features/thunkAPI/genericApiThunk";
+import { login, signup } from "../redux/features/generic/genericApiThunk";
 import { setLoggedIn, setUser } from "../redux/features/generic/genericSlice";
 import { useDispatch, useSelector } from "react-redux";
 

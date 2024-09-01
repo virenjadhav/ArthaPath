@@ -1,0 +1,12 @@
+/* Custom style for the selected row */
+.ant-table-tbody > tr.selected-row {
+  background-color: #d9f7be !important; /* Light green background for selected row */
+}
+
+/* Custom style for the row on hover */
+.ant-table-tbody > tr:hover {
+  background-color: #bae7ff !important; /* Light blue background on hover */
+}
+.ant-table-tbody > tr:active {
+  background-color: #bae7ff !important; /* Light blue background on hover */
+}

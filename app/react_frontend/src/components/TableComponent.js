@@ -3,6 +3,7 @@ import { Table, Button, Space, Modal, Form, Input, Pagination } from "antd";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import ButtonComponent from "./ButtonComponent";
+import "./styles.css";
 
 const TableComponent = ({ data, columns, setData }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -10,6 +11,7 @@ const TableComponent = ({ data, columns, setData }) => {
   const [form] = Form.useForm(); // Initialize form instance
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedRowKey, setSelectedRowKey] = useState(1);
 
   const handleChangePage = (page, pageSize) => {
     setCurrentPage(page);
@@ -65,6 +67,9 @@ const TableComponent = ({ data, columns, setData }) => {
   };
 
   const showDeleteTransactionModal = () => {};
+  const handleSelectRow = (record) => {
+    setSelectedRowKey(record.key);
+  };
 
   return (
     <div>
@@ -91,11 +96,17 @@ const TableComponent = ({ data, columns, setData }) => {
           title="Edit Transaction"
         />
       </Space> */}
-      <div className="buttons">
+      {/* <div className="buttons">
         <ButtonComponent />
-      </div>
+      </div> */}
 
-      <Table columns={columns} dataSource={data} pagination={false} />
+      {/* <Table columns={columns} dataSource={data} pagination={false} /> */}
+      <Table
+        dataSource={data}
+        columns={columns}
+        pagination={false}
+        rowClassName={(record) => (record.key === selectedRowKey ? 'selected-row' : '')}
+      />
       <Pagination
         current={currentPage}
         pageSize={pageSize}
@@ -105,7 +116,7 @@ const TableComponent = ({ data, columns, setData }) => {
         onShowSizeChange={(current, size) => setPageSize(size)}
       />
 
-      <Modal
+      {/* <Modal
         title={editingTransaction ? "Edit Transaction" : "Add Transaction"}
         visible={isModalVisible}
         onCancel={handleModalCancel}
@@ -143,9 +154,62 @@ const TableComponent = ({ data, columns, setData }) => {
             </Button>
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
 
 export default TableComponent;
+
+
+// ALL Column Field 
+// const columns = [
+//   {
+//     title: "Name",
+//     dataIndex: "name",
+//     key: "name",
+//     width: 200,
+//     align: "left",
+//     ellipsis: true,
+//     sorter: (a, b) => a.name.localeCompare(b.name),
+//     className: "name-column",
+//     onCell: (record) => ({
+//       style: { color: record.name === "Transaction 1" ? "red" : "black" }
+//     }),
+//   },
+//   {
+//     title: "Amount",
+//     dataIndex: "amount",
+//     key: "amount",
+//     width: 150,
+//     align: "right",
+//     filters: [
+//       { text: '$100', value: 100 },
+//       { text: '$200', value: 200 }
+//     ],
+//     onFilter: (value, record) => record.amount.indexOf(value) === 0,
+//     render: (text, record) => <b>{text}</b>,
+//   },
+//   {
+//     title: "Date",
+//     dataIndex: "date",
+//     key: "date",
+//     width: 150,
+//     align: "center",
+//     sorter: (a, b) => new Date(a.date) - new Date(b.date),
+//     defaultSortOrder: 'descend',
+//   },
+//   {
+//     title: "Action",
+//     key: "action",
+//     fixed: "right",
+//     width: 150,
+//     render: (text, record) => (
+//       <Space size="middle">
+//         <Button>Edit</Button>
+//         <Button danger>Delete</Button>
+//       </Space>
+//     ),
+//   },
+// ];
+
