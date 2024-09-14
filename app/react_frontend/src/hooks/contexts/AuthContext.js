@@ -34,7 +34,6 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await axiosService.post("/login", { email, password });
       const { token, user } = response.data;
-      console.log(response);
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       axiosService.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -47,7 +46,6 @@ const AuthProvider = ({ children }) => {
       // navigate('/');
       return { success: true };
     } catch (error) {
-      console.error("Authentication failed:", error.response.data.error);
       // Handle login error (e.g., show a message to the user)
       return { success: false, error: error.response.data.error };
     }
@@ -79,7 +77,6 @@ const AuthProvider = ({ children }) => {
       // <Navigate to="/" />
       return { success: true };
     } catch (error) {
-      console.error("Signup failed:", error.response.data.error);
       // Handle signup error (e.g., show a message to the user)
       return { success: false, error: error.response.data.error };
     }

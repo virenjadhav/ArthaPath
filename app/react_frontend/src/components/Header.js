@@ -12,7 +12,11 @@ import { useDispatch, useSelector } from "react-redux";
 // import { logout } from "../redux/features/generic/genericSlice.js";
 
 import { logout } from "../redux/features/generic/genericApiThunk";
-import { setLoggedIn } from "../redux/features/generic/genericSlice.js";
+import {
+  setLoggedIn,
+  setSelectedModelCode,
+  setSelectedModelId,
+} from "../redux/features/generic/genericSlice.js";
 import { setSelectedModel } from "../redux/features/generic/genericSlice.js";
 import { useNavigate } from "react-router-dom";
 
@@ -28,30 +32,32 @@ const HeaderComponent = () => {
   const dispatch = useDispatch();
   const { logged_in, user } = useSelector((state) => state.generic);
   useEffect(() => {}, [logged_in]);
-  const selectedModel = useSelector((state) => state.generic.selectedModel);
+  const selectedModelId = useSelector((state) => state.generic.selectedModelId);
   const navigate = useNavigate();
+  const modules = useState({
+    1: ["Dashboard", "dashboard"],
+    2: ["Transactions", "transactions"],
+  });
 
-  useEffect(()=> {
-    let path = '/';
-      
-      switch(selectedModel){
-        case '1':
-          path = '/dashboard';
-          break;
-        case '2':
-          path = '/transaction';
-          break;
-        defalut: 
-          path = '/';
-      }
-      
-      navigate(path);
-  }, [selectedModel])
+  useEffect(() => {
+    let path = "/";
+
+    switch (selectedModelId) {
+      case "1":
+        path = "/dashboard";
+        break;
+      case "2":
+        path = "/transactions";
+        break;
+        defalut: path = "/";
+    }
+
+    navigate(path);
+  }, [selectedModelId]);
   const handleMenuClick = (e) => {
-    // console.log(e);
-    if (e.key !== selectedModel) {
-      dispatch(setSelectedModel(e.key));
-      
+    if (e.key !== selectedModelId) {
+      dispatch(setSelectedModelId(e.key));
+      dispatch(setSelectedModelCode(modules[0][e.key][1]));
     }
     if (e.key === "logout") {
       // Handle logout action
@@ -76,11 +82,11 @@ const HeaderComponent = () => {
         theme="dark"
         mode="horizontal"
         className="menu"
-        defaultSelectedKeys={[`${selectedModel}`]}
+        defaultSelectedKeys={[`${selectedModelId}`]}
         onClick={handleMenuClick}
       >
-        <Menu.Item key="1">Dashboard</Menu.Item>
-        <Menu.Item key="2">Transactions</Menu.Item>
+        <Menu.Item key="1">{modules[0]["1"][0]}</Menu.Item>
+        <Menu.Item key="2">{modules[0]["2"][0]}</Menu.Item>
         {/* <Menu.Item key="3">Budgets</Menu.Item> */}
         {/* <Menu.Item key="4">Savings Goals</Menu.Item> */}
         {/* <Menu.Item key="5">Reports</Menu.Item> */}
@@ -93,7 +99,6 @@ const HeaderComponent = () => {
               <Avatar src={""} icon={<UserOutlined />} />
               
               {authState.user.name}
-              {console.log(authState)}
               <DownOutlined />
             </Button>
           </Dropdown>
@@ -108,7 +113,6 @@ const HeaderComponent = () => {
               <Avatar src={""} icon={<UserOutlined />} />
               {/* {userProfile.name} */}
               {/* {authState.user.name} */}
-              {/* {console.log(authState)} */}
               {user?.name}
               <DownOutlined />
             </Button>

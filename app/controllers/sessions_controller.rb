@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
         user = User.find_by(email: params[:session][:email].downcase)
         if user && user.authenticate(params[:session][:password])
             session[:user_id] = user.id
-            render json: {status: "success", message: "Logged in successfully", user: { email: current_user.email, name: current_user.name }}
+            render json: {status: "success", message: "Logged in successfully", user: { email: current_user.email, name: current_user.name, user_id: user.id  }}
         else 
             render json: {status: "error", error: "Invalid Credentials"}, status: :unauthorized
         end
@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
     def logged_in
         if current_user
             # render json: { user: current_user }, status: :ok
-            render json: {status: "success", user: { email: current_user.email, name: current_user.name } }, status: :ok
+            render json: {status: "success", user: { email: current_user.email, name: current_user.name, user_id: current_user.id  } }, status: :ok
         else
             render json: {status: "error", error: 'Not logged in' }, status: :unauthorized
         end

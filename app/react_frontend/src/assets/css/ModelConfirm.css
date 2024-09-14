@@ -1,0 +1,24 @@
+/* ModelConfirm.css */
+.custom-confirm-modal .ant-modal-footer {
+    display: flex;
+    justify-content: flex-end; /* Align the buttons to the right */
+  }
+  
+  .custom-confirm-modal .ant-btn {
+    margin-left: 8px; /* Add some spacing between the buttons */
+  }
+  
+  .custom-confirm-modal .ant-btn-primary {
+    background-color: #4CAF50; /* Optional: Customize the color of the OK button */
+    border-color: #4CAF50;
+  }
+  
+  .custom-confirm-modal .ant-modal-confirm-btns {
+    display: flex;
+  }
+  
+  /* .custom-confirm-modal .ant-btn-default {
+    color: #f5222d; 
+    border-color: #f5222d;
+  } */
+  

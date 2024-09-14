@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
   post '/signup', to: 'users#create_user'
   get 'logged_in', to: 'sessions#logged_in'
+  resources :transactions
+  #   resources :transactions, only: [:list_all, :show_all, :new, :create, :edit, :update, :destroy], path_names: { index: 'list_all', show: 'show_all' }
+
   
   
   # get 'incomes/Expenses'

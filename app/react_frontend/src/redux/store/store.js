@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import genericSlice from "../features/generic/genericSlice";
-import apiMiddleware from "../middleware/apiMiddleware";
 import modelSlice from "../features/generic/modelSlice";
+import transactionSlice from "../features/transaction/transactionSlice";
+import apiMiddleware from "../middleware/apiMiddleware";
 
 const store = configureStore({
   reducer: {
-    generic: genericSlice,
-    model: modelSlice
+    generic: genericSlice, // Includes message inside generic
+    model: modelSlice,
+    transaction: transactionSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiMiddleware),

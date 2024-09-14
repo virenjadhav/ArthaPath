@@ -16,6 +16,7 @@ import LoadingOverlay from "./components/LoadingOverlay";
 
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/transaction/Transactions";
+import Message from "./components/Message";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -29,12 +30,9 @@ const App = () => {
         const response = await dispatch(isUserLoggedIn()).unwrap();
 
         // Dispatch actions to set user and logged-in status
-        // console.log("why");
         dispatch(setUser(response.user));
         dispatch(setLoggedIn(true));
-      } catch (error) {
-        // console.error("Error during login check:", error);
-      }
+      } catch (error) {}
     };
 
     checkLoginStatus();
@@ -42,7 +40,7 @@ const App = () => {
 
   // Debugging the logged_in state
   // useEffect(() => {
-  //   // console.log("Logged in state in App:", logged_in);
+
   // }, [logged_in]);
 
   // useEffect(() => {
@@ -56,6 +54,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <LoadingOverlay />
+      <Message /> {/* Display messages globally */}
       <Routes>
         <Route
           path="/"
@@ -63,7 +62,7 @@ const App = () => {
           // element={<Home />}
         />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/transaction" element={<Transactions />} />
+        <Route path="/transactions" element={<Transactions />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route
           path="*"
@@ -112,7 +111,6 @@ export default App;
 //   // const isAuthenticated = false;
 //   // const { authState } = useContext(AuthContext);
 //   // useAxiosInterceptor(); // This will apply the Axios interceptor
-//   // console.log('Auth State:', authState); // Debugging log
 //   const dispatch = useDispatch();
 //   // const logged_in = useSelector((state) => state.generic.logged_in);
 //   const logged_in = useSelector((state) => state.generic.logged_in);
@@ -125,7 +123,6 @@ export default App;
 //         dispatch(setUser(response.user));
 //         dispatch(setLoggedIn(true));
 //       } catch (error) {
-//         console.error("Error during login check:", error);
 //       }
 //     };
 
@@ -133,7 +130,6 @@ export default App;
 //   }, [dispatch]);
 
 //   useEffect(() => {
-//     console.log("Logged in state:", logged_in);
 //   }, [logged_in]);
 
 //   // return (

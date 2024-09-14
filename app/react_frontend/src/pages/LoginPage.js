@@ -11,6 +11,12 @@ import { message } from "antd";
 import { login, signup } from "../redux/features/generic/genericApiThunk";
 import { setLoggedIn, setUser } from "../redux/features/generic/genericSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Message from "../components/Message";
+import {
+  setErrorMsg,
+  setResult,
+  setSuccessMsg,
+} from "../redux/features/generic/messageSlice";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -24,8 +30,6 @@ const Login = () => {
   const logged_in = useSelector((state) => state.generic.logged_in);
 
   useEffect(() => {
-    // console.log("logged_in flag");
-    // console.log(logged_in);
     if (logged_in == false) {
       navigate("/login");
     } else {
@@ -51,25 +55,29 @@ const Login = () => {
         })
       ).unwrap();
 
-      message.success({
-        content: "Login successful!",
-        duration: 5, // Duration in seconds
-        style: {
-          fontSize: "18px", // Larger font size
-        },
-      });
+      // message.success({
+      //   content: "Login successful!",
+      //   duration: 5, // Duration in seconds
+      //   style: {
+      //     fontSize: "18px", // Larger font size
+      //   },
+      // });
+      dispatch(setResult("success"));
+      dispatch(setSuccessMsg("Login successful!"));
       dispatch(setUser(response.user));
       dispatch(setLoggedIn(true));
       navigate("/");
     } catch (error) {
       // Handle login failure
-      message.error({
-        content: `Login failed : ${error?.error?.join(",")}`,
-        duration: 5, // Duration in seconds
-        style: {
-          fontSize: "18px", // Larger font size
-        },
-      });
+      // message.error({
+      //   content: `Login failed : ${error?.error?.join(",")}`,
+      //   duration: 5, // Duration in seconds
+      //   style: {
+      //     fontSize: "18px", // Larger font size
+      //   },
+      // });
+      dispatch(setResult("error"));
+      dispatch(setErrorMsg(`Login failed : ${error?.error?.join(",")}`));
     }
     setEmail("");
     setPassword("");
@@ -93,24 +101,28 @@ const Login = () => {
           },
         })
       ).unwrap();
-      message.success({
-        content: "Account Created Successfully.",
-        duration: 5, // Duration in seconds
-        style: {
-          fontSize: "18px", // Larger font size
-        },
-      });
+      // message.success({
+      //   content: "Account Created Successfully.",
+      //   duration: 5, // Duration in seconds
+      //   style: {
+      //     fontSize: "18px", // Larger font size
+      //   },
+      // });
+      dispatch(setResult("success"));
+      dispatch(setSuccessMsg("Account Created Successfully."));
       dispatch(setUser(response.user));
       dispatch(setLoggedIn(true));
       navigate("/");
     } catch (error) {
-      message.error({
-        content: `Sign up failed : ${error?.error?.join(",")}`,
-        duration: 5, // Duration in seconds
-        style: {
-          fontSize: "18px", // Larger font size
-        },
-      });
+      // message.error({
+      //   content: `Sign up failed : ${error?.error?.join(",")}`,
+      //   duration: 5, // Duration in seconds
+      //   style: {
+      //     fontSize: "18px", // Larger font size
+      //   },
+      // });
+      dispatch(setResult("error"));
+      dispatch(setErrorMsg(`Sign up failed : ${error?.error?.join(",")}`));
     }
 
     setEmail("");

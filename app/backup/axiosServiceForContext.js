@@ -13,7 +13,6 @@
 // // axiosService.interceptors.request.use(
 // //   (config) => {
 // //     //Dispatch loading action
-// //     console.log("inside config");
 // //     config.store.dispatch(setLoading(true));
 // //     return config;
 // //   },

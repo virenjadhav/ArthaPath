@@ -12,8 +12,6 @@ function Home() {
   // const navigate = useNavigate();
 
   // useEffect(() => {
-  //   console.log("logged_in flag");
-  //   console.log(logged_in);
   //   if (logged_in == false) {
   //     navigate("/login");
   //   } else {
@@ -23,9 +21,9 @@ function Home() {
   // useEffect(() => {}, [selectedModel])
   return (
     <>
-      <Header  />
-       {/* {selectedModel === "1" && <Dashboard />}  */}
-       {/* {selectedModel === "2" && <Transactions />}  */}
+      <Header />
+      {/* {selectedModel === "1" && <Dashboard />}  */}
+      {/* {selectedModel === "2" && <Transactions />}  */}
       {/* {logged_in == true ? <p>true</p> : <p>false</p>} */}
     </>
   );

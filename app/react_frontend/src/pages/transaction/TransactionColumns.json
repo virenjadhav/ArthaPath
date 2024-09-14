@@ -5,20 +5,31 @@
     "key": "radio",
     "width": 10
   },
-    {
-      "title": "Name",
-      "dataIndex": "name",
-      "key": "name"
-    },
+    
     {
       "title": "Amount",
       "dataIndex": "amount",
       "key": "amount"
     },
     {
-      "title": "Date",
-      "dataIndex": "date",
+      "title": "Transaction Date",
+      "dataIndex": "trans_date",
       "key": "date"
+    },
+    {
+      "title": "Main Category",
+      "dataIndex": "main_category",
+      "key": "main_category"
+    },
+    {
+      "title": "User Category",
+      "dataIndex": "user_category",
+      "key": "user_category"
+    },
+    {
+      "title": "Description",
+      "dataIndex": "description",
+      "key": "description"
     }
    
   ]

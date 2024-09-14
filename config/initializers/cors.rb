@@ -18,7 +18,7 @@
 # config/initializers/cors.rb
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins 'http://localhost:3000'  # Adjust to your React app's URL
+      origins 'http://localhost:3001'  # Adjust to your React app's URL
       resource '*',
         headers: :any,
         methods: [:get, :post, :put, :patch, :delete, :options, :head],
