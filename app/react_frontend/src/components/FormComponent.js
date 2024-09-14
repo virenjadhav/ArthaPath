@@ -1,33 +1,38 @@
-import React, { useState } from 'react';
-import {  Button, Modal, Form, Input } from "antd";
-import { useDispatch, useSelector } from 'react-redux';
-import { setIsModelVisible } from '../redux/features/generic/modelSlice';
+import React, { useState } from "react";
+import { Button, Modal, Form, Input } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setIsEditing,
+  setIsModelVisible,
+  setSelectedRecord,
+} from "../redux/features/generic/modelSlice";
 
-const FormComponent = () => {
-    const [editingTransaction, setEditingTransaction] = useState(null);
-    // const [isModalVisible, setIsModalVisible] = useState(false);
-    const isModelVisible = useSelector((state) => state.model.isModelVisible);
-    const dispatch = useDispatch();
-    const form = null;
+const FormComponent = ({ FormCustomComponent }) => {
+  const [editingTransaction, setEditingTransaction] = useState(null);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
+  const isModelVisible = useSelector((state) => state.model.isModelVisible);
+  const dispatch = useDispatch();
+  const [form] = Form.useForm(); // Initialize form instance
 
-    const handleModalCancel = () => {
-        dispatch(setIsModelVisible(false));
-    }
-    const handleModalOk = () => {
-
-    }
-    const handleSaveTransaction = () => {
-        
-    }
+  const handleModalCancel = () => {
+    dispatch(setIsModelVisible(false));
+    dispatch(setSelectedRecord(null));
+    dispatch(setIsEditing(false));
+  };
+  const handleModalOk = () => {};
+  const handleSaveTransaction = () => {};
+  const selectedForm = useSelector((state) => state.model.selectedForm);
   return (
-    <div className='addEditComponent'>
-            <Modal
-            title={editingTransaction ? "Edit " : "Add "}
-            visible={isModelVisible}
-            onCancel={handleModalCancel}
-            onOk={handleSaveTransaction}
-            >
-            {/* <Form
+    <div className="addEditComponent">
+      <Modal
+        title={editingTransaction ? "Edit " : "Add "}
+        visible={isModelVisible}
+        onCancel={handleModalCancel}
+        onOk={handleSaveTransaction}
+        footer={null}
+      >
+        <FormCustomComponent />
+        {/* <Form
             form={form}
             initialValues={editingTransaction || {}}
             onFinish={handleModalOk}
@@ -59,14 +64,19 @@ const FormComponent = () => {
                     </Button>
                 </Form.Item>
                 </Form> */}
-            </Modal>
-        </div>
-  )
-}
+        {/* <Form.Item>
+          <Button type="primary" htmlType="submit">
+            {editingTransaction ? "Update" : "Add"}
+          </Button>
+        </Form.Item> */}
+      </Modal>
+    </div>
+  );
+};
 
 export default FormComponent;
 
-// All form Field 
+// All form Field
 // 1. form
 // Type: FormInstance
 // Description: Allows you to control the form programmatically. You can use this to set, get, validate, or reset the form fields.
@@ -107,7 +117,6 @@ export default FormComponent;
 // javascript
 // Copy code
 // const onFinish = (values) => {
-//   console.log('Success:', values);
 // };
 // <Form onFinish={onFinish} />
 // 6. onFinishFailed
@@ -117,7 +126,6 @@ export default FormComponent;
 // javascript
 // Copy code
 // const onFinishFailed = (errorInfo) => {
-//   console.log('Failed:', errorInfo);
 // };
 // <Form onFinishFailed={onFinishFailed} />
 // 7. onValuesChange
@@ -127,7 +135,6 @@ export default FormComponent;
 // javascript
 // Copy code
 // const onValuesChange = (changedValues, allValues) => {
-//   console.log(changedValues, allValues);
 // };
 // <Form onValuesChange={onValuesChange} />
 // 8. validateMessages

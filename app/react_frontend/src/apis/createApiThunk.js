@@ -3,12 +3,6 @@ import axiosService from "./axiosService";
 
 const createApiThunk = (name, method, url) => {
   return createAsyncThunk(name, async (payload, { getState }) => {
-    console.log("inside api thunk");
-    console.log(payload);
-    console.log(getState);
-    console.log(method);
-    console.log(name);
-    console.log(url);
     const config = {
       method,
       url,
@@ -24,8 +18,6 @@ const createApiThunk = (name, method, url) => {
     //   data: payload,
     //   store: getState().generic,
     // });
-    console.log("response");
-    console.log(response);
     return response.data;
   });
 };

@@ -1,29 +1,26 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosService from "../../../apis/axiosService";
 
-const apiThunk = (actionType, method, url) => {
+const apiThunk = (actionType, method, baseUrl) => {
   return createAsyncThunk(
     actionType,
-    async (params = {}, { rejectWithValue }) => {
+    async ({ id, data, session } = {}, { rejectWithValue }) => {
       let response;
-      const { data, session } = params;
       try {
         switch (method) {
           case "get":
-            //   response = await axiosService.get(url);
-            response = await axiosService.get(url, { params: data }); // Pass data as query parameters
+            response = await axiosService.get(baseUrl, { params: data });
             break;
           case "post":
-            //   response = await axiosService.post(url, data);
-            response = await axiosService.post(url, { ...data, session }); // Pass data and session in the body
+            response = await axiosService.post(baseUrl, { ...data, session });
             break;
           case "put":
-            //   response = await axiosService.put(url, data);
-            response = await axiosService.put(url, { ...data, session }); // Pass data and session in the body
+            const url = id ? `${baseUrl}/${id}` : baseUrl;
+            response = await axiosService.put(url, { ...data, session });
             break;
           case "delete":
-            //   response = await axiosService.delete(url, { data });
-            response = await axiosService.delete(url, { data }); // Pass data in the body
+            const deleteUrl = id ? `${baseUrl}/${id}` : baseUrl;
+            response = await axiosService.delete(deleteUrl, { data });
             break;
           default:
             throw new Error(`Unsupported method: ${method}`);

@@ -1,22 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button, Space, Modal, Form, Input, Pagination } from "antd";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import ButtonComponent from "./ButtonComponent";
 import "./styles.css";
+import { useSelector } from "react-redux";
 
-const TableComponent = ({ data, columns, setData }) => {
+const TableComponent = ({ data, columns }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [form] = Form.useForm(); // Initialize form instance
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [selectedRowKey, setSelectedRowKey] = useState(1);
+  // State for paginated data
+  const [currentPage, setCurrentPage] = useState(1); // Tracks the current page
+  const [pageSize, setPageSize] = useState(5); // Rows per page
+  // const [currentData, setCurrentData] = useState(data.slice(0, pageSize)); // Initial data to show
+  const [currentData, setCurrentData] = useState(null); // Initial data to show
+  const [tableHeight, setTableHeight] = useState(200);
 
-  const handleChangePage = (page, pageSize) => {
+  useEffect(() => {
+    if (data) {
+      setCurrentData(data.slice(0, pageSize));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    setTableHeight(pageSize * 80);
+  }, [pageSize]);
+
+  // Handle pagination change
+  const handlePageChange = (page, pageSize) => {
     setCurrentPage(page);
     setPageSize(pageSize);
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    setCurrentData(data.slice(start, end)); // Slice the data for the current page
   };
+
+  // const handleChangePage = (page, pageSize) => {
+  //   setCurrentPage(page);
+  //   setPageSize(pageSize);
+  // };
 
   // const fetchData = async (page, pageSize) => {
   //   const response = await fetch(`/api/data?page=${page}&pageSize=${pageSize}`);
@@ -43,21 +67,21 @@ const TableComponent = ({ data, columns, setData }) => {
   };
 
   const handleDeleteTransaction = (key) => {
-    setData(data.filter((item) => item.key !== key));
+    // setData(data.filter((item) => item.key !== key));
   };
 
   const handleModalOk = (values) => {
     if (editingTransaction) {
-      setData(
-        data.map((item) =>
-          item.key === editingTransaction.key ? { ...item, ...values } : item
-        )
-      );
+      // setData(
+      //   data.map((item) =>
+      //     item.key === editingTransaction.key ? { ...item, ...values } : item
+      //   )
+      // );
     } else {
-      setData([
-        ...data,
-        { ...values, key: Date.now().toString() }, // Generating a unique key
-      ]);
+      // setData([
+      //   ...data,
+      //   { ...values, key: Date.now().toString() }, // Generating a unique key
+      // ]);
     }
     setIsModalVisible(false);
   };
@@ -72,7 +96,14 @@ const TableComponent = ({ data, columns, setData }) => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        border: "1px solid lightgray", // Light gray border
+        // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Shadow effect
+        borderRadius: "4px", // Optional: rounded corners
+        backgroundColor: "#fff", // Optional: background color to ensure table visibility
+      }}
+    >
       {/* <Space style={{ marginBottom: 16 }}>
         
         <Button
@@ -101,21 +132,54 @@ const TableComponent = ({ data, columns, setData }) => {
       </div> */}
 
       {/* <Table columns={columns} dataSource={data} pagination={false} /> */}
-      <Table
+      {/* <Table
         dataSource={data}
         columns={columns}
         pagination={false}
-        rowClassName={(record) => (record.key === selectedRowKey ? 'selected-row' : '')}
-      />
-      <Pagination
-        current={currentPage}
-        pageSize={pageSize}
-        total={data.length} // Update this if you have a large dataset
-        onChange={handleChangePage}
-        showSizeChanger
-        onShowSizeChange={(current, size) => setPageSize(size)}
-      />
+        rowClassName={(record) =>
+          record.key === selectedRowKey ? "selected-row" : ""
+        }
+      /> */}
 
+      {/* Display paginated data in the table */}
+      <Table
+        columns={columns}
+        dataSource={currentData}
+        pagination={false} // Disable internal pagination of the Table component
+        rowKey="id" // Unique key for each row
+        // scroll={{ y: tableHeight }} // Set fixed height for the table's body (adjust height as needed)
+        style={{
+          minHeight: tableHeight - pageSize * 20,
+          overflowY: "auto", // Allow scrolling if the content exceeds maxHeight
+        }}
+      />
+      {/* Pagination component */}
+      {/* <Pagination
+        current={currentPage} // Current page
+        pageSize={pageSize} // Rows per page
+        total={data?.length} // Total number of items
+        showSizeChanger // Option to change the page size
+        onChange={handlePageChange} // Handle page change
+        pageSizeOptions={["5", "10"]} // Custom options for page size
+      /> */}
+      {/* Pagination and total records footer */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "16px",
+        }}
+      >
+        <span>{`Total Records: ${data ? data.length : 0}`}</span>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={data?.length}
+          showSizeChanger
+          onChange={handlePageChange}
+          pageSizeOptions={["5", "10"]}
+        />
+      </div>
       {/* <Modal
         title={editingTransaction ? "Edit Transaction" : "Add Transaction"}
         visible={isModalVisible}
@@ -161,8 +225,7 @@ const TableComponent = ({ data, columns, setData }) => {
 
 export default TableComponent;
 
-
-// ALL Column Field 
+// ALL Column Field
 // const columns = [
 //   {
 //     title: "Name",
@@ -212,4 +275,3 @@ export default TableComponent;
 //     ),
 //   },
 // ];
-
