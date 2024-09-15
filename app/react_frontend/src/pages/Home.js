@@ -21,7 +21,8 @@ function Home() {
   // useEffect(() => {}, [selectedModel])
   return (
     <>
-      <Header />
+    Home
+      {/* <Header /> */}
       {/* {selectedModel === "1" && <Dashboard />}  */}
       {/* {selectedModel === "2" && <Transactions />}  */}
       {/* {logged_in == true ? <p>true</p> : <p>false</p>} */}

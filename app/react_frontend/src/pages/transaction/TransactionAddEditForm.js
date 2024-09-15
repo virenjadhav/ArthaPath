@@ -47,66 +47,66 @@ const TransactionAddEditForm = () => {
     console.log("main_category");
     console.log(main_category);
 
-    // try {
-    //   const formattedDate = trans_date
-    //     ? dayjs(trans_date).format("YYYY-MM-DD HH:mm:ss.SSS")
-    //     : null;
+    try {
+      const formattedDate = trans_date
+        ? dayjs(trans_date).format("YYYY-MM-DD HH:mm:ss.SSS")
+        : null;
 
-    //   const transactionData = {
-    //     amount,
-    //     main_category,
-    //     user_category,
-    //     description,
-    //     trans_date: formattedDate,
-    //     user_id,
-    //     active: 1,
-    //   };
+      const transactionData = {
+        amount,
+        main_category,
+        user_category,
+        description,
+        trans_date: formattedDate,
+        user_id,
+        active: 1,
+      };
 
-    //   if (isEditing) {
-    //     // Edit existing transaction
-    //     const response = await dispatch(
-    //       update_transaction({ id, data: transactionData })
-    //     ).unwrap();
-    //     dispatch(setSelectedRecord(response.transaction));
-    //     // message.success({
-    //     //   content: response.message,
-    //     //   duration: 5, // Duration in seconds
-    //     //   style: {
-    //     //     fontSize: "18px", // Larger font size
-    //     //   },
-    //     // });
-    //     dispatch(setResult("success"));
-    //     dispatch(setSuccessMsg(response?.message));
-    //   } else {
-    //     // Create new transaction
-    //     const response = await dispatch(
-    //       create_transaction({ data: transactionData })
-    //     ).unwrap();
-    //     dispatch(setSelectedRecord(response?.transaction));
-    //     dispatch(setIsEditing(true));
-    //     dispatch(get_transactions());
-    //     // message.success({
-    //     //   content: response.message,
-    //     //   duration: 5, // Duration in seconds
-    //     //   style: {
-    //     //     fontSize: "18px", // Larger font size
-    //     //   },
-    //     // });
-    //     dispatch(setResult("success"));
-    //     dispatch(setSuccessMsg(response?.message));
-    //   }
-    //   dispatch(get_transactions());
-    // } catch (error) {
-    //   // message.error({
-    //   //   content: `Error : ${error?.error?.join(",")}`,
-    //   //   duration: 5, // Duration in seconds
-    //   //   style: {
-    //   //     fontSize: "18px", // Larger font size
-    //   //   },
-    //   // });
-    //   dispatch(setResult("error"));
-    //   dispatch(setErrorMsg(error?.error?.join(",")));
-    // }
+      if (isEditing) {
+        // Edit existing transaction
+        const response = await dispatch(
+          update_transaction({ id, data: transactionData })
+        ).unwrap();
+        dispatch(setSelectedRecord(response.transaction));
+        // message.success({
+        //   content: response.message,
+        //   duration: 5, // Duration in seconds
+        //   style: {
+        //     fontSize: "18px", // Larger font size
+        //   },
+        // });
+        dispatch(setResult("success"));
+        dispatch(setSuccessMsg(response?.message));
+      } else {
+        // Create new transaction
+        const response = await dispatch(
+          create_transaction({ data: transactionData })
+        ).unwrap();
+        dispatch(setSelectedRecord(response?.transaction));
+        dispatch(setIsEditing(true));
+        dispatch(get_transactions());
+        // message.success({
+        //   content: response.message,
+        //   duration: 5, // Duration in seconds
+        //   style: {
+        //     fontSize: "18px", // Larger font size
+        //   },
+        // });
+        dispatch(setResult("success"));
+        dispatch(setSuccessMsg(response?.message));
+      }
+      dispatch(get_transactions());
+    } catch (error) {
+      // message.error({
+      //   content: `Error : ${error?.error?.join(",")}`,
+      //   duration: 5, // Duration in seconds
+      //   style: {
+      //     fontSize: "18px", // Larger font size
+      //   },
+      // });
+      dispatch(setResult("error"));
+      dispatch(setErrorMsg(error?.error?.join(",")));
+    }
   };
 
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
@@ -209,19 +209,19 @@ const TransactionAddEditForm = () => {
         <DatePicker format="YYYY-MM-DD" />
       </Form.Item>
 
-      {/* <Form.Item
+      <Form.Item
         name="main_category"
         label="Main Category"
         rules={[{ required: true, message: "Please select a main category!" }]}
       >
         <Input />
-      </Form.Item> */}
-      <Lookup
+      </Form.Item>
+      {/* <Lookup
         id={"main_category"}
         label={"Main Category"}
         required={true}
         requiredMsg={"Please select a main category!"}
-      />
+      /> */}
       <Form.Item
         name="user_category"
         label="User Category"

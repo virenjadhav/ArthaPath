@@ -1,0 +1,112 @@
+/* /* Center the form items vertically
+.ant-form-item {
+    display: flex;
+    align-items: center;  
+  }
+  
+  
+  .ant-form-item-control-input {
+    display: flex;
+    align-items: center;
+  }
+  
+  .ant-select-selector,
+  .ant-input {
+    margin-top: 0;  
+  }
+   */
+   /* :where(.css-dev-only-do-not-override-11lehqq).ant-form-horizontal .ant-form-item-control {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: end;
+}
+     */
+
+     /* Target the form item control to apply Flexbox behavior */
+/* .ant-form-item .ant-form-item-control {
+    display: flex;
+    flex-direction: column;  
+    flex-grow: 1;            
+    justify-content: flex-end;  
+} */
+
+/* Hide the error message area if there are no errors */
+/* .ant-form-item-explain {
+    display: none; 
+} */
+
+/* When there is an error, display the message */
+/* .ant-form-item-has-error .ant-form-item-explain {
+    display: block;
+} */
+
+/* Make sure label and input are vertically aligned */
+/* .ant-form-item {
+    display: flex;
+    align-items: center; 
+} */
+
+/* .ant-form-item-label {
+    flex: 1; 
+} */
+
+/* .ant-form-item-control {
+    flex: 2; 
+} */
+/* Override padding and margins for better alignment */
+/* .ant-form-item { */
+    /* margin-bottom: 0; /* Remove default bottom margin */
+/* } */ 
+
+/* .ant-form-item-label, .ant-form-item-control { */
+    /* padding: 0; Remove padding */
+    /* margin: 0; Remove margin */
+/* }
+.ant-form-item .ant-form-item-label,
+.ant-form-item .ant-form-item-control {
+    padding: 0 !important;
+    margin: 0 !important;
+} */
+
+/* Ensure no space is reserved for the error message when there is no error */
+/* .ant-form-item-explain {
+    display: none;
+} */
+
+/* Display the error message when there are validation errors */
+/* .ant-form-item-has-error .ant-form-item-explain {
+    display: block;
+} */
+
+/* Ensure the form items (label and input) are aligned properly */
+/* .ant-form-item {
+    display: flex;
+    align-items: center;
+} */
+
+/* Adjust label and input alignment */
+/* .ant-form-item-label {
+    flex: 1;
+}
+
+.ant-form-item-control {
+    flex: 2;
+} */
+
+/* Remove any unwanted padding or margin that causes misalignment */
+/* .ant-form-item-label, .ant-form-item-control {
+    padding: 0;
+    margin: 0;
+} */
+
+/* Optional: Remove extra space between form items */
+/* .ant-form-item {
+    margin-bottom: 0;
+}
+ */ 
+ .ant-form-item .ant-form-item-control {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+}
+
