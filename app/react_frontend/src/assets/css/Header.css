@@ -1,26 +1,84 @@
 /* src/components/Header.css */
 
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #001529; /* Dark blue background */
+  padding: 0 20px;
+  height: 64px; /* Set header height */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  position: fixed; /* Fix header to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.logo {
+  color: #fff; /* White color for logo text */
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 64px; /* Vertically center logo */
+  margin-right: 20px;
+}
+
+.menu {
+  flex: 1;
+  line-height: 64px; /* Vertically center menu items */
+  margin-left: 10px; /* Remove quotes around "10px" */
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.auth-buttons .profile-button {
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.auth-buttons .profile-button:hover {
+  background-color: transparent; /* Ensure background remains transparent on hover */
+}
+
+.auth-buttons .login-button {
+  margin-left: 10px;
+}
+
+.ant-dropdown-menu-item {
+  font-size: 14px;
+}
+
+
+/* src/components/Header.css
+
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #001529; /* Dark blue background */
+    background: #001529; 
     padding: 0 20px;
-    height: 64px; /* Set header height */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    height: 64px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
   }
   
   .logo {
-    color: #fff; /* White color for logo text */
+    color: #fff; 
     font-size: 24px;
     font-weight: bold;
-    line-height: 64px; /* Vertically center logo */
+    line-height: 64px; 
     margin-right: 20px;
   }
   
   .menu {
     flex: 1;
-    line-height: 64px; /* Vertically center menu items */
+    line-height: 64px; 
     margin-left: "10px";
   }
   
@@ -39,7 +97,7 @@
   }
 
   .auth-buttons .profile-button:hover {
-    background-color: transparent; /* Ensure background remains transparent on hover */
+    background-color: transparent; 
   }
   
   .auth-buttons .login-button {
@@ -49,4 +107,4 @@
   .ant-dropdown-menu-item {
     font-size: 14px;
   }
-  
+   */

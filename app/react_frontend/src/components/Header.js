@@ -1,23 +1,22 @@
 // src/components/Header.js
-
-import React, { useContext, useEffect, useState } from "react";
-import { Layout, Menu, Dropdown, Button, Avatar } from "antd";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
 // import { AuthContext } from "../hooks/contexts/AuthContext.js";
 
 // import Translate from "./Transactions.js";
 // import './Header.css';
-import "../assets/css/Header.css";
-import { useDispatch, useSelector } from "react-redux";
+// import { setSelectedModel } from "../redux/features/generic/genericSlice.js";
 // import { logout } from "../redux/features/generic/genericSlice.js";
 
+import React, {  useEffect, useState } from "react";
+import { Layout, Menu, Dropdown, Button, Avatar } from "antd";
+import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import "../assets/css/Header.css";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/features/generic/genericApiThunk";
 import {
   setLoggedIn,
   setSelectedModelCode,
   setSelectedModelId,
 } from "../redux/features/generic/genericSlice.js";
-import { setSelectedModel } from "../redux/features/generic/genericSlice.js";
 import { useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
@@ -55,16 +54,19 @@ const HeaderComponent = () => {
     navigate(path);
   }, [selectedModelId]);
   const handleMenuClick = (e) => {
-    if (e.key !== selectedModelId) {
-      dispatch(setSelectedModelId(e.key));
-      dispatch(setSelectedModelCode(modules[0][e.key][1]));
-    }
     if (e.key === "logout") {
       // Handle logout action
       console.log("Logging out...");
       // logout();
       dispatch(logout());
       dispatch(setLoggedIn(false));
+    }
+    else if (e.key === "profile"){
+      navigate("/profile")
+    }
+    else if (e.key !== selectedModelId) {
+      dispatch(setSelectedModelId(e.key));
+      dispatch(setSelectedModelCode(modules[0][e.key][1]));
     }
   };
 

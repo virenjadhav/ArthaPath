@@ -1,0 +1,70 @@
+/* src/assets/css/profile.css */
+
+/* Define color variables for light and dark themes */
+:root {
+    --background-dark: #000;
+    --background-light: #f0f2f5;
+    --text-dark: #fff;
+    --text-light: #000;
+}
+
+.profile-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Prevent overflow */
+}
+
+.profile-menu {
+    position: fixed;
+    left: 0;
+    top: 64px; /* Adjust this based on the height of your header */
+    height: calc(100vh - 64px); /* Full height minus the height of the header */
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--background-dark); /* Default to dark theme */
+    overflow-y: auto; /* Scroll if menu content is too long */
+    color: var(--text-light);
+    z-index: 100; /* Ensure it is above other content */
+}
+
+.profile-menu.light-theme {
+    background-color: var(--background-light);
+    color: var(--text-dark);
+}
+
+
+.profile-content {
+    margin-left: 400px; /* Leave space for the fixed menu */
+    padding: 20px;
+    width: calc(100% - 400px); /* Ensure it fills the remaining space */
+    background-color: #fff; /* Always white background for content */
+    /* color: var(--text-dark); */ /* Text color for content */
+    color: #000;
+    overflow-y: auto;
+}
+
+.ant-menu-dark, .ant-menu-light {
+    background-color: inherit !important; /* Inherit background color from parent */
+}
+
+.ant-menu-item, .ant-menu-submenu-title {
+    font-size: 16px;
+    color: inherit !important; /* Inherit text color from parent */
+}
+
+/* .ant-menu-item-selected:hover, .ant-menu-submenu-title:hover {
+    font-size: 16px;
+    color: var(--text-light)
+} */
+
+.ant-menu-item:hover, .ant-menu-submenu-title:hover {
+    color: #08c !important; /* Hover color */
+}
+
+.ant-switch {
+    margin-bottom: 16px;
+}
+
+.ant-switch-checked {
+    background-color: #08c !important; /* Switch color */
+}
