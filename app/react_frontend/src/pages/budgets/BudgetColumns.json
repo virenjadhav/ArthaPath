@@ -1,0 +1,31 @@
+[
+    {
+      "title": "",
+      "dataIndex": "radio",
+      "key": "radio",
+      "width": 10
+    },
+      
+      {
+        "title": "Amount",
+        "dataIndex": "amount",
+        "key": "amount"
+      },
+      
+      {
+        "title": "Main Category",
+        "dataIndex": "main_category",
+        "key": "main_category"
+      },
+      {
+        "title": "Sub Category",
+        "dataIndex": "sub_category",
+        "key": "sub_category"
+      },
+      {
+        "title": "Description",
+        "dataIndex": "description",
+        "key": "description"
+      }
+     
+    ]

@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   post '/signup', to: 'users#create_user'
   get 'logged_in', to: 'sessions#logged_in'
   resources :transactions
+  resources :budgets
+   # Route to change the user's password (requires authentication)
+  put 'change_password', to: 'users#change_password'
   #   resources :transactions, only: [:list_all, :show_all, :new, :create, :edit, :update, :destroy], path_names: { index: 'list_all', show: 'show_all' }
 
   

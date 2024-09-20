@@ -24,13 +24,7 @@ import {
   setSelectedRecord,
 } from "../redux/features/generic/modelSlice";
 import { useNavigate } from "react-router-dom";
-import {
-  setMessageErrorMsg,
-  setMessageResult,
-  setMessageState,
-  setMessageSuccessMsg,
-  setMessageWarningMsg,
-} from "../redux/features/generic/genericSlice";
+import { setMessageState } from "../redux/features/generic/genericSlice";
 import {
   setErrorMsg,
   setResult,
@@ -40,7 +34,12 @@ import {
 import { ModelConfirm } from "./ModelConfirm";
 import { ModelInfo } from "./ModelInfo";
 
-const ButtonComponent = ({ deleteAction, navigatePath, refreshAction }) => {
+const ButtonsAddEditComponent = ({
+  deleteAction,
+  navigatePath,
+  refreshAction,
+  moduleTitle,
+}) => {
   const isEditing = useSelector((state) => state.model.isEditing);
   const form = useSelector((state) => state.model.setSelectedForm);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
@@ -137,8 +136,10 @@ const ButtonComponent = ({ deleteAction, navigatePath, refreshAction }) => {
       //     fontSize: "18px",
       //   },
       // });
-      dispatch(setResult("success"));
-      dispatch(setSuccessMsg(response?.message));
+      // dispatch(setResult("success"));
+      // dispatch(setSuccessMsg(response?.message));
+      dispatch(setMessageState(setResult("success")));
+      dispatch(setMessageState(setSuccessMsg(response?.message)));
       dispatch(setIsModelVisible(false));
       dispatch(setIsEditing(false));
       dispatch(setSelectedRecord(null));
@@ -150,34 +151,40 @@ const ButtonComponent = ({ deleteAction, navigatePath, refreshAction }) => {
       //     fontSize: "18px",
       //   },
       // });
-      dispatch(setResult("error"));
-      dispatch(setErrorMsg(error?.error?.join(",")));
+      dispatch(setMessageState(setResult("error")));
+      dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
     }
   };
 
   return (
     <>
+      {/* Title placed above the buttons */}
+      <div style={{ fontSize: "24px", marginBottom: "8px" }}>{moduleTitle}</div>
       <Space style={{ marginBottom: 16, marginTop: 12 }}>
+        {/* # add label in this line  */}
+        {/* <span style={{ fontSize: "18px", fontWeight: "400" }}>
+          {moduleTitle}
+        </span> */}
         <Button
           type="primary"
           onClick={handleAddButtonClick}
           icon={<PlusOutlined />}
           shape="circle"
-          title="Add Transaction"
+          title={`Add ${moduleTitle}`}
         />
         <Button
           danger
           onClick={handleDeleteButtonClick}
           icon={<DeleteOutlined />}
           shape="circle"
-          title="Delete Transaction"
+          title={`Delete ${moduleTitle}`}
           disabled={!selectedRecord} // Disable delete button if no record selected
         />
         <Button
           onClick={handleEditButtonClick}
           icon={<EditOutlined />}
           shape="circle"
-          title="Edit Transaction"
+          title={`Edit ${moduleTitle}`}
           disabled={!selectedRecord} // Disable edit button if no record selected
         />
         <Button
@@ -185,11 +192,11 @@ const ButtonComponent = ({ deleteAction, navigatePath, refreshAction }) => {
           onClick={handleRefreshClick}
           icon={<ReloadOutlined />}
           shape="circle"
-          title="Refresh"
+          title={`Refresh ${moduleTitle}`}
         />
       </Space>
     </>
   );
 };
 
-export default ButtonComponent;
+export default ButtonsAddEditComponent;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Space, Modal, Form, Input, Pagination } from "antd";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
-import ButtonComponent from "./ButtonComponent";
+import ButtonComponent from "./ButtonsAddEditComponent";
 import "./styles.css";
 import { useSelector } from "react-redux";
 

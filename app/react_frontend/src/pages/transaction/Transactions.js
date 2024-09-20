@@ -22,7 +22,7 @@ import {
   get_transactions,
 } from "../../redux/features/transaction/transactionApiThunk.js";
 
-const Transactions = () => {
+const Transactions = ({ title }) => {
   // const [data, setData] = useState([
   //   {
   //     key: "1",
@@ -170,7 +170,7 @@ const Transactions = () => {
     <>
       {/* <TableComponent data={data} setData={setData} columns={columns} />
        */}
-      <HeaderComponent />
+      {/* <HeaderComponent /> */}
       <ModelComponent
         data={data}
         columns={columns}
@@ -178,6 +178,7 @@ const Transactions = () => {
         deleteAction={delete_transaction}
         navigatePath="/transactions" // Path to navigate after delete
         refreshAction={() => dispatch(get_transactions())} // Action to refresh transactions
+        moduleTitle={title}
       />
     </>
   );
