@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonComponent from "./ButtonComponent";
+import ButtonsAddEditComponent from "./ButtonsAddEditComponent";
 import FormComponent from "./FormComponent";
 import { Table, Pagination } from "antd";
 import TableComponent from "./TableComponent";
@@ -11,14 +11,16 @@ const ModelComponent = ({
   deleteAction,
   navigatePath,
   refreshAction,
+  moduleTitle,
 }) => {
   return (
     <div className="modelComponent">
       <div className="buttons">
-        <ButtonComponent
+        <ButtonsAddEditComponent
           deleteAction={deleteAction}
           navigatePath={navigatePath}
           refreshAction={refreshAction}
+          moduleTitle={moduleTitle}
         />
       </div>
       <div className="tableComponent">

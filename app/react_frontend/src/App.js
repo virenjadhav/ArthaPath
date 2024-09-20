@@ -8,7 +8,7 @@ import {
   Routes,
   Navigate,
   useNavigate,
-  useLocation
+  useLocation,
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import Home from "./pages/Home";
@@ -18,10 +18,10 @@ import LoadingOverlay from "./components/LoadingOverlay";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/transaction/Transactions";
 import Message from "./components/Message";
-import Profile from "./pages/profile/Profile"
+import Profile from "./pages/profile/Profile";
 import HeaderComponent from "./components/Header";
 import Footer from "./components/Footer";
-
+import Finance from "./pages/Finance/Finance";
 
 // This component is responsible for conditionally rendering Header and Footer
 const Layout = ({ children }) => {
@@ -31,7 +31,8 @@ const Layout = ({ children }) => {
   return (
     <>
       {shouldShowHeaderFooter && <HeaderComponent />}
-      {children}
+      <div style={{ marginTop: "60px" }}>{children}</div>
+
       {/* {shouldShowHeaderFooter && <Footer />} */}
     </>
   );
@@ -40,7 +41,7 @@ const Layout = ({ children }) => {
 const App = () => {
   const dispatch = useDispatch();
   const logged_in = useSelector((state) => state.generic.logged_in);
-  
+
   // const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,33 +71,36 @@ const App = () => {
   //     <Navigate to="/" replace />;
   //   }
   // }, [logged_in]);
-  
-  
+
   return (
     <BrowserRouter>
       <LoadingOverlay />
-      <Message /> {/* Display messages globally */}
+      {/* <Message /> */}
+      <div style={{ position: "fixed", top: 0, width: "100%", zIndex: 2000 }}>
+        <Message />
+      </div>
+      {/* Display messages globally */}
       <Layout>
-      <Routes>
-        
-        <Route
-          path="/"
-          element={logged_in ? <Home /> : <Navigate to="/login" replace />}
-          // element={<Home />}
-        />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/transactions" element={<Transactions />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route
-          path="*"
-          element={
-            logged_in ? <PageNotFound /> : <Navigate to="/login" replace />
-          }
-        />
-      </Routes>
+        <Routes>
+          <Route
+            path="/"
+            element={logged_in ? <Home /> : <Navigate to="/login" replace />}
+            // element={<Home />}
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/budgets" element={<Transactions />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/finance" element={<Finance />} />
+          <Route
+            path="*"
+            element={
+              logged_in ? <PageNotFound /> : <Navigate to="/login" replace />
+            }
+          />
+        </Routes>
       </Layout>
-     
     </BrowserRouter>
   );
 };

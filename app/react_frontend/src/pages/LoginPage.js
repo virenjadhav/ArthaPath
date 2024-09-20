@@ -12,6 +12,7 @@ import { login, signup } from "../redux/features/generic/genericApiThunk";
 import { setLoggedIn, setUser } from "../redux/features/generic/genericSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
+import { setMessageState } from "../redux/features/generic/genericSlice";
 import {
   setErrorMsg,
   setResult,
@@ -62,8 +63,10 @@ const Login = () => {
       //     fontSize: "18px", // Larger font size
       //   },
       // });
-      dispatch(setResult("success"));
-      dispatch(setSuccessMsg("Login successful!"));
+      // dispatch(setResult("success"));
+      dispatch(setMessageState(setResult("success")));
+      // dispatch(setSuccessMsg("Login successful!"));
+      dispatch(setMessageState(setSuccessMsg("Login successful!")));
       dispatch(setUser(response.user));
       dispatch(setLoggedIn(true));
       navigate("/");
@@ -76,8 +79,9 @@ const Login = () => {
       //     fontSize: "18px", // Larger font size
       //   },
       // });
-      dispatch(setResult("error"));
-      dispatch(setErrorMsg(`Login failed : ${error?.error?.join(",")}`));
+
+      dispatch(setMessageState(setResult("error")));
+      dispatch(setMessageState(setErrorMsg(`Login failed : ${error?.error}`)));
     }
     setEmail("");
     setPassword("");
@@ -108,8 +112,10 @@ const Login = () => {
       //     fontSize: "18px", // Larger font size
       //   },
       // });
-      dispatch(setResult("success"));
-      dispatch(setSuccessMsg("Account Created Successfully."));
+      // dispatch(setResult("success"));
+      dispatch(setMessageState(setResult("success")));
+      // dispatch(setSuccessMsg("Account Created Successfully."));
+      dispatch(setMessageState(setSuccessMsg("Account Created Successfully.")));
       dispatch(setUser(response.user));
       dispatch(setLoggedIn(true));
       navigate("/");
@@ -121,8 +127,10 @@ const Login = () => {
       //     fontSize: "18px", // Larger font size
       //   },
       // });
-      dispatch(setResult("error"));
-      dispatch(setErrorMsg(`Sign up failed : ${error?.error?.join(",")}`));
+      dispatch(setMessageState(setResult("error")));
+      dispatch(
+        setMessageState(setErrorMsg(`Sign up failed : ${error?.error}`))
+      );
     }
 
     setEmail("");

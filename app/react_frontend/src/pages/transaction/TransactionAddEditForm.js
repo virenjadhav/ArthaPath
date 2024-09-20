@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { message } from "antd";
+import InputComponenet from "../../components/FormComponent/InputComponent";
 import {
   Table,
   Button,
@@ -32,6 +33,8 @@ import {
   setSuccessMsg,
 } from "../../redux/features/generic/messageSlice";
 import Lookup from "../../components/Lookup";
+import { setMessageState } from "../../redux/features/generic/genericSlice";
+import ButtonComponent from "../../components/FormComponent/ButtonComponent";
 
 const { TextArea } = Input;
 
@@ -42,71 +45,109 @@ const TransactionAddEditForm = () => {
 
   // Handle form submission
   const handleModelOk = async (values) => {
-    let { id, trans_date, main_category, user_category, description, amount } =
-      values;
-    console.log("main_category");
-    console.log(main_category);
+    // Example: Get form values and check their types
+    const { amount, description, is_active, trans_date, price, notes } = values;
 
-    try {
-      const formattedDate = trans_date
-        ? dayjs(trans_date).format("YYYY-MM-DD HH:mm:ss.SSS")
-        : null;
+    // Switch case to handle different types
+    Object.entries(values).forEach(([key, value]) => {
+      switch (typeof value) {
+        case "number":
+          console.log(`${key} is a number:`, value);
+          // Perform specific operations for numbers
+          break;
 
-      const transactionData = {
-        amount,
-        main_category,
-        user_category,
-        description,
-        trans_date: formattedDate,
-        user_id,
-        active: 1,
-      };
+        case "string":
+          console.log(`${key} is a string:`, value);
+          // Perform specific operations for strings
+          break;
 
-      if (isEditing) {
-        // Edit existing transaction
-        const response = await dispatch(
-          update_transaction({ id, data: transactionData })
-        ).unwrap();
-        dispatch(setSelectedRecord(response.transaction));
-        // message.success({
-        //   content: response.message,
-        //   duration: 5, // Duration in seconds
-        //   style: {
-        //     fontSize: "18px", // Larger font size
-        //   },
-        // });
-        dispatch(setResult("success"));
-        dispatch(setSuccessMsg(response?.message));
-      } else {
-        // Create new transaction
-        const response = await dispatch(
-          create_transaction({ data: transactionData })
-        ).unwrap();
-        dispatch(setSelectedRecord(response?.transaction));
-        dispatch(setIsEditing(true));
-        dispatch(get_transactions());
-        // message.success({
-        //   content: response.message,
-        //   duration: 5, // Duration in seconds
-        //   style: {
-        //     fontSize: "18px", // Larger font size
-        //   },
-        // });
-        dispatch(setResult("success"));
-        dispatch(setSuccessMsg(response?.message));
+        case "boolean":
+          console.log(`${key} is a boolean:`, value);
+          // Perform specific operations for boolean
+          break;
+
+        case "object":
+          // If the object is a date (Moment or DayJS object), handle it as a date
+          if (dayjs(value).isValid()) {
+            console.log(`${key} is a date:`, dayjs(value).format("YYYY-MM-DD"));
+            // Perform specific operations for dates
+          }
+          break;
+
+        default:
+          console.log(`${key} has an unknown type:`, value);
       }
-      dispatch(get_transactions());
-    } catch (error) {
-      // message.error({
-      //   content: `Error : ${error?.error?.join(",")}`,
-      //   duration: 5, // Duration in seconds
-      //   style: {
-      //     fontSize: "18px", // Larger font size
-      //   },
-      // });
-      dispatch(setResult("error"));
-      dispatch(setErrorMsg(error?.error?.join(",")));
-    }
+    });
+
+    // let { id, trans_date, main_category, user_category, description, amount } =
+    //   values;
+    // console.log("main_category");
+    // console.log(main_category);
+
+    // try {
+    //   const formattedDate = trans_date
+    //     ? dayjs(trans_date).format("YYYY-MM-DD HH:mm:ss.SSS")
+    //     : null;
+
+    //   const transactionData = {
+    //     amount,
+    //     main_category,
+    //     user_category,
+    //     description,
+    //     trans_date: formattedDate,
+    //     user_id,
+    //     active: 1,
+    //   };
+
+    //   if (isEditing) {
+    //     // Edit existing transaction
+    //     const response = await dispatch(
+    //       update_transaction({ id, data: transactionData })
+    //     ).unwrap();
+    //     dispatch(setSelectedRecord(response.transaction));
+    //     // message.success({
+    //     //   content: response.message,
+    //     //   duration: 5, // Duration in seconds
+    //     //   style: {
+    //     //     fontSize: "18px", // Larger font size
+    //     //   },
+    //     // });
+    //     // dispatch(setResult("success"));
+    //     dispatch(setMessageState(setResult("success")));
+    //     // dispatch(setSuccessMsg(response?.message));
+    //     dispatch(setMessageState(setSuccessMsg(response?.message)));
+    //   } else {
+    //     // Create new transaction
+    //     const response = await dispatch(
+    //       create_transaction({ data: transactionData })
+    //     ).unwrap();
+    //     dispatch(setSelectedRecord(response?.transaction));
+    //     dispatch(setIsEditing(true));
+    //     dispatch(get_transactions());
+    //     // message.success({
+    //     //   content: response.message,
+    //     //   duration: 5, // Duration in seconds
+    //     //   style: {
+    //     //     fontSize: "18px", // Larger font size
+    //     //   },
+    //     // });
+    //     // dispatch(setResult("success"));
+    //     dispatch(setMessageState(setResult("success")));
+    //     // dispatch(setSuccessMsg(response?.message));
+    //     dispatch(setMessageState(setSuccessMsg(response?.message)));
+    //   }
+    //   dispatch(get_transactions());
+    // } catch (error) {
+    //   // message.error({
+    //   //   content: `Error : ${error?.error?.join(",")}`,
+    //   //   duration: 5, // Duration in seconds
+    //   //   style: {
+    //   //     fontSize: "18px", // Larger font size
+    //   //   },
+    //   // });
+    //   dispatch(setMessageState(setResult("error")));
+    //   dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
+    // }
   };
 
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
@@ -172,6 +213,11 @@ const TransactionAddEditForm = () => {
           <Input disabled />
         </Form.Item>
       )}
+      <InputComponenet
+        name="id"
+        label="ID"
+        disabled={isEditing ? false : true}
+      />
 
       <Form.Item
         name="amount"
@@ -235,13 +281,11 @@ const TransactionAddEditForm = () => {
       {isEditing && (
         <Form.Item name="active" label="Status">
           <Input disabled />
+          {/* <Switch /> */}
         </Form.Item>
       )}
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          {isEditing ? "Update" : "Add"}
-        </Button>
-      </Form.Item>
+
+      <ButtonComponent editForm={isEditing ? true : false} />
     </Form>
   );
 };

@@ -11,3 +11,9 @@ export const login = apiThunk("generic/login", "post", "/login");
 export const signup = apiThunk("generic/signup", "post", "/signup");
 
 export const logout = apiThunk("generic/logout", "delete", "/logout");
+
+export const changePassword = apiThunk(
+  "generic/changePassword",
+  "put",
+  "/change_password"
+);

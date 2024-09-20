@@ -6,7 +6,7 @@
 // import { setSelectedModel } from "../redux/features/generic/genericSlice.js";
 // import { logout } from "../redux/features/generic/genericSlice.js";
 
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu, Dropdown, Button, Avatar } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import "../assets/css/Header.css";
@@ -35,7 +35,7 @@ const HeaderComponent = () => {
   const navigate = useNavigate();
   const modules = useState({
     1: ["Dashboard", "dashboard"],
-    2: ["Transactions", "transactions"],
+    2: ["Finance", "finance"],
   });
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const HeaderComponent = () => {
         path = "/dashboard";
         break;
       case "2":
-        path = "/transactions";
+        path = "/finance";
         break;
         defalut: path = "/";
     }
@@ -60,11 +60,10 @@ const HeaderComponent = () => {
       // logout();
       dispatch(logout());
       dispatch(setLoggedIn(false));
-    }
-    else if (e.key === "profile"){
-      navigate("/profile")
-    }
-    else if (e.key !== selectedModelId) {
+      navigate("/login");
+    } else if (e.key === "profile") {
+      navigate("/profile");
+    } else if (e.key !== selectedModelId) {
       dispatch(setSelectedModelId(e.key));
       dispatch(setSelectedModelCode(modules[0][e.key][1]));
     }

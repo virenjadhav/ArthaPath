@@ -1,67 +1,72 @@
-import React, { useEffect, useState } from 'react';
-import { Menu, Switch } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from "react";
+import { Menu, Switch } from "antd";
+import {
+  MailOutlined,
+  AppstoreOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import "../../assets/css/profile.css";
-import GeneralProfile from './GeneralProfile';
+import GeneralProfile from "./GeneralProfile";
+import ChangePassword from "./ChangePassword";
+import Categories from "./Categories";
 
 const { SubMenu } = Menu;
 
 const Profile = () => {
-  const [theme, setTheme] = useState('dark'); // Default theme is dark
+  const [theme, setTheme] = useState("dark"); // Default theme is dark
   const [selectedKey, setSelectedKey] = useState(null);
   const [content, setContent] = useState(null);
 
   const changeTheme = (value) => {
-    setTheme(value ? 'dark' : 'light');
+    setTheme(value ? "dark" : "light");
   };
   const generalContent = () => {
-    return <GeneralProfile />
-  }
+    return <GeneralProfile />;
+  };
   const changePasswordContent = () => {
-    return <>change password</>
-  }
+    return <ChangePassword />;
+  };
+  const categoryContent = () => {
+    return <Categories />;
+  };
   useEffect(() => {
     const setContentForrender = () => {
-      switch(selectedKey) {
+      switch (selectedKey) {
         case "general":
           setContent(generalContent);
           break;
         case "changePassword":
-            setContent(changePasswordContent)
-            break;
-        default: 
+          setContent(changePasswordContent);
+          break;
+        case "categories":
+          setContent(categoryContent);
+          break;
+        default:
           setContent(null);
       }
-    }
+    };
     setContentForrender();
   }, [selectedKey]);
-  
 
   const handleMenuClick = (e) => {
-    if(e.key === 'general'){
+    if (e.key !== null) {
       setSelectedKey(e.key);
-    } else if(e.key === 'changePassword'){
-      setSelectedKey(e.key);
-    } else{
+    } else {
       setSelectedKey(null);
     }
-
-  }
+  };
 
   return (
     <div className={`profile-container ${theme}-theme`}>
-      <div className={`profile-menu ${theme}-theme`}>
+      <div className={`profile-menu ${theme}-theme profile-menu-main`}>
         <Switch
-          checked={theme === 'dark'}
+          checked={theme === "dark"}
           onChange={changeTheme}
           checkedChildren="Dark"
           unCheckedChildren="Light"
+          className="triggerButton"
         />
-        <Menu
-          theme={theme}
-          mode="inline"
-          onClick={handleMenuClick}
-        >
+        <Menu theme={theme} mode="inline" onClick={handleMenuClick}>
           {/* <SubMenu
             key="sub1"
             title={
@@ -106,15 +111,16 @@ const Profile = () => {
             <Menu.Item key="11">Option 11</Menu.Item>
             <Menu.Item key="12">Option 12</Menu.Item>
           </SubMenu> */}
-           {/* <Menu.ItemGroup key="g1" title=""> */}
-            <Menu.Item key="general">General</Menu.Item>
-            <Menu.Item key="changePassword">Change Password</Menu.Item>
+          {/* <Menu.ItemGroup key="g1" title=""> */}
+          <Menu.Item key="general">General</Menu.Item>
+          <Menu.Item key="changePassword">Change Password</Menu.Item>
+          <Menu.Item key="categories">Categories</Menu.Item>
           {/* </Menu.ItemGroup> */}
         </Menu>
       </div>
-      <div className="profile-content">
-        <h1>Content Goes Here</h1>
-        <p>This is where the main content will be displayed on the right side.</p>
+      <div className="profile-content" style={{ marginTop: 20 }}>
+        {/* <h1>Content Goes Here</h1>
+        <p>This is where the main content will be displayed on the right side.</p> */}
         {content}
       </div>
     </div>

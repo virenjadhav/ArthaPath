@@ -3,12 +3,14 @@ import genericSlice from "../features/generic/genericSlice";
 import modelSlice from "../features/generic/modelSlice";
 import transactionSlice from "../features/transaction/transactionSlice";
 import apiMiddleware from "../middleware/apiMiddleware";
+import budgetSlice from "../features/budget/budgetSlice";
 
 const store = configureStore({
   reducer: {
     generic: genericSlice, // Includes message inside generic
     model: modelSlice,
     transaction: transactionSlice,
+    budget: budgetSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiMiddleware),

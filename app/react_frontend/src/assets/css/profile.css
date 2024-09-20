@@ -13,18 +13,29 @@
     height: 100vh;
     overflow: hidden; /* Prevent overflow */
 }
+.triggerButton{
+    width: 60px ;
+    margin: 0 10px;
+}
 
 .profile-menu {
     position: fixed;
     left: 0;
     top: 64px; /* Adjust this based on the height of your header */
-    height: calc(100vh - 64px); /* Full height minus the height of the header */
-    width: 100%;
-    max-width: 400px;
+    
     background-color: var(--background-dark); /* Default to dark theme */
     overflow-y: auto; /* Scroll if menu content is too long */
     color: var(--text-light);
     z-index: 100; /* Ensure it is above other content */
+}
+.menu-collapsed {
+    max-width: 100px;
+}
+
+.profile-menu-main{
+    width: 100%;
+    max-width: 200px;
+    height: calc(100vh - 64px); /* Full height minus the height of the header */
 }
 
 .profile-menu.light-theme {
@@ -34,7 +45,7 @@
 
 
 .profile-content {
-    margin-left: 400px; /* Leave space for the fixed menu */
+    margin-left: 220px; /* Leave space for the fixed menu */
     padding: 20px;
     width: calc(100% - 400px); /* Ensure it fills the remaining space */
     background-color: #fff; /* Always white background for content */
