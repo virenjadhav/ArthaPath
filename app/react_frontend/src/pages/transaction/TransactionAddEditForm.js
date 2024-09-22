@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { message } from "antd";
-import InputComponenet from "../../components/FormComponent/InputComponent";
+import InputComponent from "../../components/FormComponent/InputComponent";
 import {
   Table,
   Button,
@@ -13,6 +13,7 @@ import {
   InputNumber,
   AutoComplete,
   Select,
+  Menu
 } from "antd";
 import {
   setIsEditing,
@@ -35,6 +36,14 @@ import {
 import Lookup from "../../components/Lookup";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
 import ButtonComponent from "../../components/FormComponent/ButtonComponent";
+import InputDecimalNumberComponent from "../../components/FormComponent/InputDecimalNumberComponent";
+import DateComponent from "../../components/FormComponent/DateComponent";
+import InputTextAreaComponent from "../../components/FormComponent/InputTextAreaComponent";
+import RadioComponent from "../../components/FormComponent/RadioComponent";
+import DropDownComponent from "../../components/FormComponent/DropDownComponent";
+import SelectComponent from "../../components/FormComponent/SelectComponents";
+import CheckBoxComponent from "../../components/FormComponent/CheckBoxComponent";
+import SingleCheckboxComponent from "../../components/FormComponent/SingleCheckboxComponent";
 
 const { TextArea } = Input;
 
@@ -42,6 +51,52 @@ const TransactionAddEditForm = () => {
   const user_id = useSelector((state) => state.generic.user?.user_id);
   const dispatch = useDispatch();
   const [form] = Form.useForm(); // Initialize form instance
+  const radioOptions = [
+    { label: 'Option VB', value: 'option1', customProp: 'CustomData1', disabled: false },
+    { label: 'Option 2', value: 'option2', customProp: 'CustomData2', disabled: false },
+    { label: 'Option 3', value: 'option3', customProp: 'CustomData3', disabled: true },
+  ];
+  const selectOptions = [
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+    { value: "option3", label: "Option 3" }
+  ];
+  // const  checkboxOptions = [
+  //   { label: "Option A", value: "A" },
+  //   { label: "Option B", value: "B" },
+  //   { label: "Option C", value: "C" }
+  // ];
+  const checkboxOptions = [
+    { label: "Option A", value: "A" },            // Normal
+    { label: "Option B", value: "B", disabled: true }, // Disabled option
+    { label: "Option C", value: "C" },
+    { label: "Option D", value: "D", disabled: true }, // Disabled option
+    { label: "Option E", value: "E" }
+  ];
+
+  const handleCheckboxChange = (checkedValues) => {
+    console.log("Checked values:", checkedValues);
+  };
+  const onDropdownClickHandler = () => {
+
+  }
+  const onDropDownSelectHandler = () => {
+
+  }
+  const DropdownMenus = (
+    <Menu
+    onClick={onDropdownClickHandler}
+     onSelect={onDropDownSelectHandler}
+     >
+      <Menu.Item key="1">
+        <a href="https://www.google.com">Google</a>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <a href="https://www.facebook.com">Facebook</a>
+      </Menu.Item>
+      <Menu.Item key="3">Option 3</Menu.Item>
+    </Menu>
+  );
 
   // Handle form submission
   const handleModelOk = async (values) => {
@@ -49,33 +104,74 @@ const TransactionAddEditForm = () => {
     const { amount, description, is_active, trans_date, price, notes } = values;
 
     // Switch case to handle different types
+    // Object.entries(values).forEach(([key, value]) => {
+    //   switch (typeof value) {
+    //     case "number":
+    //       console.log(`${key} is a number:`, value);
+    //       // Perform specific operations for numbers
+    //       break;
+
+    //     case "string":
+    //       console.log(`${key} is a string:`, value);
+    //       // Perform specific operations for strings
+    //       break;
+
+    //     case "boolean":
+    //       console.log(`${key} is a boolean:`, value);
+    //       // Perform specific operations for boolean
+    //       break;
+
+    //     case "object":
+    //       // If the object is a date (Moment or DayJS object), handle it as a date
+    //       if (dayjs(value).isValid()) {
+    //         console.log(`${key} is a date:`, dayjs(value).format("YYYY-MM-DD"));
+    //         // Perform specific operations for dates
+    //       }
+    //       break;
+
+    //     default:
+    //       console.log(`${key} has an unknown type:`, value);
+    //   }
+    // });
+    // Iterate over each value in the form
     Object.entries(values).forEach(([key, value]) => {
-      switch (typeof value) {
-        case "number":
-          console.log(`${key} is a number:`, value);
-          // Perform specific operations for numbers
+      const componentType = form.getFieldInstance(key)?.props?.componentType;
+      
+      switch (componentType) {
+        case "formInput":
+          console.log(`${key} is an input:`, value);
+          // Handle input (string) logic here
           break;
 
-        case "string":
-          console.log(`${key} is a string:`, value);
-          // Perform specific operations for strings
-          break;
-
-        case "boolean":
-          console.log(`${key} is a boolean:`, value);
-          // Perform specific operations for boolean
-          break;
-
-        case "object":
-          // If the object is a date (Moment or DayJS object), handle it as a date
+        case "date":
           if (dayjs(value).isValid()) {
             console.log(`${key} is a date:`, dayjs(value).format("YYYY-MM-DD"));
-            // Perform specific operations for dates
+            // Handle date logic here
           }
           break;
 
+        case "radio":
+          console.log(`${key} is a radio:`, value);
+          // Handle radio (boolean or string) logic here
+          break;
+
+        case "checkbox":
+          console.log(`${key} is a checkbox:`, value);
+          // Handle checkbox (array or boolean) logic here
+          break;
+
+        case "number":
+          console.log(`${key} is a number:`, value);
+          // Handle number logic here
+          break;
+
+        case "custom":
+          console.log(`${key} is a custom component:`, value);
+          // Handle custom component logic here
+          break;
+
         default:
-          console.log(`${key} has an unknown type:`, value);
+          console.log(`${key} is of unknown type:`, value);
       }
     });
 
@@ -208,23 +304,25 @@ const TransactionAddEditForm = () => {
           }
         />
       </Form.Item> */}
-      {isEditing && (
+      {/* {isEditing && (
         <Form.Item name="id" label="ID">
           <Input disabled />
         </Form.Item>
-      )}
-      <InputComponenet
+      )} */}
+      <InputComponent
         name="id"
         label="ID"
         disabled={isEditing ? false : true}
+        includeInLayout = {isEditing ? true : false}
       />
+      <InputDecimalNumberComponent name="amount" label="Amount" rules={[{ required: true, message: "Please input the amount!" }]} step={0.01} min={0} addonAfter="USD" />
 
-      <Form.Item
+      {/* <Form.Item
         name="amount"
         label="Amount"
         rules={[{ required: true, message: "Please input the amount!" }]}
       >
-        <InputNumber step={0.01} min={0} />
+        <InputNumber step={0.01} min={0} /> */}
         {/* <InputNumber step={0.01} min={0} /> */}
         {/* <Lookup /> */}
         {/* <Select>
@@ -243,9 +341,9 @@ const TransactionAddEditForm = () => {
           name="username"
           onChange={handleChange}
         /> */}
-      </Form.Item>
+      {/* </Form.Item> */}
 
-      <Form.Item
+      {/* <Form.Item
         name="trans_date"
         label="Transaction Date"
         rules={[
@@ -253,7 +351,11 @@ const TransactionAddEditForm = () => {
         ]}
       >
         <DatePicker format="YYYY-MM-DD" />
-      </Form.Item>
+       
+      </Form.Item> */}
+      <DateComponent name={"trans_date"} label={"Transaction Date"} rules={[
+          { required: true, message: "Please select the transaction date!" },
+        ]} formate={"YYYY-MM-DD"}/>
 
       <Form.Item
         name="main_category"
@@ -275,9 +377,24 @@ const TransactionAddEditForm = () => {
       >
         <Input />
       </Form.Item>
-      <Form.Item name="description" label="Description">
+      {/* <Form.Item name="description" label="Description">
         <TextArea rows={4} />
-      </Form.Item>
+      </Form.Item> */}
+      <InputTextAreaComponent name={"description"} label={"Description"} />
+      <RadioComponent options={radioOptions} direction="horizontal"/>
+      <DropDownComponent Menus={DropdownMenus}/>
+      <SelectComponent name="selectComponent" label="Select Component" options={selectOptions} />
+      <SingleCheckboxComponent
+        name="acceptTerms"
+        label="Accept Terms and Conditions"
+        checked={true}
+        onChangeHandler={() => console.log("singel checkbox clicked")}
+      />
+        <CheckBoxComponent name="myCheckbox"
+        label="Choose Options"
+        options={checkboxOptions}
+        defaultValue={["A", "C"]} // Setting which values are checked by default
+         layout="horizontal" />
       {isEditing && (
         <Form.Item name="active" label="Status">
           <Input disabled />
