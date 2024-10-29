@@ -11,27 +11,27 @@ import { setData } from "./transactionSlice";
 export const get_transactions = apiThunk(
   "transaction/get_transactions",
   "get",
-  "/transactions"
+  "/transactions/get_transactions"
 );
 
 export const delete_transaction = apiThunk(
   "transaction/delete_transaction",
   "delete",
-  `/transactions/`
+  `/delete_transaction/`
 );
 
 // POST /transactions
 export const create_transaction = apiThunk(
-  "generic/create_transaction",
+  "transaction/create_transaction",
   "post",
-  "/transactions"
+  "/create_transaction"
 );
 
 // PATCH/PUT /transactions/1
 export const update_transaction = apiThunk(
-  "generic/update_transaction",
+  "transaction/update_transaction",
   "put",
-  "/transactions"
+  "/update_transaction"
 );
 
 // export const isUserLoggedIn = apiThunk(

@@ -18,6 +18,11 @@ import {
   setResult,
   setSuccessMsg,
 } from "../redux/features/generic/messageSlice";
+import {
+  useLoginAction,
+  useLogoutAction,
+  useSignupAction,
+} from "../components/CommonServices";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -29,6 +34,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logged_in = useSelector((state) => state.generic.logged_in);
+  const { loginAction } = useLoginAction();
+  const { signupAction } = useSignupAction();
 
   useEffect(() => {
     if (logged_in == false) {
@@ -50,12 +57,17 @@ const Login = () => {
     try {
       // const response = await login(email, password);
       // const response = await dispatch(login({ email, password })).unwrap();
-      const response = await dispatch(
-        login({
-          session: { email, password },
-        })
-      ).unwrap();
-
+      // const response = await dispatch(
+      //   login({
+      //     session: { email, password },
+      //   })
+      // ).unwrap();
+      const payload = {
+        session: { email, password },
+      };
+      await loginAction(payload);
+      // const loginAction = login("generic/login", "post", "/login", payload);
+      // const response = await dispatch(loginAction()).unwrap();
       // message.success({
       //   content: "Login successful!",
       //   duration: 5, // Duration in seconds
@@ -64,12 +76,12 @@ const Login = () => {
       //   },
       // });
       // dispatch(setResult("success"));
-      dispatch(setMessageState(setResult("success")));
-      // dispatch(setSuccessMsg("Login successful!"));
-      dispatch(setMessageState(setSuccessMsg("Login successful!")));
-      dispatch(setUser(response.user));
-      dispatch(setLoggedIn(true));
-      navigate("/");
+      // dispatch(setMessageState(setResult("success")));
+      // // dispatch(setSuccessMsg("Login successful!"));
+      // dispatch(setMessageState(setSuccessMsg("Login successful!")));
+      // dispatch(setUser(response.user));
+      // dispatch(setLoggedIn(true));
+      // navigate("/");
     } catch (error) {
       // Handle login failure
       // message.error({
@@ -93,32 +105,43 @@ const Login = () => {
     e.preventDefault();
     // const response = dispatch(signup(email, password, confirmPassword, name));
     try {
-      const response = await dispatch(
-        signup({
-          data: {
-            user: {
-              email,
-              password,
-              password_confirmation: confirmPassword,
-              name,
-            },
+      // const response = await dispatch(
+      //   signup({
+      //     data: {
+      //       user: {
+      //         email,
+      //         password,
+      //         password_confirmation: confirmPassword,
+      //         name,
+      //       },
+      //     },
+      //   })
+      // ).unwrap();
+      // // message.success({
+      // //   content: "Account Created Successfully.",
+      // //   duration: 5, // Duration in seconds
+      // //   style: {
+      // //     fontSize: "18px", // Larger font size
+      // //   },
+      // // });
+      // // dispatch(setResult("success"));
+      // dispatch(setMessageState(setResult("success")));
+      // // dispatch(setSuccessMsg("Account Created Successfully."));
+      // dispatch(setMessageState(setSuccessMsg("Account Created Successfully.")));
+      // dispatch(setUser(response.user));
+      // dispatch(setLoggedIn(true));
+      // navigate("/");
+      const payload = {
+        data: {
+          user: {
+            email,
+            password,
+            password_confirmation: confirmPassword,
+            name,
           },
-        })
-      ).unwrap();
-      // message.success({
-      //   content: "Account Created Successfully.",
-      //   duration: 5, // Duration in seconds
-      //   style: {
-      //     fontSize: "18px", // Larger font size
-      //   },
-      // });
-      // dispatch(setResult("success"));
-      dispatch(setMessageState(setResult("success")));
-      // dispatch(setSuccessMsg("Account Created Successfully."));
-      dispatch(setMessageState(setSuccessMsg("Account Created Successfully.")));
-      dispatch(setUser(response.user));
-      dispatch(setLoggedIn(true));
-      navigate("/");
+        },
+      };
+      await signupAction(payload);
     } catch (error) {
       // message.error({
       //   content: `Sign up failed : ${error?.error?.join(",")}`,

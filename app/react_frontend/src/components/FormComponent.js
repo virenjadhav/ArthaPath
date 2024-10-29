@@ -24,15 +24,15 @@ const FormComponent = ({ FormCustomComponent }) => {
   const selectedForm = useSelector((state) => state.model.selectedForm);
   return (
     <div className="addEditComponent">
-      <Modal
+      {/* <Modal
         title={editingTransaction ? "Edit " : "Add "}
         visible={isModelVisible}
         onCancel={handleModalCancel}
         onOk={handleSaveTransaction}
         footer={null}
-      >
-        <FormCustomComponent />
-        {/* <Form
+      > */}
+      <FormCustomComponent />
+      {/* <Form
             form={form}
             initialValues={editingTransaction || {}}
             onFinish={handleModalOk}
@@ -64,12 +64,12 @@ const FormComponent = ({ FormCustomComponent }) => {
                     </Button>
                 </Form.Item>
                 </Form> */}
-        {/* <Form.Item>
+      {/* <Form.Item>
           <Button type="primary" htmlType="submit">
             {editingTransaction ? "Update" : "Add"}
           </Button>
         </Form.Item> */}
-      </Modal>
+      {/* </Modal> */}
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosService from "../../../apis/axiosService";
 
-const apiThunk = (actionType, method, baseUrl) => {
+const apiThunk = (actionType, method, baseUrl, payload = {}) => {
   return createAsyncThunk(
     actionType,
-    async ({ id, data, session } = {}, { rejectWithValue }) => {
+    async ({ id1, data1, session1 } = {}, { rejectWithValue }) => {
+      const { id, data, session } = payload;
       let response;
       try {
         switch (method) {

@@ -1,16 +1,16 @@
-
 import React from "react";
-import { Menu, Dropdown, Button } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Menu, Dropdown, Button } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 const DropDownComponent = ({
+  name,
   Menus,
   placement = "bottomLeft",
-  trigger = ['click'],
-  arrow = false,  // Default false
-  disabled = false,  // Default false
-  visible = undefined,  // Default undefined, don't use null
+  trigger = ["click"],
+  arrow = false, // Default false
+  disabled = false, // Default false
+  visible = undefined, // Default undefined, don't use null
   handleVisibleChange = null,
- 
+  updateFlag = null,
 }) => {
   // const handleMenuClick = (e) => {
   //   // Update the dropdown value and set it in the form
@@ -40,17 +40,21 @@ const DropDownComponent = ({
   //     <Menu.Item key="3">Option 3</Menu.Item>
   //   </Menu>
   // );
-  return <>
-    <Dropdown overlay={Menus} 
-    // trigger={['click']}
-    {...dropdownProps}
-    componentType="DropDown"
+  return (
+    <>
+      <Dropdown
+        overlay={Menus}
+        // trigger={['click']}
+        {...dropdownProps}
+        componentType="DropDown"
+        updateFlag={updateFlag}
       >
-    <Button>
-      Dropdown <DownOutlined />
-    </Button>
-  </Dropdown>
-  </>;
+        <Button>
+          Dropdown <DownOutlined />
+        </Button>
+      </Dropdown>
+    </>
+  );
   // Common Dropdown Properties:
   // overlay: (Required) The menu or custom content to show in the dropdown.
   // trigger: The event that triggers the dropdown (click, hover, or contextMenu).
@@ -62,5 +66,3 @@ const DropDownComponent = ({
 };
 
 export default DropDownComponent;
-
-

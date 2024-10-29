@@ -18,6 +18,7 @@ import {
   setSelectedModelId,
 } from "../redux/features/generic/genericSlice.js";
 import { useNavigate } from "react-router-dom";
+import { useLogoutAction } from "./CommonServices.js";
 
 const { Header } = Layout;
 
@@ -38,6 +39,8 @@ const HeaderComponent = () => {
     2: ["Finance", "finance"],
   });
 
+  const { logoutAction } = useLogoutAction();
+
   useEffect(() => {
     let path = "/";
 
@@ -53,14 +56,16 @@ const HeaderComponent = () => {
 
     navigate(path);
   }, [selectedModelId]);
-  const handleMenuClick = (e) => {
+  const handleMenuClick = async (e) => {
     if (e.key === "logout") {
       // Handle logout action
       console.log("Logging out...");
       // logout();
-      dispatch(logout());
-      dispatch(setLoggedIn(false));
-      navigate("/login");
+      const payload = {};
+      await logoutAction(payload);
+      // dispatch(logout());
+      // dispatch(setLoggedIn(false));
+      // navigate("/login");
     } else if (e.key === "profile") {
       navigate("/profile");
     } else if (e.key !== selectedModelId) {

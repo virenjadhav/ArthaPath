@@ -15,6 +15,7 @@ import {
   EditOutlined,
   ReloadOutlined,
   ExclamationCircleOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -33,18 +34,32 @@ import {
 } from "../redux/features/generic/messageSlice";
 import { ModelConfirm } from "./ModelConfirm";
 import { ModelInfo } from "./ModelInfo";
+import useApiServiceCall from "../apis/ApiServiceCall";
+import FormAddEdit from "./FormComponent/FormAddEdit";
+import {
+  useFormDeleteAction,
+  useFormRefreshAction,
+  useRefreshAction,
+} from "./FormComponent/FormServices";
+import SearchCriteriaComponent from "./Criteria/SearchCriteriaComponent";
 
 const ButtonsAddEditComponent = ({
   deleteAction,
   navigatePath,
-  refreshAction,
+
   moduleTitle,
 }) => {
   const isEditing = useSelector((state) => state.model.isEditing);
   const form = useSelector((state) => state.model.setSelectedForm);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
+  const searchCriteriaData = useSelector(
+    (state) => state.model.searchCriteriaData
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const { callApi } = useApiServiceCall();
+  const { formRefreshAction } = useFormRefreshAction();
+  const { formDeleteAction } = useFormDeleteAction();
 
   const handleAddButtonClick = () => {
     dispatch(setIsModelVisible(true));
@@ -53,38 +68,47 @@ const ButtonsAddEditComponent = ({
   };
 
   const handleDeleteModalConfirmClickHandler = async () => {
-    try {
-      const response = await dispatch(
-        deleteAction({ id: selectedRecord.id })
-      ).unwrap();
-      // message.success({
-      //   content: response?.message,
-      //   duration: 5,
-      //   style: {
-      //     fontSize: "18px",
-      //   },
-      // });
-      // dispatch(setMessageResult("success"));
-      // dispatch(setMessageSuccessMsg(response?.message));
-      dispatch(setMessageState(setResult("success")));
-      dispatch(setMessageState(setSuccessMsg(response?.message)));
-      dispatch(refreshAction);
-      dispatch(setIsModelVisible(false));
-      dispatch(setIsEditing(false));
-      dispatch(setSelectedRecord(null));
-    } catch (error) {
-      // message.error({
-      //   content: `Error : ${error?.error?.join(",")}`,
-      //   duration: 5,
-      //   style: {
-      //     fontSize: "18px",
-      //   },
-      // });
-      // dispatch(setMessageResult("error"));
-      // dispatch(setMessageErrorMsg(error?.error?.join(",")));
-      dispatch(setMessageState(setResult("error")));
-      dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
+    // try {
+    //   const response = await dispatch(
+    //     deleteAction({ id: selectedRecord.id })
+    //   ).unwrap();
+    //   // message.success({
+    //   //   content: response?.message,
+    //   //   duration: 5,
+    //   //   style: {
+    //   //     fontSize: "18px",
+    //   //   },
+    //   // });
+    //   // dispatch(setMessageResult("success"));
+    //   // dispatch(setMessageSuccessMsg(response?.message));
+    //   dispatch(setMessageState(setResult("success")));
+    //   dispatch(setMessageState(setSuccessMsg(response?.message)));
+    //   // dispatch(refreshAction);
+    //   dispatch(setIsModelVisible(false));
+    //   dispatch(setIsEditing(false));
+    //   dispatch(setSelectedRecord(null));
+    // } catch (error) {
+    //   // message.error({
+    //   //   content: `Error : ${error?.error?.join(",")}`,
+    //   //   duration: 5,
+    //   //   style: {
+    //   //     fontSize: "18px",
+    //   //   },
+    //   // });
+    //   // dispatch(setMessageResult("error"));
+    //   // dispatch(setMessageErrorMsg(error?.error?.join(",")));
+    //   dispatch(setMessageState(setResult("error")));
+    //   dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
+    // }
+    // formDeleteAction();
+    // await formDeleteAction();
+    if (!selectedRecord) {
+      console.error("No record selected for deletion.");
+      return;
     }
+
+    // Call formDeleteAction and pass the selectedRecord
+    await formDeleteAction(selectedRecord);
   };
 
   const handleDeleteButtonClick = () => {
@@ -125,36 +149,51 @@ const ButtonsAddEditComponent = ({
       message.warning("Please select a record to edit.");
     }
   };
+  // const handleRefreshClickHandler = (response) => {
+  //   dispatch(setMessageState(setResult("success")));
+  //   dispatch(setMessageState(setSuccessMsg(response?.message)));
+  //   dispatch(setIsModelVisible(false));
+  //   dispatch(setIsEditing(false));
+  //   dispatch(setSelectedRecord(null));
+  // };
 
   const handleRefreshClick = async () => {
-    try {
-      const response = await dispatch(refreshAction).unwrap();
-      // message.success({
-      //   content: response?.message,
-      //   duration: 5,
-      //   style: {
-      //     fontSize: "18px",
-      //   },
-      // });
-      // dispatch(setResult("success"));
-      // dispatch(setSuccessMsg(response?.message));
-      dispatch(setMessageState(setResult("success")));
-      dispatch(setMessageState(setSuccessMsg(response?.message)));
-      dispatch(setIsModelVisible(false));
-      dispatch(setIsEditing(false));
-      dispatch(setSelectedRecord(null));
-    } catch (error) {
-      // message.error({
-      //   content: `Error : ${error?.error?.join(",")}`,
-      //   duration: 5,
-      //   style: {
-      //     fontSize: "18px",
-      //   },
-      // });
-      dispatch(setMessageState(setResult("error")));
-      dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
-    }
+    // try {
+    // const response = await dispatch(refreshAction).unwrap();
+    // callApi("getList", handleRefreshClickHandler);
+    // refreshAction();
+    let payload = {
+      data: {
+        criteriaSearchData: searchCriteriaData,
+      },
+    };
+    await formRefreshAction(payload);
+    // await formRefreshAction();
+    // message.success({
+    //   content: response?.message,
+    //   duration: 5,
+    //   style: {
+    //     fontSize: "18px",
+    //   },
+    // });
+    // dispatch(setResult("success"));
+    // dispatch(setSuccessMsg(response?.message));
+    // if (response) {
+    //   handleRefreshClickHandler(response);
+    // }
+    // } catch (error) {
+    //   // message.error({
+    //   //   content: `Error : ${error?.error?.join(",")}`,
+    //   //   duration: 5,
+    //   //   style: {
+    //   //     fontSize: "18px",
+    //   //   },
+    //   // });
+    //   dispatch(setMessageState(setResult("error")));
+    //   dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
+    // }
   };
+  const handleSearchButtonClick = () => {};
 
   return (
     <>
@@ -194,6 +233,7 @@ const ButtonsAddEditComponent = ({
           shape="circle"
           title={`Refresh ${moduleTitle}`}
         />
+        <SearchCriteriaComponent moduleTitle={moduleTitle} />
       </Space>
     </>
   );

@@ -21,6 +21,7 @@ const TableComponent = ({ data, columns }) => {
   useEffect(() => {
     if (data) {
       setCurrentData(data.slice(0, pageSize));
+      setCurrentPage(0);
     }
   }, [data]);
 

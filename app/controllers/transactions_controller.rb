@@ -1,9 +1,12 @@
 class TransactionsController < ApplicationController
-    before_action :set_transaction, only: [:show, :edit, :update, :destroy]
+    before_action :set_transaction, only: [:show_transaction, :edit_transaction, :update_transaction, :destroy_transaction]
+    # before_create :set_trans_no
   
     # GET /transactions
-    def index
-      @transactions = Transaction.all.where(:active => true)
+    def get_transactions
+      criteria_data = params[:criteriaSearchData]
+      criteria_condition = CommonModule.get_criteria_condition(criteria_data)
+      @transactions = Transaction.all.where("active = 1 #{!criteria_condition.blank? ? criteria_condition : "" } ").limit(100)
       transactions = []
       @transactions.each do |transaction| 
         trans_date = transaction.trans_date.blank? ? nil: transaction.trans_date.strftime('%Y-%m-%d')
@@ -14,7 +17,7 @@ class TransactionsController < ApplicationController
     end
   
     # GET /transactions/1
-    def show
+    def show_transaction
     end
   
     # GET /transactions/new
@@ -23,7 +26,7 @@ class TransactionsController < ApplicationController
     end
   
     # POST /transactions
-    def create
+    def create_transaction
       @transaction = Transaction.new(transaction_params)
       if @transaction.save
         # redirect_to @transaction, notice: 'Transaction was successfully created.'
@@ -36,11 +39,11 @@ class TransactionsController < ApplicationController
     end
   
     # GET /transactions/1/edit
-    def edit
+    def edit_transaction
     end
   
     # PATCH/PUT /transactions/1
-    def update
+    def update_transaction
       # if @transaction.update(transaction_params)
       #   # redirect_to @transaction, notice: 'Transaction was successfully updated.'
       #   render json: {transaction: @transaction, message: 'Transaction was successfully created.'}, status: :
@@ -55,8 +58,8 @@ class TransactionsController < ApplicationController
     end
   
     # DELETE /transactions/1
-    def destroy
-      # @transaction.destroy
+    def destroy_transaction
+      # @transaction.destroy      
       if @transaction.update(active: false)
         render json: { message: "Transaction deleted successfully" }, status: :ok
       else
@@ -76,8 +79,14 @@ class TransactionsController < ApplicationController
   
       # Only allow a list of trusted parameters through.
       def transaction_params
-        params.require(:transaction).permit(:active, :amount, :main_category, :user_category, :trans_date, :description, :user_id)
+        params.require(:transaction).permit(:active, :amount, :main_category_id, :main_category_code, :user_category, :trans_date, :description, :user_id)
       end
+
+      # def set_trans_no
+      #   # Find the maximum `trans_no` and increment it by 1
+      #   max_trans_no = Transaction.maximum(:trans_no) || 5000
+      #   self.trans_no = max_trans_no + 1
+      # end
   end
 
 
