@@ -1,0 +1,11 @@
+/* .criteria-model{
+    min-width: "700px";
+    color: red;
+} */
+.criteria-model .ant-modal-content{
+    width: 550px !important;
+}
+.criteria-model .ant-form-item-label{
+    width: 130px !important;
+     /* width: auto; */
+}

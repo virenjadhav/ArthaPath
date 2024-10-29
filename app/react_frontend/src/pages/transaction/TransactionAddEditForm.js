@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { message } from "antd";
 import InputComponent from "../../components/FormComponent/InputComponent";
 import {
@@ -13,7 +13,7 @@ import {
   InputNumber,
   AutoComplete,
   Select,
-  Menu
+  Menu,
 } from "antd";
 import {
   setIsEditing,
@@ -44,6 +44,9 @@ import DropDownComponent from "../../components/FormComponent/DropDownComponent"
 import SelectComponent from "../../components/FormComponent/SelectComponents";
 import CheckBoxComponent from "../../components/FormComponent/CheckBoxComponent";
 import SingleCheckboxComponent from "../../components/FormComponent/SingleCheckboxComponent";
+import FormAddEdit from "../../components/FormComponent/FormAddEdit";
+import LookupComponent from "../../components/Lookup/LookupComponent";
+// import transactionServicesData from "./TransactionServices.json";
 
 const { TextArea } = Input;
 
@@ -51,15 +54,31 @@ const TransactionAddEditForm = () => {
   const user_id = useSelector((state) => state.generic.user?.user_id);
   const dispatch = useDispatch();
   const [form] = Form.useForm(); // Initialize form instance
+  const formComponentProps = useRef({});
   const radioOptions = [
-    { label: 'Option VB', value: 'option1', customProp: 'CustomData1', disabled: false },
-    { label: 'Option 2', value: 'option2', customProp: 'CustomData2', disabled: false },
-    { label: 'Option 3', value: 'option3', customProp: 'CustomData3', disabled: true },
+    {
+      label: "Option VB",
+      value: "option1",
+      customProp: "CustomData1",
+      disabled: false,
+    },
+    {
+      label: "Option 2",
+      value: "option2",
+      customProp: "CustomData2",
+      disabled: false,
+    },
+    {
+      label: "Option 3",
+      value: "option3",
+      customProp: "CustomData3",
+      disabled: true,
+    },
   ];
   const selectOptions = [
     { value: "option1", label: "Option 1" },
     { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" }
+    { value: "option3", label: "Option 3" },
   ];
   // const  checkboxOptions = [
   //   { label: "Option A", value: "A" },
@@ -67,27 +86,18 @@ const TransactionAddEditForm = () => {
   //   { label: "Option C", value: "C" }
   // ];
   const checkboxOptions = [
-    { label: "Option A", value: "A" },            // Normal
+    { label: "Option A", value: "A" }, // Normal
     { label: "Option B", value: "B", disabled: true }, // Disabled option
     { label: "Option C", value: "C" },
     { label: "Option D", value: "D", disabled: true }, // Disabled option
-    { label: "Option E", value: "E" }
+    { label: "Option E", value: "E" },
   ];
 
-  const handleCheckboxChange = (checkedValues) => {
-    console.log("Checked values:", checkedValues);
-  };
-  const onDropdownClickHandler = () => {
-
-  }
-  const onDropDownSelectHandler = () => {
-
-  }
+  const handleCheckboxChange = (checkedValues) => {};
+  const onDropdownClickHandler = () => {};
+  const onDropDownSelectHandler = () => {};
   const DropdownMenus = (
-    <Menu
-    onClick={onDropdownClickHandler}
-     onSelect={onDropDownSelectHandler}
-     >
+    <Menu onClick={onDropdownClickHandler} onSelect={onDropDownSelectHandler}>
       <Menu.Item key="1">
         <a href="https://www.google.com">Google</a>
       </Menu.Item>
@@ -97,88 +107,123 @@ const TransactionAddEditForm = () => {
       <Menu.Item key="3">Option 3</Menu.Item>
     </Menu>
   );
+  const handleFormComponentChange = (name, props) => {
+    // if (type === "add") {
+    //   formComponentProps.current[name] = {
+    //     ...props.current[name],
+    //     componentType: componentTypeValue,
+    //   };
+    // } else {
+    //   formComponentProps.current[name] = props.current[name];
+    // }
+    let existingValues = formComponentProps.current[name];
+    formComponentProps.current[name] = { ...existingValues, ...props };
+  };
 
   // Handle form submission
   const handleModelOk = async (values) => {
     // Example: Get form values and check their types
     const { amount, description, is_active, trans_date, price, notes } = values;
 
+    const customProps = formComponentProps.current;
     // Switch case to handle different types
     // Object.entries(values).forEach(([key, value]) => {
     //   switch (typeof value) {
     //     case "number":
-    //       console.log(`${key} is a number:`, value);
+
     //       // Perform specific operations for numbers
     //       break;
 
     //     case "string":
-    //       console.log(`${key} is a string:`, value);
+
     //       // Perform specific operations for strings
     //       break;
 
     //     case "boolean":
-    //       console.log(`${key} is a boolean:`, value);
+
     //       // Perform specific operations for boolean
     //       break;
 
     //     case "object":
     //       // If the object is a date (Moment or DayJS object), handle it as a date
     //       if (dayjs(value).isValid()) {
-    //         console.log(`${key} is a date:`, dayjs(value).format("YYYY-MM-DD"));
+
     //         // Perform specific operations for dates
     //       }
     //       break;
 
     //     default:
-    //       console.log(`${key} has an unknown type:`, value);
+
     //   }
     // });
     // Iterate over each value in the form
-    Object.entries(values).forEach(([key, value]) => {
-      const componentType = form.getFieldInstance(key)?.props?.componentType;
-      
-      switch (componentType) {
-        case "formInput":
-          console.log(`${key} is an input:`, value);
-          // Handle input (string) logic here
-          break;
+    // Object.entries(values).forEach(([key, value]) => {
+    //   const fieldInstance = form.getFieldInstance(key);
+    //   const componentType =
+    //     fieldInstance?.attributes?.componentType?.value || "defaultType";
+    //   const updateFlag = fieldInstance?.attributes?.updateFlag;
 
-        case "date":
-          if (dayjs(value).isValid()) {
-            console.log(`${key} is a date:`, dayjs(value).format("YYYY-MM-DD"));
-            // Handle date logic here
-          }
-          break;
+    //   switch (componentType) {
+    //     case "formInput":
 
-        case "radio":
-          console.log(`${key} is a radio:`, value);
-          // Handle radio (boolean or string) logic here
-          break;
+    //       // Handle input (string) logic here
+    //       break;
 
-        case "checkbox":
-          console.log(`${key} is a checkbox:`, value);
-          // Handle checkbox (array or boolean) logic here
-          break;
+    //     case "formInputTextArea":
 
-        case "number":
-          console.log(`${key} is a number:`, value);
-          // Handle number logic here
-          break;
+    //       // Handle input (string) logic here
+    //       break;
+    //     case "formInputDecimal":
 
-        case "custom":
-          console.log(`${key} is a custom component:`, value);
-          // Handle custom component logic here
-          break;
+    //       // Handle input (string) logic here
+    //       break;
 
-        default:
-          console.log(`${key} is of unknown type:`, value);
-      }
-    });
+    //     case "formDate":
+    //       if (dayjs(value).isValid()) {
+
+    //         // Handle date logic here
+    //       }
+    //       break;
+
+    //     case "formRadio":
+
+    //       // Handle radio (boolean or string) logic here
+    //       break;
+
+    //     case "formCheckbox":
+
+    //       // Handle checkbox (array or boolean) logic here
+    //       break;
+
+    //     // case "number":
+
+    //     //   // Handle number logic here
+    //     //   break;
+
+    //     // case "custom":
+
+    //     //   // Handle custom component logic here
+    //     //   break;
+
+    //     case "formSingleCheckbox":
+
+    //       // Handle custom component logic here
+    //       break;
+    //     case "formSelect":
+
+    //       break;
+
+    //     case "DropDown":
+
+    //       break;
+
+    //     default:
+
+    //   }
+    // });
 
     // let { id, trans_date, main_category, user_category, description, amount } =
     //   values;
-    // console.log("main_category");
-    // console.log(main_category);
 
     // try {
     //   const formattedDate = trans_date
@@ -277,17 +322,66 @@ const TransactionAddEditForm = () => {
   const { Option } = Select;
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
-  //   console.log(`Input Name: ${name}, Input Value: ${value}`);
   //   // setInputValue(value); // Update the input value
   // };
 
   return (
-    <Form
-      form={form}
-      // initialValues={selectedRecord || {}}
-      onFinish={handleModelOk}
-      layout="horizontal"
-    >
+    <>
+      <FormAddEdit>
+        <InputComponent
+          name="trans_no"
+          label="Trans #"
+          disabled={isEditing ? true : false}
+          includeInLayout={isEditing ? true : false}
+          customComponentProps={{ updateFlag: true }}
+          style={{
+            fontWeight: "bold",
+            color: "black",
+            // fontSize: "24px", // Adjust font size as needed
+          }}
+        />
+        <InputDecimalNumberComponent
+          name="amount"
+          label="Amount"
+          rules={[{ required: true, message: "Please input the amount!" }]}
+          step={0.01}
+          min={0}
+          addonAfter="USD"
+          customComponentProps={{ updateFlag: true }}
+        />
+        <DateComponent
+          name={"trans_date"}
+          label={"Transaction Date"}
+          rules={[
+            { required: true, message: "Please select the transaction date!" },
+          ]}
+          formate={"YYYY-MM-DD"}
+          customComponentProps={{ updateFlag: true }}
+        />
+        <LookupComponent
+          name="main_category_lookup"
+          label="Main Category"
+          labelField="code"
+          dataField="id"
+          dataSourceName="get_main_categories"
+          dataTag="main_category_id"
+          labelTag="main_category_code"
+          filterKeyLabelName="code"
+          filterKeyDataName="id"
+          validationFlag={true}
+        />
+        <InputTextAreaComponent
+          name={"description"}
+          label={"Description"}
+          customComponentProps={{ updateFlag: true }}
+        />
+      </FormAddEdit>
+      {/* <Form
+        form={form}
+        // initialValues={selectedRecord || {}}
+        onFinish={handleModelOk}
+        layout="horizontal"
+      > */}
       {/* <Form.Item label="main ID" name="main_category">
         <Input /> 
       </Form.Item> */}
@@ -309,13 +403,28 @@ const TransactionAddEditForm = () => {
           <Input disabled />
         </Form.Item>
       )} */}
-      <InputComponent
+      {/* <InputComponent
         name="id"
         label="ID"
         disabled={isEditing ? false : true}
-        includeInLayout = {isEditing ? true : false}
-      />
-      <InputDecimalNumberComponent name="amount" label="Amount" rules={[{ required: true, message: "Please input the amount!" }]} step={0.01} min={0} addonAfter="USD" />
+        includeInLayout={isEditing ? true : false}
+        updateFlag={true}
+      /> */}
+      {/* <InputDecimalNumberComponent
+        name="amount"
+        label="Amount"
+        rules={[{ required: true, message: "Please input the amount!" }]}
+        step={0.01}
+        min={0}
+        addonAfter="USD"
+        formComponentProps={formComponentProps}
+        handleFormPropsChange={handleFormComponentChange}
+        customComponentProps={{ updateFlag: true }}
+      /> */}
+
+      {/* <Form.Item name="currency" label="Currency">
+        <Input componentType="currency" />
+      </Form.Item> */}
 
       {/* <Form.Item
         name="amount"
@@ -323,13 +432,13 @@ const TransactionAddEditForm = () => {
         rules={[{ required: true, message: "Please input the amount!" }]}
       >
         <InputNumber step={0.01} min={0} /> */}
-        {/* <InputNumber step={0.01} min={0} /> */}
-        {/* <Lookup /> */}
-        {/* <Select>
+      {/* <InputNumber step={0.01} min={0} /> */}
+      {/* <Lookup /> */}
+      {/* <Select>
           <Option value="store_1">Store 1</Option>
         </Select> */}
-        {/* <InputNumber step={0.01} min={0} addonAfter="USD" /> */}
-        {/* <Input
+      {/* <InputNumber step={0.01} min={0} addonAfter="USD" /> */}
+      {/* <Input
           allowClear
           autoComplete="off"
           bordered={true}
@@ -353,9 +462,17 @@ const TransactionAddEditForm = () => {
         <DatePicker format="YYYY-MM-DD" />
        
       </Form.Item> */}
-      <DateComponent name={"trans_date"} label={"Transaction Date"} rules={[
+      {/* <DateComponent
+        name={"trans_date"}
+        label={"Transaction Date"}
+        rules={[
           { required: true, message: "Please select the transaction date!" },
-        ]} formate={"YYYY-MM-DD"}/>
+        ]}
+        formate={"YYYY-MM-DD"}
+        formComponentProps={formComponentProps}
+        handleFormPropsChange={handleFormComponentChange}
+        customComponentProps={{ updateFlag: true }}
+      />
 
       <Form.Item
         name="main_category"
@@ -363,47 +480,80 @@ const TransactionAddEditForm = () => {
         rules={[{ required: true, message: "Please select a main category!" }]}
       >
         <Input />
-      </Form.Item>
+      </Form.Item> */}
       {/* <Lookup
         id={"main_category"}
         label={"Main Category"}
         required={true}
         requiredMsg={"Please select a main category!"}
       /> */}
-      <Form.Item
+      {/* <Form.Item
         name="user_category"
         label="User Category"
         rules={[{ required: true, message: "Please select a user category!" }]}
       >
         <Input />
-      </Form.Item>
+      </Form.Item> */}
       {/* <Form.Item name="description" label="Description">
         <TextArea rows={4} />
       </Form.Item> */}
-      <InputTextAreaComponent name={"description"} label={"Description"} />
-      <RadioComponent options={radioOptions} direction="horizontal"/>
-      <DropDownComponent Menus={DropdownMenus}/>
-      <SelectComponent name="selectComponent" label="Select Component" options={selectOptions} />
+      {/* <InputTextAreaComponent
+        name={"description"}
+        label={"Description"}
+        formComponentProps={formComponentProps}
+        handleFormPropsChange={handleFormComponentChange}
+        customComponentProps={{ updateFlag: true }}
+      />
+      <RadioComponent
+        name="radio_tag"
+        options={radioOptions}
+        direction="horizontal"
+        formComponentProps={formComponentProps}
+        handleFormPropsChange={handleFormComponentChange}
+        customComponentProps={{ updateFlag: false }}
+      /> */}
+      {/* <DropDownComponent
+        name="selected_category"
+        Menus={DropdownMenus}
+        updateFlag={true}
+      /> */}
+      {/* <SelectComponent
+        name="selectComponent"
+        label="Select Component"
+        options={selectOptions}
+        formComponentProps={formComponentProps}
+        handleFormPropsChange={handleFormComponentChange}
+        customComponentProps={{ updateFlag: false }}
+      />
       <SingleCheckboxComponent
         name="acceptTerms"
         label="Accept Terms and Conditions"
         checked={true}
-        onChangeHandler={() => console.log("singel checkbox clicked")}
+        formComponentProps={formComponentProps}
+        handleFormPropsChange={handleFormComponentChange}
+        customComponentProps={{ updateFlag: false }}
       />
-        <CheckBoxComponent name="myCheckbox"
+      <CheckBoxComponent
+        name="myCheckbox"
         label="Choose Options"
         options={checkboxOptions}
         defaultValue={["A", "C"]} // Setting which values are checked by default
-         layout="horizontal" />
-      {isEditing && (
-        <Form.Item name="active" label="Status">
-          <Input disabled />
-          {/* <Switch /> */}
-        </Form.Item>
-      )}
+        layout="horizontal"
+        formComponentProps={formComponentProps}
+        handleFormPropsChange={handleFormComponentChange}
+        customComponentProps={{ updateFlag: false }}
+      /> */}
 
-      <ButtonComponent editForm={isEditing ? true : false} />
-    </Form>
+      {/* {isEditing && (
+          <Form.Item name="active" label="Status">
+            <Input disabled />
+            
+          </Form.Item>
+        )}
+
+        <ButtonComponent editForm={isEditing ? true : false} /> */}
+      {/* </Form> */}
+    </>
   );
 };
 

@@ -44,8 +44,6 @@ const BudgetAddEditForm = () => {
   const handleModelOk = async (values) => {
     let { id, trans_date, main_category, sub_category, description, amount } =
       values;
-    console.log("main_category");
-    console.log(main_category);
 
     try {
       //   const formattedDate = trans_date

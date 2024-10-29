@@ -46,7 +46,6 @@ const ChangePassword = () => {
       form.resetFields();
     } catch (error) {
       dispatch(setMessageState(setResult("error")));
-      // console.log(`Error : ${error?.error}`);
       dispatch(setMessageState(setErrorMsg(`Error : ${error?.error}`)));
     }
   };
@@ -147,7 +146,6 @@ export default ChangePassword;
 // const ChangePassword = () => {
 //   const [form] = Form.useForm();
 //   const onChangePassword = (values) => {
-//     console.log(values);
 //   };
 //   return (
 //     <>

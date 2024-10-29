@@ -1,0 +1,14 @@
+[
+    {
+        "dataType": "Number",
+        "label": "Trans #",
+        "dataTag": "trans_no",
+        "key": "trans_no"
+    },
+    {
+        "dataType": "Date",
+        "label": "Trans Date",
+        "dataTag": "trans_date",
+        "key": "trans_date"
+    }
+]

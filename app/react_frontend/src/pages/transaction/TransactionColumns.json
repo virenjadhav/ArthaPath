@@ -5,12 +5,18 @@
     "key": "radio",
     "width": 10
   },
+  {
+    "title": "Trans#",
+    "dataIndex": "trans_no",
+    "key": "trans_no"
+  },
     
     {
       "title": "Amount",
       "dataIndex": "amount",
       "key": "amount"
     },
+    
     {
       "title": "Transaction Date",
       "dataIndex": "trans_date",
@@ -18,7 +24,7 @@
     },
     {
       "title": "Main Category",
-      "dataIndex": "main_category",
+      "dataIndex": "main_category_code",
       "key": "main_category"
     },
     {

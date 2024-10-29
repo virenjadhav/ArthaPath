@@ -29,6 +29,6 @@
 /config/master.key
 
 # ignore database file
-/config/database.yml
-Gemfile.lock
-Gemfile
+# /config/database.yml
+# Gemfile.lock
+# Gemfile

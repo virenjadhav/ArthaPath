@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import ModelComponent from "../../components/ModelComponent";
 import HeaderComponent from "../../components/Header";
 import columnsData from "./TransactionColumns.json";
+import transactionServicesData from "./TransactionServices.json";
+import transactionCriteriaDataStru from "./TransactionCriteria.json";
 // import moment from "moment";
 import dayjs from "dayjs"; // Import day.js
 import {
   setDate,
   setSelectedForm,
   setSelectedRecord,
+  setServicesData,
+  setCriteriaDataStru,
 } from "../../redux/features/generic/modelSlice";
 import TransactionAddEditForm from "./TransactionAddEditForm";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +25,14 @@ import {
   delete_transaction,
   get_transactions,
 } from "../../redux/features/transaction/transactionApiThunk.js";
+import { setMessageState } from "../../redux/features/generic/genericSlice.js";
+// import useApiServiceCall, {
+//   ApiServiceCall,
+// } from "../../apis/ApiServiceCall.js";
+import {
+  setErrorMsg,
+  setResult,
+} from "../../redux/features/generic/messageSlice.js";
 
 const Transactions = ({ title }) => {
   // const [data, setData] = useState([
@@ -76,6 +88,7 @@ const Transactions = ({ title }) => {
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.transaction.data);
+  // const { callApi } = useApiServiceCall();
 
   useEffect(() => {
     if (!selectedRecord) {
@@ -84,24 +97,63 @@ const Transactions = ({ title }) => {
   }, [selectedRecord, data]);
 
   useEffect(() => {
-    const getAllTransacations = async () => {
-      try {
-        // Dispatch the async thunk to check login status
-        const response = await dispatch(get_transactions()).unwrap();
-
-        // Dispatch actions to set user and logged-in status
-        // dispatch(setUser(response.user));
-        // dispatch(setLoggedIn(true));
-        dispatch(setData(response.transactions));
-        dispatch(setColumns(columnsData));
-      } catch (error) {
-        console.error("Error for getting all transactions : ", error);
+    if (transactionServicesData) {
+      dispatch(setServicesData(transactionServicesData));
+    }
+    // Cleanup function to remove component on unmount
+    return () => {
+      if (transactionServicesData) {
+        // delete formComponentProps.current[name];
+        dispatch(setServicesData(null));
       }
     };
-    if (!data) {
-      getAllTransacations();
+  }, [transactionServicesData]);
+
+  useEffect(() => {
+    if (transactionCriteriaDataStru) {
+      dispatch(setCriteriaDataStru(transactionCriteriaDataStru));
     }
-  }, [dispatch, data]);
+    // Cleanup function to remove component on unmount
+    return () => {
+      if (transactionCriteriaDataStru) {
+        // delete formComponentProps.current[name];
+        dispatch(setCriteriaDataStru(null));
+      }
+    };
+  }, [transactionCriteriaDataStru]);
+  // const getAllTransacations = async () => {
+  //   try {
+  //     const response = await callApi("getList"); // Using serviceId for fetching the list
+  //   } catch (error) {
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // const getAllTransacations = async () => {
+  //   //   // try {
+  //   //   // Dispatch the async thunk to check login status
+  //   //   // const response = await dispatch(get_transactions()).unwrap();
+  //   //   // const response = await dispatch(ApiServiceCall("getList"));
+  //   //   const { callApi } = useApiServiceCall("getList");
+  //   //   try {
+  //   //     const response = await callApi();
+  //   //   } catch (error) {
+  //   //   }
+
+  //   //   // Dispatch actions to set user and logged-in status
+  //   //   // dispatch(setUser(response.user));
+  //   //   // dispatch(setLoggedIn(true));
+  //   //   //   dispatch(setData(response.transactions));
+  //   //   //   dispatch(setColumns(columnsData));
+  //   //   // } catch (error) {
+  //   //   //   dispatch(setMessageState(setResult("error")));
+  //   //   //   dispatch(setMessageState(setErrorMsg(error?.message)));
+  //   //   // }
+  //   // };
+  //   if (!data) {
+  //     getAllTransacations();
+  //   }
+  // }, []);
 
   const handleSelectRow = (record) => {
     setSelectedRowKey(record.id);

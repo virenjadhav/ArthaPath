@@ -1,0 +1,37 @@
+[
+    {
+        "id": "createRecord",
+        "url": "transactions/create_transaction",
+        "key": "createRecord",
+        "name": "transaction/create_transaction",
+        "method": "post"
+    },
+    {
+        "id": "updateRecord",
+        "url": "transactions/update_transaction",
+        "key": "updateRecord",
+        "name": "transaction/update_transaction",
+        "method": "put"
+    },
+    {
+        "id": "getRecord",
+        "url": "transactions/get_transaction",
+        "key": "getRecord",
+        "name": "transaction/get_transaction",
+        "method": "get"
+    },
+    {
+        "id": "getList",
+        "url": "transactions/get_transactions",
+        "key": "getList",
+        "name": "transaction/get_transactions",
+        "method": "get"
+    },
+    {
+        "id": "deleteRecord",
+        "url": "transactions/delete_transaction",
+        "key": "deleteRecord",
+        "name": "transaction/delete_transaction",
+        "method": "delete"
+    }  
+]

@@ -1,0 +1,3 @@
+class MainCategory < ApplicationRecord
+
+end

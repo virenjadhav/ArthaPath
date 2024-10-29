@@ -4,29 +4,32 @@ import { Form, Select } from "antd";
 const { Option } = Select;
 
 const SelectComponent = ({
-  name, 
-  label, 
-  options = [],  // Array of options
-  placeholder = "", 
-  visible = true, 
+  name,
+  label,
+  options = [], // Array of options
+  placeholder = "",
+  visible = true,
   includeInLayout = true,
-  size = "default", 
-  onChangeHandler = null, 
-  onFocusHandler = null, 
-  onBlurHandler = null, 
-  autoFocus = null, 
-  defaultValue = "", 
-  disabled = false, 
-  allowClear = false, 
-  loading = false, 
+  size = "default",
+  onChangeHandler = null,
+  onFocusHandler = null,
+  onBlurHandler = null,
+  autoFocus = null,
+  defaultValue = "",
+  disabled = false,
+  allowClear = false,
+  loading = false,
   mode = null, // single or multiple select
   maxTagCount = null, // Limit tags display in multiple mode
   dropdownClassName = "", // Custom class for dropdown
   bordered = true,
-  inputFocus = null, 
-  removeFocus = null, 
-  handleSelect = null, 
-  rules = null 
+  inputFocus = null,
+  removeFocus = null,
+  handleSelect = null,
+  rules = null,
+  formComponentProps = null,
+  handleFormPropsChange = null,
+  customComponentProps = null,
 }) => {
   const selectRef = useRef(null);
 
@@ -41,6 +44,28 @@ const SelectComponent = ({
       selectRef.current.select();
     }
   }, [removeFocus, inputFocus, handleSelect]);
+  useEffect(() => {
+    // Add this component to the formComponentProps on mount
+    if (formComponentProps) {
+      // formComponentProps.current[name] = { componentType: "formInput" }; // Add componentType
+      handleFormPropsChange(name, {
+        ...customComponentProps,
+        componentType: "formSelect",
+      });
+    }
+
+    // Cleanup function to remove component on unmount
+    return () => {
+      if (formComponentProps) {
+        delete formComponentProps.current[name];
+      }
+    };
+  }, [name, formComponentProps]);
+  const handleComponentChange = (e) => {
+    handleFormPropsChange(name, {
+      ...customComponentProps,
+    });
+  };
 
   return (
     <>
@@ -54,7 +79,7 @@ const SelectComponent = ({
               size={size}
               autoFocus={autoFocus}
               defaultValue={defaultValue}
-              onChange={onChangeHandler}
+              onChange={handleComponentChange}
               onFocus={onFocusHandler}
               onBlur={onBlurHandler}
               allowClear={allowClear}
@@ -63,7 +88,6 @@ const SelectComponent = ({
               maxTagCount={maxTagCount}
               dropdownClassName={dropdownClassName}
               bordered={bordered}
-              componentType="formSelect"
             >
               {options.map((option, index) => (
                 <Option key={index} value={option.value}>

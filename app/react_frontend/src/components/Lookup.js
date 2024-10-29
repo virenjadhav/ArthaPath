@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input } from "antd";
 import { ReadOutlined } from "@ant-design/icons";
-import LookupModel from "./LookupModel";
+import LookupModel from "./Lookup/LookupModel";
 
 const Lookup = ({ id, label, required, requiredMsg }) => {
   const [isLookupModelVisible, setIsLookupModelVisible] = useState(false);
