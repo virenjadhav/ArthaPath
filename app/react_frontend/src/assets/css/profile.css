@@ -79,3 +79,15 @@
 .ant-switch-checked {
     background-color: #08c !important; /* Switch color */
 }
+
+
+ /* for common categories  */
+
+ .custom-select-table .ant-table-selection-column {
+    width: 10px !important; /* Adjust the width as needed */
+  }
+  
+  /* .custom-select-table .ant-checkbox-wrapper {
+    display: flex;
+    justify-content: center; 
+  } */

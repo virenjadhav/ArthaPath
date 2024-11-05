@@ -40,7 +40,7 @@ import {
   useFormDeleteAction,
   useFormRefreshAction,
   useRefreshAction,
-} from "./FormComponent/FormServices";
+} from "./Services/FormServices";
 import SearchCriteriaComponent from "./Criteria/SearchCriteriaComponent";
 
 const ButtonsAddEditComponent = ({
@@ -48,6 +48,15 @@ const ButtonsAddEditComponent = ({
   navigatePath,
 
   moduleTitle,
+  deleteVisible = true,
+  refreshVisible = true,
+  addVisible = true,
+  editVisible = true,
+  criteriaVisible = true,
+  afterRefreshHandler = null,
+  afterDeleteHandler = null,
+  afterAddHandler = null,
+  afterEditHandler = null
 }) => {
   const isEditing = useSelector((state) => state.model.isEditing);
   const form = useSelector((state) => state.model.setSelectedForm);
@@ -204,36 +213,37 @@ const ButtonsAddEditComponent = ({
         {/* <span style={{ fontSize: "18px", fontWeight: "400" }}>
           {moduleTitle}
         </span> */}
-        <Button
+        { addVisible && <Button
           type="primary"
           onClick={handleAddButtonClick}
           icon={<PlusOutlined />}
           shape="circle"
           title={`Add ${moduleTitle}`}
-        />
-        <Button
+        />}
+        { deleteVisible && <Button
           danger
           onClick={handleDeleteButtonClick}
           icon={<DeleteOutlined />}
           shape="circle"
           title={`Delete ${moduleTitle}`}
           disabled={!selectedRecord} // Disable delete button if no record selected
-        />
-        <Button
+        />}
+        {editVisible &&  <Button
           onClick={handleEditButtonClick}
           icon={<EditOutlined />}
           shape="circle"
           title={`Edit ${moduleTitle}`}
           disabled={!selectedRecord} // Disable edit button if no record selected
-        />
-        <Button
+        /> }
+       {refreshVisible && <Button
           type="default"
           onClick={handleRefreshClick}
           icon={<ReloadOutlined />}
           shape="circle"
           title={`Refresh ${moduleTitle}`}
-        />
-        <SearchCriteriaComponent moduleTitle={moduleTitle} />
+        /> }
+        {criteriaVisible && <SearchCriteriaComponent moduleTitle={moduleTitle} />}
+        
       </Space>
     </>
   );

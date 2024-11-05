@@ -13,7 +13,7 @@ class TransactionsController < ApplicationController
         transaction.trans_date =  trans_date
         transactions << transaction
       end
-      render json: {transactions: transactions, message: 'Transactions Reload successfully.'}, status: :ok
+      render json: {data: transactions, message: 'Transactions Reload successfully.'}, status: :ok
     end
   
     # GET /transactions/1

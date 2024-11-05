@@ -15,7 +15,7 @@ const modelSlice = createSlice({
     searchCriteriaData: {},
   },
   reducers: {
-    setDate(state, action) {
+    setData(state, action) {
       state.data = action.payload;
     },
     setIsModelVisible(state, action) {
@@ -43,7 +43,7 @@ const modelSlice = createSlice({
 });
 
 export const {
-  setDate,
+  setData,
   setIsModelVisible,
   setSelectedRecord,
   setSelectedForm,

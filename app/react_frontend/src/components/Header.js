@@ -18,7 +18,7 @@ import {
   setSelectedModelId,
 } from "../redux/features/generic/genericSlice.js";
 import { useNavigate } from "react-router-dom";
-import { useLogoutAction } from "./CommonServices.js";
+import { useLogoutAction } from "../components/Services/CommonServices.js";
 
 const { Header } = Layout;
 

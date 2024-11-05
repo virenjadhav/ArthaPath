@@ -9,7 +9,7 @@ import {
   setResult,
 } from "../../redux/features/generic/messageSlice";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
-import { useValidateLookupRecordAction } from "../CommonServices";
+import { useValidateLookupRecordAction } from "../Services/CommonServices";
 
 const LookupComponent = ({
   name,

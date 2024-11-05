@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
 import {
+  setData,
   setIsEditing,
   setIsModelVisible,
   setSelectedRecord,
@@ -12,20 +13,22 @@ import {
 } from "../../redux/features/generic/messageSlice";
 import { callApiService } from "../../apis/ApiServiceCall";
 
+
 export const useFormRefreshAction = () => {
   // const { callApi } = useApiServiceCall();
   const dispatch = useDispatch();
   const handleRefreshClickHandler = (response) => {
+    dispatch(setData(response?.data))
     dispatch(setMessageState(setResult("success")));
     dispatch(setMessageState(setSuccessMsg(response?.message)));
     // dispatch(setIsModelVisible(false));
     // dispatch(setIsEditing(false));
     // dispatch(setSelectedRecord(null));
   };
-  const formRefreshAction = useCallback(async (payload = {}) => {
+  const formRefreshAction = useCallback(async (payload = {}, afterActionHandler = null) => {
     // const response = await callApi("getList", handleRefreshClickHandler);
     const response = await dispatch(
-      callApiService("getList", handleRefreshClickHandler, payload)
+      callApiService("getList", handleRefreshClickHandler, payload, afterActionHandler)
     );
   }, []);
 

@@ -22,7 +22,7 @@ import {
   useLoginAction,
   useLogoutAction,
   useSignupAction,
-} from "../components/CommonServices";
+} from "../components/Services/CommonServices";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);

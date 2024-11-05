@@ -13,8 +13,11 @@ Rails.application.routes.draw do
     put 'update_transaction/:id', to: 'transactions#update_transaction'               # PUT request
     delete 'delete_transaction/:id', to: 'transactions#destroy_transaction'           # DELETE request
   end
+  scope :common_category do 
+    post 'save_common_category', to: 'common_category#save_common_category_to_user'
+  end
   
-
+  get 'get_common_categories', to: 'common_category#get_common_categories'
   put 'change_password', to: 'users#change_password'
   get 'get_lookup_record', to: 'lookup#get_lookup_record'
   post 'validate_lookup_value', to: 'lookup#validate_lookup_value'
