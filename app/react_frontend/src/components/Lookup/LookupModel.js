@@ -22,7 +22,7 @@ import {
 import {
   useLookupRecordAction,
   useValidateLookupRecordAction,
-} from "../CommonServices";
+} from "../Services/CommonServices";
 
 const { Search } = Input;
 

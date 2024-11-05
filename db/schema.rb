@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_29_060943) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_30_084000) do
   create_table "budgets", force: :cascade do |t|
     t.boolean "active", default: true
     t.decimal "amount", precision: 10, scale: 2
@@ -26,13 +26,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_29_060943) do
   create_table "common_categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "main_categories", force: :cascade do |t|
+    t.boolean "active", default: true
     t.string "name"
     t.string "code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "type", limit: 25
+    t.string "category_type"
+    t.integer "ref_id"
+    t.string "ref_code"
+    t.check_constraint "[category_type]='sub' AND [ref_id] IS NOT NULL AND [ref_code] IS NOT NULL OR [category_type]<>'sub'", name: "check_ref_id_ref_code"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -51,6 +52,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_29_060943) do
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
+  create_table "user_categories", force: :cascade do |t|
+    t.datetime "created_at", default: -> { "getdate()" }, null: false
+    t.datetime "updated_at", default: -> { "getdate()" }, null: false
+    t.boolean "active", default: true
+    t.string "name"
+    t.string "code"
+    t.string "type", limit: 25
+    t.string "user_category_type"
+    t.integer "ref_id"
+    t.string "ref_code"
+    t.bigint "common_category_id"
+    t.string "common_category_code"
+    t.index ["common_category_id"], name: "index_user_categories_on_common_category_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -61,4 +77,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_29_060943) do
 
   add_foreign_key "budgets", "users"
   add_foreign_key "transactions", "users"
+  add_foreign_key "user_categories", "common_categories", on_delete: :nullify
 end

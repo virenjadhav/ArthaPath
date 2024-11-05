@@ -1,0 +1,16 @@
+[
+    {
+        "id": "getList",
+        "url": "/get_common_categories",
+        "key": "get_common_categories",
+        "name": "generic/get_common_categories",
+        "method": "get"
+    },
+    {
+        "id": "createRecord",
+        "url": "common_category/save_common_category",
+        "key": "createRecord",
+        "name": "common_category/save_common_category",
+        "method": "post"
+    }
+]

@@ -24,7 +24,7 @@ import {
   useFormRefreshAction,
   useFormUpdateAction,
   useRefreshAction,
-} from "./FormServices";
+} from "../Services/FormServices";
 import "../../assets/css/FormAddEditStyle.css";
 
 const FormAddEdit = ({ children }) => {

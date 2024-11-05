@@ -87,7 +87,7 @@ const Transactions = ({ title }) => {
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.transaction.data);
+  const data = useSelector((state) => state.model.data);
   // const { callApi } = useApiServiceCall();
 
   useEffect(() => {

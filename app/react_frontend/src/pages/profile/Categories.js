@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Radio, Tabs } from "antd";
 import CommonCategories from "./CommonCategories";
+import UserCategory from "./UserCategory";
 // import type { RadioChangeEvent } from "antd";
 // import type { SizeType } from "antd/es/config-provider"; // Correct import
 
@@ -12,6 +13,11 @@ const Categories = () => {
   //   };
 
   const items = [
+    {
+      label: `User Categories`,
+      key: "user_category",
+      children: <UserCategory />
+    },
     {
       label: `Common Categories`,
       key: "common_category",
