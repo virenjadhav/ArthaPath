@@ -15,6 +15,7 @@ import {
 import { update_transaction } from "../../redux/features/transaction/transactionApiThunk";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
 import {
+  setErrorMsg,
   setResult,
   setSuccessMsg,
 } from "../../redux/features/generic/messageSlice";
@@ -26,6 +27,10 @@ import {
   useRefreshAction,
 } from "../Services/FormServices";
 import "../../assets/css/FormAddEditStyle.css";
+export let form = null;
+const initializeForm = (formValue) => {
+  form = formValue;
+};
 
 const FormAddEdit = ({ children }) => {
   const [form] = useForm();
@@ -51,6 +56,7 @@ const FormAddEdit = ({ children }) => {
     //     ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
     //     : null;
     //   form.setFieldsValue({ ...selectedRecord, trans_date: formattedDate });
+    initializeForm(form);
     if (selectedRecord && isEditing) {
       const formattedDate = selectedRecord.trans_date
         ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
@@ -102,7 +108,9 @@ const FormAddEdit = ({ children }) => {
   };
 
   const handleCreateServiceHandler = (response) => {
-    dispatch(setSelectedRecord(response?.transaction));
+    console.log("response");
+    console.log(response);
+    dispatch(setSelectedRecord(response?.data));
     dispatch(setIsEditing(true));
     handleRefreshAction();
     dispatch(setMessageState(setResult("success")));
@@ -110,7 +118,7 @@ const FormAddEdit = ({ children }) => {
   };
 
   const handleUpdateServiceHandler = (response) => {
-    dispatch(setSelectedRecord(response.transaction));
+    dispatch(setSelectedRecord(response?.data));
     dispatch(setMessageState(setResult("success")));
     dispatch(setMessageState(setSuccessMsg(response?.message)));
   };
@@ -127,10 +135,19 @@ const FormAddEdit = ({ children }) => {
 
     let id = null;
     id = selectedRecord?.id;
+    console.log("values");
+    console.log(values);
+    console.log(customProps);
+    let errors = [];
     Object.entries(values).forEach(([key, value]) => {
       // if (key === "id") {
       //   id = value;
       // }
+      const error = form.getFieldError(key);
+      if (error?.length > 0) {
+        errors = [...errors, error?.join(",")];
+        return;
+      }
 
       let customPropForValue = customProps[key];
       switch (customPropForValue["componentType"]) {
@@ -197,10 +214,28 @@ const FormAddEdit = ({ children }) => {
             };
           }
           break;
+        case "formSelect":
+          if (customPropForValue["updateFlag"] == true) {
+            saveData = {
+              ...saveData,
+              [key]: value,
+            };
+          }
+          break;
         default:
           console.log("Default Value");
       }
     });
+    console.log("errors");
+    console.log(errors);
+    if (errors.length > 0) {
+      dispatch(setMessageState(setResult("error")));
+      dispatch(setMessageState(setErrorMsg(`Error : ${errors?.join(",")}`)));
+      return;
+    }
+    console.log("Save Data");
+    console.log(saveData);
+
     if (isEditing) {
       let payload = {
         id: id,

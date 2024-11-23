@@ -8,13 +8,25 @@
 #   gem "tiny_tds"
 #   gem "activerecord-sqlserver-adapter"
 #
+# default: &default
+#   adapter: sqlserver
+#   encoding: utf8
+#   username: viren
+#   password: Viren@123
+#   host: DESKTOP-3DEQPUJ
+#   port: 1433 # Default SQL Server port
+
 default: &default
   adapter: sqlserver
   encoding: utf8
-  username: viren
-  password: Viren@123
-  host: DESKTOP-3DEQPUJ
-  port: 1433 # Default SQL Server port
+  username: sa
+  password: diaspark@123
+  # host: DESKTOP-3DEQPUJ
+  # port: 1433 # Default SQL Server port
+  dataserver: JEWELDB2014\SQL2017
+  session_options: ["SET TEXTSIZE 1000000000", "SET LANGUAGE us_english"]
+  timeout: 0
+  pool: 5
 
 development:
   <<: *default
@@ -26,7 +38,6 @@ development:
 test:
   <<: *default
   database: arthapath
-
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -47,8 +58,8 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
-production:
-  <<: *default
-  database: arthapath_production
-  username: viren
-  password: Viren@123
+# production:
+#   <<: *default
+#   database: arthapath_production
+#   username: viren
+#   password: Viren@123

@@ -1,22 +1,30 @@
-import { Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import ButtonsAddEditComponent from "../../components/ButtonsAddEditComponent";
 import { useDispatch, useSelector } from "react-redux";
-import categoryServicesData from "./UserCategoryServices.json";
+import ModelComponent from "../../components/ModelComponent";
 import {
   setColumnsData,
   setCriteriaDataStru,
+  setSelectedRecord,
   setServicesData,
 } from "../../redux/features/generic/modelSlice";
-import categoriesCriteriaData from "./CategoryCriteriaStru.json";
 import columnsData from "./UserCategoryColumns.json";
+import CustomCategoryAddEdit from "./CustomCategoryAddEdit";
+import Categories from "./Categories";
+import categoriesCriteriaData from "./CategoryCriteriaStru.json";
+import categoryServicesData from "./UserCategoryServices.json";
 
-const UserCategory = () => {
+const CustomCategory = ({ title }) => {
+  const [selectedRowKey, setSelectedRowKey] = useState(null);
+  const selectedRecord = useSelector((state) => state.model.selectedRecord);
+  const dispatch = useDispatch();
   const data = useSelector((state) => state.model.data);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
-  // const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  // const [checkStrictly, setCheckStrictly] = useState(false);
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!selectedRecord) {
+      setSelectedRowKey(null);
+    }
+  }, [selectedRecord, data]);
   useEffect(() => {
     const columns = columnsData.map((column) => {
       // if (column.dataIndex === "trans_date") {
@@ -32,8 +40,8 @@ const UserCategory = () => {
           render: (_, record) => (
             <input
               type="radio"
-              // checked={record.id === selectedRowKey}
-              // onChange={() => handleSelectRow(record)}
+              checked={record.id === selectedRowKey}
+              onChange={() => handleSelectRow(record)}
             />
           ),
         };
@@ -67,33 +75,32 @@ const UserCategory = () => {
       }
     };
   }, [categoriesCriteriaData]);
-
-  const columns = [
-    {
-      title: "Code ",
-      dataIndex: "code",
-      key: "code",
-      width: "30%",
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-
-    {
-      title: "Type",
-      dataIndex: "type",
-      width: "20%",
-      key: "type",
-    },
-    {
-      title: "Category Type ",
-      dataIndex: "user_category_type",
-      key: "user_category_type",
-      width: "12%",
-    },
-  ];
+  const handleSelectRow = (record) => {
+    setSelectedRowKey(record.id);
+    dispatch(setSelectedRecord(record));
+  };
+  const columns = columnsData.map((column) => {
+    // if (column.dataIndex === "trans_date") {
+    //   return {
+    //     ...column,
+    //     render: (text) => dayjs(text).format("YYYY-MM-DD"),
+    //   };
+    // }
+    if (column.dataIndex === "radio") {
+      return {
+        ...column,
+        className: "radio-button-column", // Apply the CSS class
+        render: (_, record) => (
+          <input
+            type="radio"
+            checked={record.id === selectedRowKey}
+            onChange={() => handleSelectRow(record)}
+          />
+        ),
+      };
+    }
+    return column;
+  });
   const handleExpand = (expanded, record) => {
     if (expanded) {
       setExpandedRowKeys([record.key]);
@@ -103,41 +110,23 @@ const UserCategory = () => {
   };
   return (
     <>
-      {/* <Space
-        align="center"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        CheckStrictly: <Switch checked={checkStrictly} onChange={setCheckStrictly} />
-      </Space> */}
-      <Space align="center" style={{ marginBottom: 16 }}>
-        <ButtonsAddEditComponent
-          deleteVisible={false}
-          addVisible={false}
-          editVisible={false}
-          criteriaVisible={false}
-        />
-      </Space>
-      <Table
-        className="custom-select-table"
+      <ModelComponent
+        data={data}
         columns={columns}
-        dataSource={data}
+        FormCustomComponent={CustomCategoryAddEdit}
+        deleteAction={null}
+        navigatePath="/transactions" // Path to navigate after delete
+        refreshAction={null} // Action to refresh transactions
+        moduleTitle={title}
         expandable={{
           expandedRowKeys,
           onExpand: handleExpand,
           rowExpandable: (record) =>
             record.children && record.children.length > 0,
         }}
-        // rowSelection={{
-        //   ...rowSelection,
-        //   checkStrictly,
-        //   columnWidth: 10, // Adjusted width for select button column
-        // }}
       />
-      {/* // checkStrictly, */}
     </>
   );
 };
 
-export default UserCategory;
+export default CustomCategory;

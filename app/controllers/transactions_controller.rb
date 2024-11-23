@@ -6,7 +6,7 @@ class TransactionsController < ApplicationController
     def get_transactions
       criteria_data = params[:criteriaSearchData]
       criteria_condition = CommonModule.get_criteria_condition(criteria_data)
-      @transactions = Transaction.all.where("active = 1 #{!criteria_condition.blank? ? criteria_condition : "" } ").limit(100)
+      @transactions = Transaction.all.where("active = 1 #{!criteria_condition.blank? ? criteria_condition : "" } ").order(id: :desc).limit(100)
       transactions = []
       @transactions.each do |transaction| 
         trans_date = transaction.trans_date.blank? ? nil: transaction.trans_date.strftime('%Y-%m-%d')
@@ -27,10 +27,10 @@ class TransactionsController < ApplicationController
   
     # POST /transactions
     def create_transaction
-      @transaction = Transaction.new(transaction_params)
+      @transaction = Transaction.new(transaction_params)   
       if @transaction.save
         # redirect_to @transaction, notice: 'Transaction was successfully created.'
-        render json: {transaction: @transaction, message: 'Transaction was successfully created.'}, status: :created
+        render json: {data: @transaction, message: "Transaction# #{@transaction.trans_no} was successfully created."}, status: :created
         # render 
       else
         render json: {error: @transaction.errors.full_messages}, status: :unprocessable_entity
@@ -51,7 +51,7 @@ class TransactionsController < ApplicationController
       #   render :edit
       # end
       if @transaction.update(transaction_params)
-        render json: { message: 'Transaction updated successfully', transaction: @transaction }, status: :ok
+        render json: { message: "Transaction# '#{@transaction.trans_no}' updated successfully", data: @transaction }, status: :ok
       else
         render json: { error: @transaction.errors.full_messages }, status: :unprocessable_entity
       end
@@ -61,7 +61,7 @@ class TransactionsController < ApplicationController
     def destroy_transaction
       # @transaction.destroy      
       if @transaction.update(active: false)
-        render json: { message: "Transaction deleted successfully" }, status: :ok
+        render json: { message: "Transaction# '#{@transaction.trans_no}' deleted successfully" }, status: :ok
       else
         render json: { errors: @transaction.errors.full_messages }, status: :unprocessable_entity
       end
@@ -79,7 +79,7 @@ class TransactionsController < ApplicationController
   
       # Only allow a list of trusted parameters through.
       def transaction_params
-        params.require(:transaction).permit(:active, :amount, :main_category_id, :main_category_code, :user_category, :trans_date, :description, :user_id)
+        params.require(:body).permit(:active, :amount, :main_category_id, :main_category_code, :sub_category_id, :sub_category_code, :user_category, :trans_date, :description, :user_id)
       end
 
       # def set_trans_no

@@ -1,0 +1,40 @@
+[
+    {
+        "dataType": "Lookup",
+        "label": "Main Category #",
+        "dataTag": "main_category_id",
+        "labelTag": "main_category_code",
+        "key": "main_category",
+        "searchBy": "both",
+        "searchType": "Number",
+        "searchTypeLabel": "String",
+        "labelField": "code",
+        "dataField": "id",
+        "dataSourceName": "get_main_categories",
+        "lookupService": "get_main_categories",
+        "lookupFormatUrl": "main_categories",
+        "filterKeyLabelName": "code",
+        "filterKeyDataName": "id",
+        "validationFlag": true
+    },
+    {
+        "dataType": "DependentLookup",
+        "label": "Sub Category #",
+        "dataTag": "sub_category_id",
+        "labelTag": "sub_category_code",
+        "key": "sub_category",
+        "searchBy": "both",
+        "searchType": "Number",
+        "searchTypeLabel": "String",
+        "labelField": "code",
+        "dataField": "id",
+        "dataSourceName": "get_sub_categories",
+        "lookupService": "get_sub_categories",
+        "lookupFormatUrl": "main_categories",
+        "filterKeyLabelName": "code",
+        "filterKeyDataName": "id",
+        "validationFlag": true,
+        "mainLookupName": "main_category",
+        "mainLookupValue": ""
+    }
+]

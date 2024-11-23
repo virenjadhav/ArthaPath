@@ -37,6 +37,9 @@ const LookupModel = ({
   labelField,
   initialSearchValue,
   filterKeyLabelName,
+  dependentLookup = false,
+  mainLookupName = null,
+  mainLookupValue = null,
 }) => {
   // const [selectionType, setSelectionType] = useState("radio");
   const [selectedRowKey, setSelectedRowKey] = useState(null);
@@ -98,6 +101,41 @@ const LookupModel = ({
       //     },
       //   })
       // ).unwrap();
+
+      let deptn = false;
+      if (dependentLookup) {
+        if (mainLookupName) {
+          if (mainLookupValue) {
+            deptn = true;
+            // const dependentPayload = {
+            //   data: {
+            //     dataSourceName: dataSourceName,
+            //     dataField: dataField,
+            //     labelField: labelField,
+            //     searchValue: value,
+            //     filterKeyLabelName: filterKeyLabelName
+
+            //   },
+            // };
+          } else {
+            dispatch(setResult("Error"));
+            dispatch(
+              setErrorMsg(
+                "Please Select Value of main Lookup for Dependent Lookup!"
+              )
+            );
+            setData(null);
+            return;
+          }
+        } else {
+          dispatch(setResult("Error"));
+          dispatch(setErrorMsg("Main Lookup not found!"));
+          setData(null);
+          return;
+        }
+      } else {
+        deptn = false;
+      }
       const payload = {
         data: {
           dataSourceName: dataSourceName,
@@ -105,6 +143,9 @@ const LookupModel = ({
           labelField: labelField,
           searchValue: value,
           filterKeyLabelName: filterKeyLabelName,
+          dependentLookup: dependentLookup,
+          mainLookupName: mainLookupName,
+          mainLookupValue: mainLookupValue,
         },
       };
       await lookupRecordAction(payload, handleLookupRecordHandler);
@@ -136,6 +177,8 @@ const LookupModel = ({
   }, [columnsData, lookupService, lookupFormatUrl]);
   useEffect(() => {
     if (isLookupModalVisible) {
+      setSelectedRowKey(null);
+      setSelectedLookupRecord(null);
       setSearchValue(initialSearchValue);
       get_lookup_data(initialSearchValue);
     }
@@ -147,6 +190,13 @@ const LookupModel = ({
     // dispatch(setSelectedRecord(record));
   };
   const handleSave = () => {
+    if (!selectedLookupRecord) {
+      dispatch(setMessageState(setResult("error")));
+      dispatch(
+        setMessageState(setErrorMsg("Please select a record before saving."))
+      );
+      return;
+    }
     handelSaveClickHandler(selectedLookupRecord);
     handleModalCancel();
   };

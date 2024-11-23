@@ -6,6 +6,8 @@ const LookupFormatUrl = (LookupFormatUrl) => {
     switch (LookupFormatUrl) {
       case "main_categories":
         return mainCategoryData;
+      case "sub_categories":
+        return mainCategoryData;
       default:
         return [];
     }

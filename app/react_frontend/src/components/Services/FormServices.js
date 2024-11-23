@@ -13,24 +13,38 @@ import {
 } from "../../redux/features/generic/messageSlice";
 import { callApiService } from "../../apis/ApiServiceCall";
 
-
 export const useFormRefreshAction = () => {
   // const { callApi } = useApiServiceCall();
+  const user_id = useSelector((state) => state.generic.user?.user_id);
   const dispatch = useDispatch();
   const handleRefreshClickHandler = (response) => {
-    dispatch(setData(response?.data))
+    dispatch(setData(response?.data));
     dispatch(setMessageState(setResult("success")));
     dispatch(setMessageState(setSuccessMsg(response?.message)));
     // dispatch(setIsModelVisible(false));
     // dispatch(setIsEditing(false));
     // dispatch(setSelectedRecord(null));
   };
-  const formRefreshAction = useCallback(async (payload = {}, afterActionHandler = null) => {
-    // const response = await callApi("getList", handleRefreshClickHandler);
-    const response = await dispatch(
-      callApiService("getList", handleRefreshClickHandler, payload, afterActionHandler)
-    );
-  }, []);
+  const formRefreshAction = useCallback(
+    async (data = {}, afterActionHandler = null) => {
+      // const response = await callApi("getList", handleRefreshClickHandler);
+      let payload = {
+        data: {
+          ...data,
+          user_id: user_id,
+        },
+      };
+      const response = await dispatch(
+        callApiService(
+          "getList",
+          handleRefreshClickHandler,
+          payload,
+          afterActionHandler
+        )
+      );
+    },
+    []
+  );
 
   return { formRefreshAction };
 };

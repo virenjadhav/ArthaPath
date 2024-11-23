@@ -34,7 +34,6 @@ const Budgets = ({ title }) => {
   //       dispatch(setData(response?.budget));
   //       dispatch(setColumns(columnsData));
   //     } catch (error) {
-  //       console.error("Error for getting all budgets : ", error);
   //     }
   //   };
   //   if (!data) {

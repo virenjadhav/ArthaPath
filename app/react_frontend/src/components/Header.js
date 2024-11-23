@@ -43,7 +43,6 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     let path = "/";
-
     switch (selectedModelId) {
       case "1":
         path = "/dashboard";
@@ -51,9 +50,12 @@ const HeaderComponent = () => {
       case "2":
         path = "/finance";
         break;
-        defalut: path = "/";
+      case "profile":
+        path = "/profile";
+        break;
+      default:
+        path = "/";
     }
-
     navigate(path);
   }, [selectedModelId]);
   const handleMenuClick = async (e) => {
@@ -66,11 +68,15 @@ const HeaderComponent = () => {
       // dispatch(logout());
       // dispatch(setLoggedIn(false));
       // navigate("/login");
-    } else if (e.key === "profile") {
-      navigate("/profile");
+      // } else if (e.key === "profile") {
+      // navigate("/profile");
     } else if (e.key !== selectedModelId) {
       dispatch(setSelectedModelId(e.key));
-      dispatch(setSelectedModelCode(modules[0][e.key][1]));
+      if (e.key === "profile") {
+        dispatch(setSelectedModelCode("profile"));
+      } else {
+        dispatch(setSelectedModelCode(modules[0][e.key][1]));
+      }
     }
   };
 
@@ -89,6 +95,7 @@ const HeaderComponent = () => {
         mode="horizontal"
         className="menu"
         defaultSelectedKeys={[`${selectedModelId}`]}
+        selectedKeys={selectedModelId}
         onClick={handleMenuClick}
       >
         <Menu.Item key="1">{modules[0]["1"][0]}</Menu.Item>

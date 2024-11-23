@@ -1,47 +1,113 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Table, Space, Switch, Button } from 'antd';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Table, Space, Switch, Button } from "antd";
 import ButtonAddEditComponent from "../../components/ButtonsAddEditComponent";
-import { setServicesData } from '../../redux/features/generic/modelSlice';
-import categoryServicesData from "./CategoriesServices.json"
-import { useSaveCommonCategory } from '../../components/Services/CategoriesServices';
+import {
+  setColumnsData,
+  setServicesData,
+} from "../../redux/features/generic/modelSlice";
+import categoryServicesData from "./CategoriesServices.json";
+import { useSaveCommonCategory } from "../../components/Services/CategoriesServices";
 // import "../../assets/css/profile.css"
+const columns = [
+  {
+    title: "Code ",
+    dataIndex: "code",
+    key: "code",
+    width: "30%",
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+  },
+
+  {
+    title: "Type",
+    dataIndex: "type",
+    width: "20%",
+    key: "type",
+  },
+  {
+    title: "Category Type ",
+    dataIndex: "category_type",
+    key: "category_type",
+    width: "12%",
+  },
+];
 
 const CommonCategories = () => {
   const dispatch = useDispatch();
-  const data = useSelector(state => state.model.data);
+  const data = useSelector((state) => state.model.data);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const [checkStrictly, setCheckStrictly] = useState(false);
-    const {saveCommonCategory} = useSaveCommonCategory();
+  const [checkStrictly, setCheckStrictly] = useState(false);
+  const { saveCommonCategory } = useSaveCommonCategory();
+  const user_id = useSelector((state) => state.generic.user?.user_id);
 
   useEffect(() => {
-    if(categoryServicesData){
+    if (categoryServicesData) {
       dispatch(setServicesData(categoryServicesData));
-    }    
+    }
   }, [dispatch, categoryServicesData]);
-    // rowSelection objects indicates the need for row selection
-    // Set default selected rows based on the active field
   useEffect(() => {
-    const defaultSelectedKeys = data?.filter(item => item.active === 1)  // Select rows where active is 1
-      .map(item => item.key);
-    setSelectedRowKeys(defaultSelectedKeys);
+    dispatch(setColumnsData(columns));
+  }, columns);
+  // rowSelection objects indicates the need for row selection
+  // Set default selected rows based on the active field
+  // useEffect(() => {
+  //   if (data && Array.isArray(data)) {
+  //     // Check if data is defined and an array
+  //     const defaultSelectedKeys = data
+  //       .filter((item) => item.active === true) // Select rows where active is 1
+  //       .map((item) => item.key);
+  //     setSelectedRowKeys(defaultSelectedKeys); // Set selectedRowKeys state
+  //   }
+  // }, [data]);
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      const defaultSelectedKeys = [];
+
+      data.forEach((item) => {
+        if (item.category_type === "main") {
+          const activeSubCategories =
+            item.children?.filter((sub) => sub.active === true) || [];
+
+          if (activeSubCategories.length === item.children?.length) {
+            // All subcategories are active, select the main category
+            defaultSelectedKeys.push(item.key);
+          } else {
+            // Select only active subcategories
+            activeSubCategories.forEach((sub) =>
+              defaultSelectedKeys.push(sub.key)
+            );
+          }
+        } else if (item.active) {
+          // Select standalone active items (non-main, non-sub)
+          defaultSelectedKeys.push(item.key);
+        }
+      });
+
+      setSelectedRowKeys(defaultSelectedKeys);
+    }
   }, [data]);
-const rowSelection = {
-  columnWidth: 10, // Adjust the width as needed
-  // onChange: (selectedRowKeys, selectedRows) => {
-  //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  // },
-  onChange: (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  },
-  // onSelect: (record, selected, selectedRows) => {
-  //   console.log(record, selected, selectedRows);
-  // },
-  // onSelectAll: (selected, selectedRows, changeRows) => {
-  //   console.log(selected, selectedRows, changeRows);
-  // },
-};
+  const rowSelection = {
+    selectedRowKeys,
+    // onChange: (selectedRowKeys, selectedRows) => {
+
+    // },
+
+    onChange: (newSelectedRowKeys) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+    // onSelect: (record, selected, selectedRows) => {
+    //   console.log(record, selected, selectedRows);
+    // },
+    // onSelectAll: (selected, selectedRows, changeRows) => {
+    //   console.log(selected, selectedRows, changeRows);
+    // },
+  };
+  useEffect(() => {}, [selectedRowKeys]);
 
   const handleExpand = (expanded, record) => {
     if (expanded) {
@@ -70,53 +136,45 @@ const rowSelection = {
   //     key: 'type',
   //   },
   // ];
-    const columns = [
-      {
-        title: 'Code ',
-        dataIndex: 'code',
-        key: 'code',
-        width: '30%',
-      },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
 
-    },
-    
-    
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      width: '20%',
-      key: 'type',
-    },
-    {
-      title: 'Category Type ',
-      dataIndex: 'category_type',
-      key: 'category_type',
-      width: '12%',
-    },
-  ];
-  const afterSaveClickHandler = (response) => {
-    console.log("response")
-    console.log(response)
-
-  }
+  const afterSaveClickHandler = (response) => {};
   const handleSave = async () => {
-    const updatedData = data.map(item => ({
-      ...item,
-      active: selectedRowKeys.includes(item.key) ? 1 : 0,
-    }));
+    // const updatedData = data.map((item) => ({
+    //   ...item,
+    //   active: selectedRowKeys.includes(item.key) ? 1 : 0,
+    // }));
+    const updatedData = data.map((item) => {
+      const isMainCategorySelected = selectedRowKeys.includes(item.key);
+
+      const isAnySubCategorySelected =
+        item.children &&
+        item.children.some((subItem) => selectedRowKeys.includes(subItem.key));
+
+      const updatedItem = {
+        ...item,
+        active:
+          isMainCategorySelected || isAnySubCategorySelected ? true : false,
+        user_id: user_id,
+      };
+
+      if (item.children && item.children.length > 0) {
+        updatedItem.children = item.children.map((subItem) => ({
+          ...subItem,
+          active: selectedRowKeys.includes(subItem.key) ? true : false,
+          user_id: user_id,
+        }));
+      }
+
+      return updatedItem;
+    });
     let payload = {
-      data: updatedData,
+      data: { updatedItem: updatedData, user_id },
     };
     await saveCommonCategory(payload, afterSaveClickHandler);
-  }
+  };
 
   return (
     <>
-    
       {/* <Space
         align="center"
         style={{
@@ -126,36 +184,40 @@ const rowSelection = {
         CheckStrictly: <Switch checked={checkStrictly} onChange={setCheckStrictly} />
       </Space> */}
       <Space align="center" style={{ marginBottom: 16 }}>
-        <ButtonAddEditComponent deleteVisible={false} addVisible={false} editVisible={false} criteriaVisible={false} />
+        <ButtonAddEditComponent
+          deleteVisible={false}
+          addVisible={false}
+          editVisible={false}
+          criteriaVisible={false}
+        />
       </Space>
       <Table
-      className="custom-select-table"
+        className="custom-select-table"
         columns={columns}
         dataSource={data}
         expandable={{
           expandedRowKeys,
           onExpand: handleExpand,
-          rowExpandable: record => record.children && record.children.length > 0,
+          rowExpandable: (record) =>
+            record.children && record.children.length > 0,
         }}
-                rowSelection={{
+        rowSelection={{
           ...rowSelection,
           checkStrictly,
           columnWidth: 10, // Adjusted width for select button column
-       
-          
         }}
       />
       <Space>
-        <Button type="primary" onClick={handleSave}>Save</Button>
+        <Button type="primary" onClick={handleSave}>
+          Save
+        </Button>
       </Space>
-         {/* // checkStrictly, */}
+      {/* // checkStrictly, */}
     </>
   );
 };
 
 export default CommonCategories;
-
-
 
 // import React, { useEffect, useState } from 'react'
 // import { useCommonCategoryAction } from '../../components/CommonServices';
@@ -322,17 +384,7 @@ export default CommonCategories;
 //     // };
 //   // }, [transactionServicesData]);
 //   // rowSelection objects indicates the need for row selection
-// const rowSelection = {
-//   onChange: (selectedRowKeys, selectedRows) => {
-//     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-//   },
-//   onSelect: (record, selected, selectedRows) => {
-//     console.log(record, selected, selectedRows);
-//   },
-//   onSelectAll: (selected, selectedRows, changeRows) => {
-//     console.log(selected, selectedRows, changeRows);
-//   },
-// };
+
 //   useEffect(() => {
 //     const serviceDetail =[ {
 //       id: "getList",
@@ -351,7 +403,7 @@ export default CommonCategories;
 //     //   dataSource={data}
 //     //   rowKey="id"
 //     //   expandable={{ expandedRowRender }}
-      
+
 //     // />
 //     // </div>
 //   // )
@@ -469,16 +521,7 @@ export default CommonCategories;
 
 // // rowSelection objects indicates the need for row selection
 // const rowSelection = {
-//   onChange: (selectedRowKeys, selectedRows) => {
-//     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-//   },
-//   onSelect: (record, selected, selectedRows) => {
-//     console.log(record, selected, selectedRows);
-//   },
-//   onSelectAll: (selected, selectedRows, changeRows) => {
-//     console.log(selected, selectedRows, changeRows);
-//   },
-// };
+
 // const CommonCategories = () => {
 //   const [checkStrictly, setCheckStrictly] = useState(false);
 //   return (
@@ -502,6 +545,5 @@ export default CommonCategories;
 //     </>
 //   );
 // };
-
 
 // export default CommonCategories;
