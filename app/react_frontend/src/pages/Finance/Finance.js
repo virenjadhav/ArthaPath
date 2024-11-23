@@ -14,44 +14,114 @@ import Budgets from "../budgets/Budgets";
 import SavingGoals from "../saving_goals/SavingGoals";
 import Investment from "../investment/Investment";
 import Debt from "../debt/Debt";
+import { useLocation, useNavigate } from "react-router-dom";
 // import "antd/dist/antd.css";
 
 const Finance = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [selectedKey, setSelectedKey] = useState("transactions");
+  const [selectedKey, setSelectedKey] = useState("");
   const [content, setContent] = useState(null);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
   useEffect(() => {
-    setModuleContent();
+    const navigateToPath = () => {
+      switch (selectedKey) {
+        case "transactions":
+          navigate("/finance/transactions");
+          break;
+        case "budgets":
+          navigate("/finance/budgets");
+          break;
+        case "saving_goals":
+          navigate("/finance/saving_goals");
+          break;
+        case "investment":
+          navigate("/finance/investment");
+          break;
+        case "debt":
+          navigate("/finance/debt");
+          break;
+        default:
+          navigate("/finance");
+      }
+    };
+    navigateToPath();
   }, [selectedKey]);
 
-  const setModuleContent = () => {
-    if (selectedKey === "transactions") {
-      setContent(() => {
-        return <Transactions title="Transactions" />;
-      });
-    } else if (selectedKey === "budgets") {
-      setContent(() => {
-        return <Budgets />;
-      });
-    } else if (selectedKey === "saving_goals") {
-      setContent(() => {
-        return <SavingGoals />;
-      });
-    } else if (selectedKey === "investment") {
-      setContent(() => {
-        return <Investment />;
-      });
-    } else if (selectedKey === "debt") {
-      setContent(() => {
-        return <Debt />;
-      });
+  useEffect(() => {
+    const [_, financePath, contentPath] = pathname?.split("/");
+    setContentByLocation(financePath, contentPath);
+  }, [pathname]);
+
+  const setContentByLocation = (financePath, contentPath) => {
+    if (financePath) {
+      if (contentPath) {
+        setModuleContent(contentPath);
+      } else {
+        setContent(null);
+      }
     } else {
       setContent(null);
     }
+  };
+
+  const setModuleContent = (selectedContent) => {
+    switch (selectedContent) {
+      case "transactions":
+        setContent(() => {
+          return <Transactions title="Transactions" />;
+        });
+        break;
+      case "budgets":
+        setContent(() => {
+          return <Budgets title="Budgets" />;
+        });
+        break;
+      case "saving_goals":
+        setContent(() => {
+          return <SavingGoals title="Saving Goals" />;
+        });
+        break;
+      case "investment":
+        setContent(() => {
+          return <Investment title="Investment" />;
+        });
+        break;
+      case "debt":
+        setContent(() => {
+          return <Debt title="Debt" />;
+        });
+        break;
+      default:
+        setContent(null);
+    }
+    // if (selectedKey === "transactions") {
+    //   setContent(() => {
+    //     return <Transactions title="Transactions" />;
+    //   });
+    // } else if (selectedKey === "budgets") {
+    //   setContent(() => {
+    //     return <Budgets />;
+    //   });
+    // } else if (selectedKey === "saving_goals") {
+    //   setContent(() => {
+    //     return <SavingGoals />;
+    //   });
+    // } else if (selectedKey === "investment") {
+    //   setContent(() => {
+    //     return <Investment />;
+    //   });
+    // } else if (selectedKey === "debt") {
+    //   setContent(() => {
+    //     return <Debt />;
+    //   });
+    // } else {
+    //   setContent(null);
+    // }
   };
 
   const onMenuClick = (e) => {
@@ -109,7 +179,7 @@ const Finance = () => {
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
         <Menu
-          defaultSelectedKeys={["transactions"]}
+          defaultSelectedKeys={[]}
           mode="inline"
           theme="dark"
           inlineCollapsed={collapsed}

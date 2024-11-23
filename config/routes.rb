@@ -16,6 +16,13 @@ Rails.application.routes.draw do
   scope :common_category do 
     post 'save_common_category', to: 'common_category#save_common_category_to_user'
   end
+  scope :user_category do 
+    get 'get_user_categories', to: 'user_category#get_user_categories'
+    get 'get_user_category', to: 'user_category#show_user_category'
+    post 'create_user_category', to: 'user_category#create_user_category'
+    put 'update_user_category/:id', to: 'user_category#update_user_category'               # PUT request
+    delete 'delete_user_category/:id', to: 'user_category#destroy_user_category' 
+  end
   
   get 'get_common_categories', to: 'common_category#get_common_categories'
   put 'change_password', to: 'users#change_password'

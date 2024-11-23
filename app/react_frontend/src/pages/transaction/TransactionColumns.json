@@ -28,9 +28,9 @@
       "key": "main_category"
     },
     {
-      "title": "User Category",
-      "dataIndex": "user_category",
-      "key": "user_category"
+      "title": "Sub Category",
+      "dataIndex": "sub_category_code",
+      "key": "sub_category"
     },
     {
       "title": "Description",

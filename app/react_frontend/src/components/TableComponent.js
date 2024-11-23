@@ -6,7 +6,7 @@ import ButtonComponent from "./ButtonsAddEditComponent";
 import "./styles.css";
 import { useSelector } from "react-redux";
 
-const TableComponent = ({ data, columns }) => {
+const TableComponent = ({ data, columns, expandableTable = null }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [form] = Form.useForm(); // Initialize form instance
@@ -153,6 +153,7 @@ const TableComponent = ({ data, columns }) => {
           minHeight: tableHeight - pageSize * 20,
           overflowY: "auto", // Allow scrolling if the content exceeds maxHeight
         }}
+        expandable={expandableTable}
       />
       {/* Pagination component */}
       {/* <Pagination

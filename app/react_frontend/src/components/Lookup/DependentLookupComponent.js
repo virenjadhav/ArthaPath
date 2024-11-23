@@ -12,7 +12,7 @@ import { setMessageState } from "../../redux/features/generic/genericSlice";
 import { useValidateLookupRecordAction } from "../Services/CommonServices";
 import { form } from "../FormComponent/FormAddEdit";
 
-const LookupComponent = ({
+const DependentLookupComponent = ({
   name,
   label,
   dataField,
@@ -24,6 +24,8 @@ const LookupComponent = ({
   lookupService,
   filterKeyLabelName,
   filterKeyDataName,
+  mainLookupValueProp,
+  mainLookupName,
   placeholder = "",
   visible = true,
   includeInLayout = true,
@@ -68,6 +70,7 @@ const LookupComponent = ({
   // const [dataValue, setDataValue] = useState(null);
   // const [labelValue, setLabelValue] = useState(null);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
+  const [mainLookupValue, setMainLookupValue] = useState(mainLookupValueProp); // Define state
   const isEditing = useSelector((state) => state.model.isEditing);
   const [savedInputValue, setSavedInputValue] = useState({});
 
@@ -80,25 +83,26 @@ const LookupComponent = ({
     // if (handleFormPropsChange) {
     //   handleFormPropsChange(name, {
     //     ...customComponentProps,
-    //     componentType: "formLookup",
-    //     dataField: dataField,
-    //     labelField: labelField,
-    //     dataTag: dataTag,
-    //     labelTag: labelTag,
     //     // value,
     //     upperValue,
     //   });
     // }
-    // if (value) {
-    // setInputValue(value.target.value);
-    setInputValue(upperValue);
-    // form.setFieldsValue({ [name]: upperValue });
-    // }
-    if (onChange) {
-      onChange(upperValue);
+    if (value) {
+      // setInputValue(value.target.value);
+      setInputValue(upperValue);
+      // form.setFieldsValue({ [name]: upperValue });
     }
   };
 
+  // const handleOnBlur = () => {
+  //   if (validationFlag) {
+  //     // handle validation
+  //     validateLookup(inputValue);
+  //   }
+  //   if (onhandleFocusOut) {
+  //     onhandleFocusOut();
+  //   }
+  // };
   const handleOnBlur = (e, targetValue = null) => {
     let upperValue = null;
     if (e) {
@@ -112,23 +116,15 @@ const LookupComponent = ({
       // handle validation
       validateLookup(upperValue);
     }
-    // else if (
-
-    // ) {
-
-    //   // const customEvent = new CustomEvent("mainLookupChange", {
-    //   //   detail: {
-    //   //     lookupName: name,
-    //   //     lookupDataValue: null,
-    //   //     lookupLabelValue: null,
-    //   //   },
-    //   // });
-    //   // window.dispatchEvent(customEvent);
+    // if (validationFlag && upperValue !== savedInputValue[labelTag]) {
+    //   // handle validation
+    //   validateLookup(upperValue);
     // }
     if (onhandleFocusOut) {
       onhandleFocusOut();
     }
   };
+
   const validateLookup = async (value) => {
     if (value) {
       try {
@@ -142,12 +138,30 @@ const LookupComponent = ({
         //     },
         //   })
         // ).unwrap();
+        if (mainLookupName) {
+          if (mainLookupValue) {
+            // #nothing
+          } else {
+            dispatch(setResult("Error"));
+            dispatch(
+              setErrorMsg(
+                "Please Select Value of main Lookup for Dependent Lookup!"
+              )
+            );
+          }
+        } else {
+          dispatch(setResult("Error"));
+          dispatch(setErrorMsg("Main Lookup not found!"));
+        }
         const payload = {
           data: {
             value: value,
             filterKeyLabelName: filterKeyLabelName,
             filterKeyDataName: filterKeyDataName,
             lookupType: dataSourceName,
+            dependentLookup: true,
+            mainLookupName: mainLookupName,
+            mainLookupValue: mainLookupValue,
           },
         };
         await validateLookupRecordAction(
@@ -175,14 +189,6 @@ const LookupComponent = ({
       //   labelValue: labelValue,
       // });
       setSavedInputValue({ [dataTag]: dataValue, [labelTag]: labelValue });
-      // const customEvent = new CustomEvent("mainLookupChange", {
-      //   detail: {
-      //     lookupName: name,
-      //     lookupDataValue: dataValue,
-      //     lookupLabelValue: labelValue,
-      //   },
-      // });
-      // window.dispatchEvent(customEvent);
     }
   };
   const handelSaveClickHandler = (record) => {
@@ -192,7 +198,6 @@ const LookupComponent = ({
     if (labelField && record[labelField] !== undefined) {
       labelValue = record[labelField];
       // setLabelValue(labelValue);
-      // setInputValue(labelValue);
     }
     if (dataField && record[dataField] !== undefined) {
       dataValue = record[dataField];
@@ -204,6 +209,7 @@ const LookupComponent = ({
     if (validationFlag) {
       // check current value are valid or not
       // validateLookup(labelValue);
+      // validateLookup(labelValue);
       handleOnBlur(null, labelValue);
     } else {
       // handleFormPropsChange(name, {
@@ -214,7 +220,35 @@ const LookupComponent = ({
       setSavedInputValue({ [dataTag]: dataValue, [labelTag]: labelValue });
     }
   };
+  useEffect(() => {
+    // When the main lookup value changes, reset the dependent lookup to null
+    // if (
+    //   mainLookupName == undefined ||
+    //   mainLookupName == null ||
+    //   mainLookupValue === null ||
+    //   mainLookupValue === undefined ||
+    //   mainLookupValue === ""
+    // ) {
+    setInputValue(null);
+    form.setFieldsValue({ [name]: null });
+    // }
+  }, [mainLookupValue, mainLookupName]);
+  const handleMainLookupChange = (event) => {
+    const { lookupName, lookupDataValue, lookupLabelValue } = event?.detail;
+    if (mainLookupName === lookupName && lookupDataValue !== mainLookupValue) {
+      // mainLookupValue = lookupLabelValue;
+      setMainLookupValue(lookupLabelValue);
+      setSavedInputValue({ [dataTag]: null, [labelTag]: null });
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("mainLookupChange", handleMainLookupChange);
 
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      // window.removeEventListener("mainLookupChange", handleMainLookupChange);
+    };
+  }, [mainLookupValue]);
   useEffect(() => {
     if (removeFocus) {
       inputRef.current.blur();
@@ -261,11 +295,6 @@ const LookupComponent = ({
         // setDataValue(dataValue);
       }
       if (inputValue !== value) {
-        setSavedInputValue({
-          [dataTag]: dataValue,
-          [labelTag]: labelValue,
-          formSaved: true,
-        });
         // setInputValue(value);
         // form.setFieldsValue({ [name]: value });
         // handleFormPropsChange(name, {
@@ -273,25 +302,22 @@ const LookupComponent = ({
         //   dataValue: dataValue,
         //   labelValue: labelValue,
         // });
+        setSavedInputValue({ [dataTag]: dataValue, [labelTag]: labelValue });
       }
     } else {
       // setInputValue(null);
-      setSavedInputValue({
-        [dataTag]: null,
-        [labelTag]: null,
-        formSaved: true,
-      });
       // form.setFieldsValue({ [name]: null });
       // handleFormPropsChange(name, {
       //   ...customComponentProps,
       //   dataValue: null,
       //   labelValue: null,
       // });
+      setSavedInputValue({ [dataTag]: null, [labelTag]: null });
     }
   }, [isEditing, selectedRecord]);
   useEffect(() => {
-    let error = [];
     if (form) {
+      let error = [];
       if (rules) {
         const [{ required, message }] = rules;
         if (required && !inputValue) {
@@ -313,57 +339,33 @@ const LookupComponent = ({
       ]);
     }
   }, [inputValue, form, rules]);
-
   useEffect(() => {
     if (savedInputValue) {
       let labelValue = savedInputValue[labelTag];
       let dataValue = savedInputValue[dataTag];
-      let formSaved = savedInputValue?.formSaved;
       setInputValue(labelValue);
-      if (handleFormPropsChange) {
-        handleFormPropsChange(name, {
-          ...customComponentProps,
-          componentType: "formLookup",
-          dataField: dataField,
-          labelField: labelField,
-          dataTag: dataTag,
-          labelTag: labelTag,
-          dataValue: dataValue,
-          labelValue: labelValue,
-        });
-      }
-      if (formSaved == undefined || formSaved == null) {
-        const customEvent = new CustomEvent("mainLookupChange", {
-          detail: {
-            lookupName: name,
-            lookupDataValue: dataValue,
-            lookupLabelValue: labelValue,
-          },
-        });
-        window.dispatchEvent(customEvent);
-      }
+      handleFormPropsChange(name, {
+        ...customComponentProps,
+        componentType: "formLookup",
+        dataField: dataField,
+        labelField: labelField,
+        dataTag: dataTag,
+        labelTag: labelTag,
+        dataValue: dataValue,
+        labelValue: labelValue,
+      });
     } else {
       setInputValue(null);
-      if (handleFormPropsChange) {
-        handleFormPropsChange(name, {
-          ...customComponentProps,
-          componentType: "formLookup",
-          dataField: dataField,
-          labelField: labelField,
-          dataTag: dataTag,
-          labelTag: labelTag,
-          dataValue: null,
-          labelValue: null,
-        });
-      }
-      const customEvent = new CustomEvent("mainLookupChange", {
-        detail: {
-          lookupName: name,
-          lookupDataValue: null,
-          lookupLabelValue: null,
-        },
+      handleFormPropsChange(name, {
+        ...customComponentProps,
+        componentType: "formLookup",
+        dataField: dataField,
+        labelField: labelField,
+        dataTag: dataTag,
+        labelTag: labelTag,
+        dataValue: null,
+        labelValue: null,
       });
-      window.dispatchEvent(customEvent);
     }
   }, [savedInputValue]);
 
@@ -387,6 +389,9 @@ const LookupComponent = ({
                 dataField={dataField}
                 initialSearchValue={inputValue}
                 filterKeyLabelName={filterKeyLabelName}
+                dependentLookup={true}
+                mainLookupName={mainLookupName}
+                mainLookupValue={mainLookupValue}
               />
               <Input
                 ref={inputRef} // This allows us to control the input programmatically
@@ -422,44 +427,6 @@ const LookupComponent = ({
       )}
     </>
   );
-  // return (
-  //   <>
-  //     {includeInLayout && (
-  //       <Form.Item name={name} label={label} rules={rules}>
-  //         {visible && (
-  //           <Input
-  //             ref={inputRef} // This allows us to control the input programmatically
-  //             value={inputValue}
-  //             onBlur={handleOnBlur}
-  //             disabled={disabled}
-  //             readOnly={readOnly}
-  //             placeholder={placeholder}
-  //             type={type}
-  //             onPressEnter={onPressEnterHandler}
-  //             autoFocus={autoFocus}
-  //             defaultValue={defaultValue}
-  //             onFocus={onFocusHandler}
-  //             loading={loading}
-  //             addonBefore={addonBefore}
-  //             addonAfter={<ReadOutlined onClick={handleLookupClick} />}
-  //             prefix={prefix}
-  //             suffix={suffix}
-  //             allowClear={allowClear}
-  //             maxLength={maxLength}
-  //             bordered={bordered}
-  //             stringMode={stringMode}
-  //             controls={controls}
-  //             step={step}
-  //             precision={precision}
-  //             min={min}
-  //             max={max}
-  //             onChange={handleComponentChange}
-  //           />
-  //         )}
-  //       </Form.Item>
-  //     )}
-  //   </>
-  // );
 };
 
-export default LookupComponent;
+export default DependentLookupComponent;

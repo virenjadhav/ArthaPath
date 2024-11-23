@@ -1,11 +1,39 @@
 class ApplicationController < ActionController::API
     # before_action :authenticate_user!, expect: [:login, :signup]
     before_action :authenticate_user!, unless: :skip_authorization?
+    before_action :convert_params_to_doc
 
     def skip_authorization?
         # Define actions for which you want to skip authorization
         ['login', 'signup', 'create_session', 'logged_in', 'create_user'].include?(action_name)
     end
+
+    def convert_params_to_doc 
+      body = params["body"]
+      body = body.is_a?(ActionController::Parameters) ? body.to_unsafe_h : body
+      if !body.nil? && body.is_a?(Hash)
+        # Now `body` is a regular hash, so you can check its contents
+        # @doc = body.first.last
+        @doc = body
+        
+      elsif !body.nil? && body.is_a?(Hash)
+        @doc = []
+        body.each do |key, value|
+          # Only process numeric keys
+          next unless key.match?(/^\d+$/)
+          
+          @doc << value
+        end
+      else
+        @doc = body  # If it's not a hash or array, just assign it directly
+      end
+      if @doc and !@doc.blank? and @doc["user_id"]
+        @user_id = @doc["user_id"]
+      else 
+        @user_id = nil 
+      end
+    end
+    
 
     def module_action_handler
         module_name = params[:module_name]

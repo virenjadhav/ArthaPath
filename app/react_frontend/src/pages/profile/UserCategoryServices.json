@@ -1,0 +1,37 @@
+[
+    {
+        "id": "createRecord",
+        "url": "user_category/create_user_category",
+        "key": "createRecord",
+        "name": "user_category/create_user_category",
+        "method": "post"
+    },
+    {
+        "id": "updateRecord",
+        "url": "user_category/update_user_category",
+        "key": "updateRecord",
+        "name": "user_category/update_user_category",
+        "method": "put"
+    },
+    {
+        "id": "getRecord",
+        "url": "user_category/get_user_category",
+        "key": "getRecord",
+        "name": "user_category/get_user_category",
+        "method": "get"
+    },
+    {
+        "id": "getList",
+        "url": "user_category/get_user_categories",
+        "key": "getList",
+        "name": "user_category/get_user_categories",
+        "method": "get"
+    },
+    {
+        "id": "deleteRecord",
+        "url": "user_category/delete_user_category",
+        "key": "deleteRecord",
+        "name": "user_category/delete_user_category",
+        "method": "delete"
+    }  
+]

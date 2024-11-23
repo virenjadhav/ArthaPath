@@ -13,6 +13,7 @@ const modelSlice = createSlice({
     servicesData: null,
     criteriaDataStru: null,
     searchCriteriaData: {},
+    columnsData: null,
   },
   reducers: {
     setData(state, action) {
@@ -39,6 +40,21 @@ const modelSlice = createSlice({
     setSearchCriteriaData(state, action) {
       state.searchCriteriaData = action.payload;
     },
+    setColumnsData(state, action) {
+      state.columnsData = action.payload;
+    },
+    clearModelReducer(state) {
+      state.data = null;
+      state.isModelVisible = false;
+      state.selectedForm = {};
+      state.selectedRecord = null;
+      state.records = null;
+      state.isEditing = false;
+      state.servicesData = null;
+      state.criteriaDataStru = null;
+      state.searchCriteriaData = {};
+      state.columnsData = null;
+    },
   },
 });
 
@@ -51,5 +67,7 @@ export const {
   setServicesData,
   setCriteriaDataStru,
   setSearchCriteriaData,
+  clearModelReducer,
+  setColumnsData,
 } = modelSlice.actions;
 export default modelSlice.reducer;

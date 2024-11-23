@@ -7,7 +7,6 @@ export const ModelInfo = ({ title, content, okText, onOkHandler }) => {
     content: content ? content : "",
     okText: okText ? okText : "",
     onOk: () => {
-      console.log("Closed");
       onOkHandler();
     },
   });

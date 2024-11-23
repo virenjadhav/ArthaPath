@@ -1,0 +1,41 @@
+[
+    {
+      "title": "",
+      "dataIndex": "radio",
+      "key": "radio",
+      "width": 10
+    },
+    {
+      "title": "Code #",
+      "dataIndex": "code",
+      "key": "code"
+    },
+    {
+        "title": "Name",
+        "dataIndex": "name",
+        "key": "name"
+    },
+    {
+        "title": "Type",
+        "dataIndex": "type",
+        "key": "type"
+    },
+    {
+        
+        "title": "User Category",
+        "dataIndex": "user_category_type",
+        "key": "user_category_type"
+    },
+    {
+        
+        "title": "Main Category",
+        "dataIndex": "ref_code",
+        "key": "ref_code"
+    },
+    {
+        
+        "title": "Common Category",
+        "dataIndex": "common_category_code",
+        "key": "common_category_code"
+    }
+]

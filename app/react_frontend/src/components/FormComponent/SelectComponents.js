@@ -47,7 +47,6 @@ const SelectComponent = ({
   useEffect(() => {
     // Add this component to the formComponentProps on mount
     if (formComponentProps) {
-      // formComponentProps.current[name] = { componentType: "formInput" }; // Add componentType
       handleFormPropsChange(name, {
         ...customComponentProps,
         componentType: "formSelect",
@@ -60,17 +59,36 @@ const SelectComponent = ({
         delete formComponentProps.current[name];
       }
     };
-  }, [name, formComponentProps]);
+  }, [name, formComponentProps, customComponentProps, handleFormPropsChange]);
   const handleComponentChange = (e) => {
-    handleFormPropsChange(name, {
-      ...customComponentProps,
-    });
+    // handleFormPropsChange(name, {
+    //   ...customComponentProps,
+    // });
+    if (onChangeHandler) {
+      onChangeHandler(name, e);
+    }
+    if (handleFormPropsChange) {
+      handleFormPropsChange(name, {
+        ...customComponentProps,
+        e, // Pass the updated value back
+      });
+    }
+  };
+  const onBlur = (e) => {
+    if (onBlurHandler) {
+      onBlurHandler(e);
+    }
   };
 
   return (
     <>
       {includeInLayout && (
-        <Form.Item name={name} label={label} rules={rules}>
+        <Form.Item
+          name={name}
+          label={label}
+          rules={rules}
+          initialValue={defaultValue}
+        >
           {visible && (
             <Select
               ref={selectRef}
@@ -81,7 +99,7 @@ const SelectComponent = ({
               defaultValue={defaultValue}
               onChange={handleComponentChange}
               onFocus={onFocusHandler}
-              onBlur={onBlurHandler}
+              onBlur={onBlur}
               allowClear={allowClear}
               loading={loading}
               mode={mode} // Supports 'multiple' or 'tags'

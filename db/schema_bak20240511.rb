@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_22_095313) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_30_084000) do
   create_table "budgets", force: :cascade do |t|
     t.boolean "active", default: true
     t.decimal "amount", precision: 10, scale: 2
@@ -48,8 +48,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_095313) do
     t.integer "trans_no"
     t.integer "main_category_id"
     t.string "main_category_code"
-    t.integer "sub_category_id"
-    t.string "sub_category_code"
     t.index ["trans_no"], name: "index_transactions_on_trans_no", unique: true
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
@@ -66,9 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_095313) do
     t.string "ref_code"
     t.bigint "common_category_id"
     t.string "common_category_code"
-    t.bigint "user_id", null: false
     t.index ["common_category_id"], name: "index_user_categories_on_common_category_id"
-    t.index ["user_id"], name: "index_user_categories_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -82,5 +78,4 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_095313) do
   add_foreign_key "budgets", "users"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_categories", "common_categories", on_delete: :nullify
-  add_foreign_key "user_categories", "users"
 end

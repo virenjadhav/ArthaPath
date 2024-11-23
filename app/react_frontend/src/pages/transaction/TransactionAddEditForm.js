@@ -46,6 +46,7 @@ import CheckBoxComponent from "../../components/FormComponent/CheckBoxComponent"
 import SingleCheckboxComponent from "../../components/FormComponent/SingleCheckboxComponent";
 import FormAddEdit from "../../components/FormComponent/FormAddEdit";
 import LookupComponent from "../../components/Lookup/LookupComponent";
+import DependentLookupComponent from "../../components/Lookup/DependentLookupComponent";
 // import transactionServicesData from "./TransactionServices.json";
 
 const { TextArea } = Input;
@@ -359,16 +360,48 @@ const TransactionAddEditForm = () => {
           customComponentProps={{ updateFlag: true }}
         />
         <LookupComponent
-          name="main_category_lookup"
+          name="main_category"
           label="Main Category"
           labelField="code"
           dataField="id"
           dataSourceName="get_main_categories"
+          lookupService="get_main_categories"
+          lookupFormatUrl="main_categories"
           dataTag="main_category_id"
           labelTag="main_category_code"
           filterKeyLabelName="code"
           filterKeyDataName="id"
           validationFlag={true}
+          rules={[
+            {
+              required: true,
+              message: "Please Select Main Category!",
+            },
+          ]}
+        />
+        <DependentLookupComponent
+          name="sub_category"
+          label="Sub Category "
+          labelField="code"
+          dataField="id"
+          dataSourceName="get_sub_categories"
+          lookupService="get_sub_categories"
+          lookupFormatUrl="main_categories"
+          dataTag="sub_category_id"
+          labelTag="sub_category_code"
+          filterKeyLabelName="code"
+          filterKeyDataName="id"
+          validationFlag={true}
+          mainLookupValue={form.getFieldValue("main_category")}
+          mainLookupName="main_category"
+          //   includeInLayout={isSubCategoryVisible ? true : false}
+          //   visible={isSubCategoryVisible ? true : false}
+          rules={[
+            {
+              required: true,
+              message: "Please Select Sub Category!",
+            },
+          ]}
         />
         <InputTextAreaComponent
           name={"description"}

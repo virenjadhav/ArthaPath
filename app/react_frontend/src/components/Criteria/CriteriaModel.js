@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Modal, Input, Form, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import InputComponent from "../FormComponent/InputComponent";
@@ -9,12 +9,15 @@ import dayjs from "dayjs";
 import { setSearchCriteriaData } from "../../redux/features/generic/modelSlice";
 import "../../assets/css/CriteriaStyle.css";
 import InputDecimalNumberComponent from "../FormComponent/InputDecimalNumberComponent";
+import LookupComponent from "../Lookup/LookupComponent";
+import DependentLookupComponent from "../Lookup/DependentLookupComponent";
 
 const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
   const criteriaDataStru = useSelector((state) => state.model.criteriaDataStru);
   const [form] = useForm();
   const { formRefreshAction } = useFormRefreshAction();
   const dispatch = useDispatch();
+  const formComponentProps = useRef({});
 
   const renderInputField = (field) => {
     switch (field.dataType) {
@@ -24,6 +27,7 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
             name={field.dataTag}
             label={field.label}
             key={field.dataTag}
+            handleFormPropsChange={handleFormComponentChange}
           />
         );
       case "Number":
@@ -34,6 +38,7 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
             precision={0}
             name={field.dataTag}
             label={field.label}
+            handleFormPropsChange={handleFormComponentChange}
           />
         );
       case "Date":
@@ -42,8 +47,65 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
             name={field.dataTag}
             label={field.label}
             form={form}
+            handleFormPropsChange={handleFormComponentChange}
           />
         );
+      case "Lookup":
+        return (
+          <LookupComponent
+            name={field.key}
+            label={field.label}
+            labelField={field.labelField}
+            dataField={field.dataField}
+            dataSourceName={field.dataSourceName}
+            lookupService={field.lookupService}
+            lookupFormatUrl={field.lookupFormatUrl}
+            dataTag={field.dataTag}
+            labelTag={field.labelTag}
+            filterKeyLabelName={field.filterKeyLabelName}
+            filterKeyDataName={field.filterKeyDataName}
+            validationFlag={field.validationFlag}
+            handleFormPropsChange={handleFormComponentChange}
+            //   includeInLayout={isSubCategoryVisible ? true : false}
+            //   visible={isSubCategoryVisible ? true : false}
+            //   rules={[
+            //     {
+            //       required: isSubCategoryVisible,
+            //       message: "Please Select Main Category!",
+            //     },
+            //   ]}
+          />
+        );
+        break;
+      case "DependentLookup":
+        return (
+          <DependentLookupComponent
+            name={field.key}
+            label={field.label}
+            labelField={field.labelField}
+            dataField={field.dataField}
+            dataSourceName={field.dataSourceName}
+            lookupService={field.lookupService}
+            lookupFormatUrl={field.lookupFormatUrl}
+            dataTag={field.dataTag}
+            labelTag={field.labelTag}
+            filterKeyLabelName={field.filterKeyLabelName}
+            filterKeyDataName={field.filterKeyDataName}
+            validationFlag={field.validationFlag}
+            handleFormPropsChange={handleFormComponentChange}
+            mainLookupValue={form.getFieldValue(field.mainLookupValue)}
+            mainLookupName={field.mainLookupName}
+            //   includeInLayout={isSubCategoryVisible ? true : false}
+            //   visible={isSubCategoryVisible ? true : false}
+            //   rules={[
+            //     {
+            //       required: isSubCategoryVisible,
+            //       message: "Please Select Sub Category!",
+            //     },
+            //   ]}
+          />
+        );
+        break;
       default:
         return null;
     }
@@ -52,65 +114,32 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
   const handleCancelModelClickHandler = () => {
     setIsSearchModelVisible(false);
   };
-
-  //   const handleModelOk = async (values) => {
-
-  //     let searchData = {};
-  //     if (criteriaDataStru) {
-  //       Object.entries(criteriaDataStru).forEach(([key, value]) => {
-  //         switch (value?.dataType) {
-  //           case "String":
-  //             searchData[value?.dataTag] = {
-  //               value: values[value?.dataTag],
-  //               type: "String",
-  //             };
-  //             break;
-  //           case "Number":
-  //             searchData[value?.dataTag] = {
-  //               value: values[value?.dataTag],
-  //               type: "Number",
-  //             };
-  //             break;
-  //           case "Date":
-  //             let dataValue = values[value?.dataTag]; // This should be the RangePicker value
-
-  //             if (Array.isArray(dataValue)) {
-  //               // Handle RangePicker case
-  //               searchData[value?.dataTag] = {
-  //                 value: dataValue.map((date) =>
-  //                   date ? dayjs(date).format("YYYY-MM-DD HH:mm:ss.SSS") : null
-  //                 ),
-  //                 type: "Date",
-  //               };
-  //             } else {
-  //               // Handle single DatePicker case
-  //               searchData[value?.dataTag] = {
-  //                 value: dataValue
-  //                   ? dayjs(dataValue).format("YYYY-MM-DD HH:mm:ss.SSS")
-  //                   : null,
-  //                 type: "Date",
-  //               };
-  //             }
-  //             break;
-  //           default:
-  //         }
-  //       });
-
-  //       setSearchCriteriaData(searchData);
-
-  //       let payload = {
-  //         data: {
-  //           criteriaSearchData: searchData,
-  //         },
-  //       };
-  //       await formRefreshAction(payload);
-  //     }
-  //   };
+  const handleFormComponentChange = (name, props) => {
+    // Dynamically updating form component state
+    formComponentProps.current[name] = {
+      ...formComponentProps.current[name],
+      ...props,
+    };
+  };
+  //   const enhancedChildren = React.Children.map(children, (child) =>
+  //     React.cloneElement(child, {
+  //       formComponentProps,
+  //       handleFormPropsChange: handleFormComponentChange,
+  //     })
+  //   );
 
   const handleModelOk = async (values) => {
     let searchData = {};
+    const customProps = formComponentProps.current;
+    let errors = [];
     if (criteriaDataStru) {
       Object.entries(criteriaDataStru).forEach(([key, value]) => {
+        const error = form.getFieldError(key);
+        if (error?.length > 0) {
+          errors = [...errors, error?.join(",")];
+          return;
+        }
+        let customPropForValue = customProps[value?.key];
         switch (value?.dataType) {
           case "String":
             searchData[value?.dataTag] = {
@@ -123,6 +152,74 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
               value: values[value?.dataTag],
               type: "Number",
             };
+            break;
+          case "Lookup":
+            // searchData[value?.dataTag] = {
+            //   value: values[value?.dataTag],
+            //   labelValue: values[value?.labelTag],
+            //   type: "Lookup",
+            // };
+            let dataTag = customPropForValue?.["dataTag"];
+            let labelTag = customPropForValue?.["labelTag"];
+            let dataValueLookup = customPropForValue?.["dataValue"];
+            let labelValueLookup = customPropForValue?.["labelValue"];
+            if (dataTag !== labelTag) {
+              searchData[value?.key] = {
+                value: dataValueLookup,
+                labelValue: labelValueLookup,
+                dataTag: dataTag,
+                labelTag: labelTag,
+                type: "Lookup",
+                searchBy: value?.searchBy,
+                searchType: value?.searchType,
+                searchTypeLabel: value?.searchTypeLabel,
+              };
+            } else {
+              searchData[value?.key] = {
+                value: dataValueLookup,
+                labelValue: labelValueLookup,
+                dataTag: dataTag,
+                labelTag: labelTag,
+                type: "Lookup",
+                searchBy: value?.searchBy,
+                searchType: value?.searchType,
+                searchTypeLabel: value?.searchTypeLabel,
+              };
+            }
+            break;
+          case "DependentLookup":
+            // searchData[value?.dataTag] = {
+            //   value: values[value?.dataTag],
+            //   labelValue: values[value?.labelTag],
+            //   type: "Lookup",
+            // };
+            let depDataTag = customPropForValue?.["dataTag"];
+            let depLabelTag = customPropForValue?.["labelTag"];
+            let depDataValueLookup = customPropForValue?.["dataValue"];
+            let depLabelValueLookup = customPropForValue?.["labelValue"];
+            if (depDataTag !== depLabelTag) {
+              searchData[value?.key] = {
+                value: depDataValueLookup,
+                labelValue: depLabelValueLookup,
+                dataTag: depDataTag,
+                labelTag: depLabelTag,
+                type: "Lookup",
+                searchBy: value?.searchBy,
+                searchType: value?.searchType,
+                searchTypeLabel: value?.searchTypeLabel,
+              };
+            } else {
+              searchData[value?.key] = {
+                value: depDataValueLookup,
+                labelValue: depLabelValueLookup,
+                dataTag: depDataTag,
+                labelTag: depLabelTag,
+                type: "Lookup",
+                searchBy: value?.searchBy,
+                searchType: value?.searchType,
+                searchTypeLabel: value?.searchTypeLabel,
+              };
+            }
             break;
           case "Date":
             const dataValue = values[value?.dataTag]; // This should be the selected date value
@@ -207,43 +304,14 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
       });
       dispatch(setSearchCriteriaData(searchData));
 
-      let payload = {
-        data: {
-          criteriaSearchData: searchData,
-        },
+      let data = {
+        criteriaSearchData: searchData,
       };
-      await formRefreshAction(payload);
+
+      await formRefreshAction(data);
       handleCancelModelClickHandler();
     }
   };
-  //   const handleModelOk = async (values) => {
-  //     let searchData = {};
-  //     Object.entries(criteriaDataStru).forEach(([key, value]) => {
-  //       if (value?.dataTag) {
-  //         searchData[value?.dataTag] = {
-  //           value: values[value?.dataTag],
-  //           type: value?.dataType,
-  //         };
-  //       }
-  //     });
-
-  //     // Format Date if necessary
-  //     for (const key in searchData) {
-  //       if (searchData[key].type === "Date" && searchData[key].value) {
-  //         searchData[key].value = searchData[key].value
-  //           ? dayjs(searchData[key].value).format("YYYY-MM-DD HH:mm:ss")
-  //           : null;
-  //       }
-  //     }
-
-  //     setSearchCriteriaData(searchData);
-  //     let payload = {
-  //       data: {
-  //         criteriaSearchData: searchData,
-  //       },
-  //     };
-  //     await formRefreshAction(payload);
-  //   };
 
   return (
     <Modal
@@ -284,6 +352,88 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
 };
 
 export default CriteriaModel;
+//   const handleModelOk = async (values) => {
+//     let searchData = {};
+//     Object.entries(criteriaDataStru).forEach(([key, value]) => {
+//       if (value?.dataTag) {
+//         searchData[value?.dataTag] = {
+//           value: values[value?.dataTag],
+//           type: value?.dataType,
+//         };
+//       }
+//     });
+
+//     // Format Date if necessary
+//     for (const key in searchData) {
+//       if (searchData[key].type === "Date" && searchData[key].value) {
+//         searchData[key].value = searchData[key].value
+//           ? dayjs(searchData[key].value).format("YYYY-MM-DD HH:mm:ss")
+//           : null;
+//       }
+//     }
+
+//     setSearchCriteriaData(searchData);
+//     let payload = {
+//       data: {
+//         criteriaSearchData: searchData,
+//       },
+//     };
+//     await formRefreshAction(payload);
+//   };
+
+//   const handleModelOk = async (values) => {
+
+//     let searchData = {};
+//     if (criteriaDataStru) {
+//       Object.entries(criteriaDataStru).forEach(([key, value]) => {
+//         switch (value?.dataType) {
+//           case "String":
+//             searchData[value?.dataTag] = {
+//               value: values[value?.dataTag],
+//               type: "String",
+//             };
+//             break;
+//           case "Number":
+//             searchData[value?.dataTag] = {
+//               value: values[value?.dataTag],
+//               type: "Number",
+//             };
+//             break;
+//           case "Date":
+//             let dataValue = values[value?.dataTag]; // This should be the RangePicker value
+
+//             if (Array.isArray(dataValue)) {
+//               // Handle RangePicker case
+//               searchData[value?.dataTag] = {
+//                 value: dataValue.map((date) =>
+//                   date ? dayjs(date).format("YYYY-MM-DD HH:mm:ss.SSS") : null
+//                 ),
+//                 type: "Date",
+//               };
+//             } else {
+//               // Handle single DatePicker case
+//               searchData[value?.dataTag] = {
+//                 value: dataValue
+//                   ? dayjs(dataValue).format("YYYY-MM-DD HH:mm:ss.SSS")
+//                   : null,
+//                 type: "Date",
+//               };
+//             }
+//             break;
+//           default:
+//         }
+//       });
+
+//       setSearchCriteriaData(searchData);
+
+//       let payload = {
+//         data: {
+//           criteriaSearchData: searchData,
+//         },
+//       };
+//       await formRefreshAction(payload);
+//     }
+//   };
 
 // import React, { useEffect } from "react";
 // import { Modal, Input, DatePicker, Form, Button } from "antd";

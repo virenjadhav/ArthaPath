@@ -9,6 +9,7 @@ import "../../assets/css/profile.css";
 import GeneralProfile from "./GeneralProfile";
 import ChangePassword from "./ChangePassword";
 import Categories from "./Categories";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const { SubMenu } = Menu;
 
@@ -16,6 +17,8 @@ const Profile = () => {
   const [theme, setTheme] = useState("dark"); // Default theme is dark
   const [selectedKey, setSelectedKey] = useState(null);
   const [content, setContent] = useState(null);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const changeTheme = (value) => {
     setTheme(value ? "dark" : "light");
@@ -29,30 +32,95 @@ const Profile = () => {
   const categoryContent = () => {
     return <Categories />;
   };
-  useEffect(() => {
-    const setContentForrender = () => {
-      switch (selectedKey) {
-        case "general":
-          setContent(generalContent);
-          break;
-        case "changePassword":
-          setContent(changePasswordContent);
-          break;
-        case "categories":
-          setContent(categoryContent);
-          break;
-        default:
-          setContent(null);
-      }
-    };
-    setContentForrender();
-  }, [selectedKey]);
+  // useEffect(() => {
+  //   const navigateToPath = () => {
+  //     switch (selectedKey) {
+  //       case "general":
+  //         navigate("/profile/info");
+  //         break;
+  //       case "changePassword":
+  //         navigate("/profile/change_password");
+  //         break;
+  //       case "categories":
+  //         navigate("/profile/categories/custom_categories");
+  //         break;
+  //       default:
+  //         navigate("/profile");
+  //     }
+  //   };
+  //   navigateToPath();
+  // }, [selectedKey]);
 
+  // useEffect(() => {
+  //   const [_, path, contentPath] = pathname?.split("/");
+  //   setContentByLocation(path, contentPath);
+
+  // }, [pathname]);
+  // const setContentByLocation = (path, contentPath) => {
+  //   if (path) {
+  //     if (contentPath) {
+  //       setModuleContent(contentPath);
+  //     } else {
+  //       setContent(null);
+  //     }
+  //   } else {
+  //     setContent(null);
+  //   }
+  // };
+  // const setModuleContent = (selectedContent) => {
+  //   switch (selectedContent) {
+  //     case "info":
+  //       setContent(generalContent);
+  //       break;
+  //     case "change_password":
+  //       setContent(changePasswordContent);
+  //       break;
+  //     case "categories":
+  //       setContent(categoryContent);
+  //       break;
+  //     default:
+  //       setContent(null);
+  //   }
+  // };
+  // useEffect(() => {
+  //   const setContentForrender = () => {
+  //     switch (selectedKey) {
+  //       case "general":
+  //         setContent(generalContent);
+  //         break;
+  //       case "changePassword":
+  //         setContent(changePasswordContent);
+  //         break;
+  //       case "categories":
+  //         setContent(categoryContent);
+  //         break;
+  //       default:
+  //         setContent(null);
+  //     }
+  //   };
+  //   setContentForrender();
+  // }, [selectedKey]);
+
+  // const handleMenuClick = (e) => {
+  //   if (e.key !== null) {
+  //     setSelectedKey(e.key);
+  //   } else {
+  //     setSelectedKey(null);
+  //   }
+  // };
   const handleMenuClick = (e) => {
-    if (e.key !== null) {
-      setSelectedKey(e.key);
-    } else {
-      setSelectedKey(null);
+    switch (e.key) {
+      case "general":
+        navigate("/profile/info");
+        break;
+      case "changePassword":
+        navigate("/profile/change_password");
+        break;
+      case "categories":
+        navigate("/profile/categories");
+        break;
+      default:
+        break;
     }
   };
 
@@ -121,7 +189,8 @@ const Profile = () => {
       <div className="profile-content" style={{ marginTop: 20 }}>
         {/* <h1>Content Goes Here</h1>
         <p>This is where the main content will be displayed on the right side.</p> */}
-        {content}
+        {/* {content} */}
+        <Outlet />
       </div>
     </div>
   );
