@@ -10,7 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_22_095313) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_29_102320) do
+  create_table "accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "bank_id", null: false
+    t.string "name", null: false
+    t.string "currency", default: "INR"
+    t.decimal "initial_balance", precision: 15, scale: 2, default: 0.0
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_id"], name: "index_accounts_on_bank_id"
+    t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
+
+  create_table "banks", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "name", null: false
+    t.bigint "user_id", null: false
+    t.boolean "active", default: false
+    t.string "bank_owner_name"
+    t.string "address1"
+    t.string "address2"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
+    t.string "country"
+    t.string "ifsc_code"
+    t.string "account_number"
+    t.string "icon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_banks_on_code", unique: true, where: "([active]=(1))"
+    t.index ["user_id"], name: "index_banks_on_user_id"
+  end
+
   create_table "budgets", force: :cascade do |t|
     t.boolean "active", default: true
     t.decimal "amount", precision: 10, scale: 2
@@ -79,6 +113,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_095313) do
     t.varchar "name", limit: 50
   end
 
+  add_foreign_key "accounts", "banks"
+  add_foreign_key "accounts", "users"
+  add_foreign_key "banks", "users"
   add_foreign_key "budgets", "users"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_categories", "common_categories", on_delete: :nullify

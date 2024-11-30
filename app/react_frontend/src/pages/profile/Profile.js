@@ -119,6 +119,12 @@ const Profile = () => {
       case "categories":
         navigate("/profile/categories");
         break;
+      case "banks":
+        navigate("/profile/banks");
+        break;
+      case "accounts":
+        navigate("/profile/Accounts");
+        break;
       default:
         break;
     }
@@ -183,6 +189,8 @@ const Profile = () => {
           <Menu.Item key="general">General</Menu.Item>
           <Menu.Item key="changePassword">Change Password</Menu.Item>
           <Menu.Item key="categories">Categories</Menu.Item>
+          <Menu.Item key="banks">Banks</Menu.Item>
+          <Menu.Item key="accounts">Accounts</Menu.Item>
           {/* </Menu.ItemGroup> */}
         </Menu>
       </div>
