@@ -9,6 +9,8 @@ import UserCategories from "../pages/profile/UserCategory";
 import ProfileInfo from "../pages/profile/GeneralProfile";
 import ChangePassword from "../pages/profile/ChangePassword";
 import CommonCategories from "../pages/profile/CommonCategories";
+import Accounts from "../pages/accounts/Accounts";
+import Banks from "../pages/accounts/Banks";
 
 const profileRoutes = {
   path: "/profile",
@@ -30,6 +32,8 @@ const profileRoutes = {
     },
     { path: "info", element: <ProfileInfo /> },
     { path: "change_password", element: <ChangePassword /> },
+    { path: "accounts", element: <Accounts /> },
+    { path: "banks", element: <Banks /> },
   ],
 };
 

@@ -13,6 +13,13 @@ Rails.application.routes.draw do
     put 'update_transaction/:id', to: 'transactions#update_transaction'               # PUT request
     delete 'delete_transaction/:id', to: 'transactions#destroy_transaction'           # DELETE request
   end
+  scope :banks do
+    get 'get_banks_details', to: 'banks#get_banks_details'
+    get 'show_bank', to: 'banks#show_bank'
+    post 'create_bank', to: 'banks#create_bank'
+    put 'update_bank/:id', to: 'banks#update_bank'               # PUT request
+    delete 'delete_bank/:id', to: 'banks#destroy_bank'           # DELETE request
+  end
   scope :common_category do 
     post 'save_common_category', to: 'common_category#save_common_category_to_user'
   end

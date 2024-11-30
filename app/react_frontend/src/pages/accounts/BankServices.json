@@ -1,0 +1,38 @@
+
+[
+  {
+      "id": "createRecord",
+      "url": "banks/create_bank",
+      "key": "createRecord",
+      "name": "banks/create_bank",
+      "method": "post"
+  },
+  {
+      "id": "updateRecord",
+      "url": "banks/update_bank",
+      "key": "updateRecord",
+      "name": "banks/update_bank",
+      "method": "put"
+  },
+  {
+      "id": "getRecord",
+      "url": "banks/show_bank",
+      "key": "getRecord",
+      "name": "banks/show_bank",
+      "method": "get"
+  },
+  {
+      "id": "getList",
+      "url": "banks/get_banks_details",
+      "key": "getList",
+      "name": "banks/get_banks_details",
+      "method": "get"
+  },
+  {
+      "id": "deleteRecord",
+      "url": "banks/delete_bank",
+      "key": "deleteRecord",
+      "name": "banks/delete_bank",
+      "method": "delete"
+  }  
+]
