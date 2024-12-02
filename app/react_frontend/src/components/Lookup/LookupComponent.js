@@ -10,7 +10,8 @@ import {
 } from "../../redux/features/generic/messageSlice";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
 import { useValidateLookupRecordAction } from "../Services/CommonServices";
-import { form } from "../FormComponent/FormAddEdit";
+import { get_form } from "../FormComponent/FormAddEdit";
+// import { form } from "../FormComponent/FormAddEdit";
 
 const LookupComponent = ({
   name,
@@ -70,6 +71,7 @@ const LookupComponent = ({
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const isEditing = useSelector((state) => state.model.isEditing);
   const [savedInputValue, setSavedInputValue] = useState({});
+  // const form = get_form();
 
   const handleLookupClick = (e) => {
     setIsLookupModelVisible(true);
@@ -289,30 +291,30 @@ const LookupComponent = ({
       // });
     }
   }, [isEditing, selectedRecord]);
-  useEffect(() => {
-    let error = [];
-    if (form) {
-      if (rules) {
-        const [{ required, message }] = rules;
-        if (required && !inputValue) {
-          error = [message];
-        } else {
-          error = [];
-        }
-      }
-      // form.setFieldsValue({ [name]: inputValue });
-      form.setFields([
-        {
-          name: name,
-          value: inputValue, // you can set a value or keep it the same
-          // errors: [error], // clear any existing errors
-          errors: error?.length > 0 ? error : null,
-          // rules: [{ required: true, message: 'Updated: This field is now required!' }],
-          rules: error?.length > 0 ? rules : null,
-        },
-      ]);
-    }
-  }, [inputValue, form, rules]);
+  // useEffect(() => {
+  //   let error = [];
+  //   if (form) {
+  //     if (rules) {
+  //       const [{ required, message }] = rules;
+  //       if (required && !inputValue) {
+  //         error = [message];
+  //       } else {
+  //         error = [];
+  //       }
+  //     }
+  //     // form.setFieldsValue({ [name]: inputValue });
+  //     form.setFields([
+  //       {
+  //         name: name,
+  //         value: inputValue, // you can set a value or keep it the same
+  //         // errors: [error], // clear any existing errors
+  //         errors: error?.length > 0 ? error : null,
+  //         // rules: [{ required: true, message: 'Updated: This field is now required!' }],
+  //         rules: error?.length > 0 ? rules : null,
+  //       },
+  //     ]);
+  //   }
+  // }, [inputValue, form, rules]);
 
   useEffect(() => {
     if (savedInputValue) {

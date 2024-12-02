@@ -23,7 +23,8 @@ const callApi = async (
   payload = {},
   afterActionHandler = null,
   genericService = false,
-  serviceDetails = {}
+  serviceDetails = {},
+  axiosDetail = {baseURL: null, contentType:null}
 ) => {
   // Fetch the latest servicesData from Redux state
   const servicesData = getState().model.servicesData;
@@ -53,7 +54,7 @@ const callApi = async (
       throw new Error(
         `Please provide API method for this service: ${serviceId}`
       );
-    const getTransactionsAction = serviceCall(name, method, url, payload);
+    const getTransactionsAction = serviceCall(name, method, url, payload, axiosDetail);
     const response = await dispatch(getTransactionsAction()).unwrap();
 
     if (response) {
@@ -78,7 +79,8 @@ export const callApiService = (
   payload,
   afterActionHandler = null,
   genericService,
-  serviceDetails
+  serviceDetails,
+  axiosDetail = {baseURL: null, contentType:null}
 ) => {
   return async (dispatch, getState) => {
     await callApi(
@@ -89,7 +91,8 @@ export const callApiService = (
       payload,
       afterActionHandler,
       genericService,
-      serviceDetails
+      serviceDetails,
+      axiosDetail
     );
   };
 };

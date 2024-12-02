@@ -23,6 +23,10 @@ Rails.application.routes.draw do
   scope :common_category do 
     post 'save_common_category', to: 'common_category#save_common_category_to_user'
   end
+  scope :image do 
+    post 'upload_image', to: 'image#upload_image'
+    post 'upload_bank_icon', to: 'image#upload_bank_icon'
+  end
   scope :user_category do 
     get 'get_user_categories', to: 'user_category#get_user_categories'
     get 'get_user_category', to: 'user_category#show_user_category'

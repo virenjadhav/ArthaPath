@@ -10,7 +10,8 @@ import {
 } from "../../redux/features/generic/messageSlice";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
 import { useValidateLookupRecordAction } from "../Services/CommonServices";
-import { form } from "../FormComponent/FormAddEdit";
+import { get_form } from "../FormComponent/FormAddEdit";
+// import { form } from "../FormComponent/FormAddEdit";
 
 const DependentLookupComponent = ({
   name,
@@ -73,6 +74,7 @@ const DependentLookupComponent = ({
   const [mainLookupValue, setMainLookupValue] = useState(mainLookupValueProp); // Define state
   const isEditing = useSelector((state) => state.model.isEditing);
   const [savedInputValue, setSavedInputValue] = useState({});
+  // const form = get_form();
 
   const handleLookupClick = (e) => {
     setIsLookupModelVisible(true);
@@ -230,7 +232,7 @@ const DependentLookupComponent = ({
     //   mainLookupValue === ""
     // ) {
     setInputValue(null);
-    form.setFieldsValue({ [name]: null });
+    // form.setFieldsValue({ [name]: null });
     // }
   }, [mainLookupValue, mainLookupName]);
   const handleMainLookupChange = (event) => {
@@ -315,30 +317,30 @@ const DependentLookupComponent = ({
       setSavedInputValue({ [dataTag]: null, [labelTag]: null });
     }
   }, [isEditing, selectedRecord]);
-  useEffect(() => {
-    if (form) {
-      let error = [];
-      if (rules) {
-        const [{ required, message }] = rules;
-        if (required && !inputValue) {
-          error = [message];
-        } else {
-          error = [];
-        }
-      }
-      // form.setFieldsValue({ [name]: inputValue });
-      form.setFields([
-        {
-          name: name,
-          value: inputValue, // you can set a value or keep it the same
-          // errors: [error], // clear any existing errors
-          errors: error?.length > 0 ? error : null,
-          // rules: [{ required: true, message: 'Updated: This field is now required!' }],
-          rules: error?.length > 0 ? rules : null,
-        },
-      ]);
-    }
-  }, [inputValue, form, rules]);
+  // useEffect(() => {
+  //   if (form) {
+  //     let error = [];
+  //     if (rules) {
+  //       const [{ required, message }] = rules;
+  //       if (required && !inputValue) {
+  //         error = [message];
+  //       } else {
+  //         error = [];
+  //       }
+  //     }
+  //     // form.setFieldsValue({ [name]: inputValue });
+  //     form.setFields([
+  //       {
+  //         name: name,
+  //         value: inputValue, // you can set a value or keep it the same
+  //         // errors: [error], // clear any existing errors
+  //         errors: error?.length > 0 ? error : null,
+  //         // rules: [{ required: true, message: 'Updated: This field is now required!' }],
+  //         rules: error?.length > 0 ? rules : null,
+  //       },
+  //     ]);
+  //   }
+  // }, [inputValue, form, rules]);
   useEffect(() => {
     if (savedInputValue) {
       let labelValue = savedInputValue[labelTag];

@@ -34,5 +34,12 @@
       "key": "deleteRecord",
       "name": "banks/delete_bank",
       "method": "delete"
-  }  
+  },
+    {
+        "id": "uploadBankIcon",
+        "url": "image/upload_bank_icon",
+        "key": "uploadBankIcon",
+        "name": "image/upload_bank_icon",
+        "method": "post"
+    }
 ]

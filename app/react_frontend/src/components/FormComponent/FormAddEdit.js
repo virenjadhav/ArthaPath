@@ -1,6 +1,6 @@
 import { Form, Modal } from "antd";
 import { useForm } from "antd/es/form/Form";
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import InputDecimalNumberComponent from "./InputDecimalNumberComponent";
 import DateComponent from "./DateComponent";
 import RadioComponent from "./RadioComponent";
@@ -27,19 +27,41 @@ import {
   useRefreshAction,
 } from "../Services/FormServices";
 import "../../assets/css/FormAddEditStyle.css";
-export let form = null;
-const initializeForm = (formValue) => {
-  form = formValue;
-};
 
-const FormAddEdit = ({ children }) => {
-  const [form] = useForm();
-  const formComponentProps = useRef({});
+
+const FormAddEdit = ({ children, form: externalForm }) => {
+  // const FormAddEdit = forwardRef(({ children, onValuesChangeCallback }, ref) => {
+
+  // const [form] = useForm();
+  
+  // // Expose the form instance to the parent component
+  // useImperativeHandle(ref, () => ({
+  //   getForm: () => form,
+  // }));
+  // const [form] = Form.useForm();
+  // useImperativeHandle(ref, () => ({
+  //   getFormInstance: () => form,
+  //   getFormValues: () => form.getFieldsValue(),
+  // }));
+  // useEffect(() => {
+  //   if (onValuesChangeCallback) {
+  //     form.setFieldsValue({}); // Reset form when needed
+  //   }
+  // }, [form, onValuesChangeCallback]);
+
+  // const handleValuesChange = (changedValues, allValues) => {
+  //   if (onValuesChangeCallback) {
+  //     onValuesChangeCallback(allValues);
+  //   }
+  // };
   // const [saveData, setSaveData] = useState({});
   // const { callApi } = useApiServiceCall();
+  const [internalForm] = useForm();
+  const form = externalForm || internalForm; // Use the external form if provided
   const { formRefreshAction } = useFormRefreshAction();
   const { formCreateAction } = useFormCreateAction();
   const { formUpdateAction } = useFormUpdateAction();
+  const formComponentProps = useRef({});
   const [editingTransaction, setEditingTransaction] = useState(null);
   // const [isModalVisible, setIsModalVisible] = useState(false);
   const isModelVisible = useSelector((state) => state.model.isModelVisible);
@@ -49,6 +71,7 @@ const FormAddEdit = ({ children }) => {
   const user_id = useSelector((state) => state.generic.user?.user_id);
   const servicesData = useSelector((state) => state.model.servicesData);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     // if (selectedRecord && isEditing) {
     //   // Convert trans_date from string to dayjs object
@@ -56,7 +79,7 @@ const FormAddEdit = ({ children }) => {
     //     ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
     //     : null;
     //   form.setFieldsValue({ ...selectedRecord, trans_date: formattedDate });
-    initializeForm(form);
+    // initializeForm(form);
     if (selectedRecord && isEditing) {
       const formattedDate = selectedRecord.trans_date
         ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
@@ -304,6 +327,7 @@ const FormAddEdit = ({ children }) => {
           // initialValues={selectedRecord || {}}
           onFinish={handleModelOk}
           layout="horizontal"
+          // onValuesChange={handleValuesChange}
         >
           {/* {children} */}
           {enhancedChildren}
@@ -314,6 +338,7 @@ const FormAddEdit = ({ children }) => {
     </>
   );
 };
+// });
 
 export default FormAddEdit;
 
