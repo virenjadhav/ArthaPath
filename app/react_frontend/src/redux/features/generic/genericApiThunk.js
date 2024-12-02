@@ -44,6 +44,6 @@ export const changePassword = apiThunk(
 //   "get",
 //   "/transactions/get_transactions"
 // );
-export const serviceCall = (actionType, method, baseUrl, payload = {}) => {
-  return apiThunk(actionType, method, baseUrl, payload);
+export const serviceCall = (actionType, method, baseUrl, payload = {}, axiosDetail = {baseURL: null, contentType:null}) => {
+  return apiThunk(actionType, method, baseUrl, payload, axiosDetail);
 };

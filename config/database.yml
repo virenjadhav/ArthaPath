@@ -8,25 +8,25 @@
 #   gem "tiny_tds"
 #   gem "activerecord-sqlserver-adapter"
 #
-# default: &default
-#   adapter: sqlserver
-#   encoding: utf8
-#   username: viren
-#   password: Viren@123
-#   host: DESKTOP-3DEQPUJ
-#   port: 1433 # Default SQL Server port
-
 default: &default
   adapter: sqlserver
   encoding: utf8
-  username: sa
-  password: diaspark@123
-  # host: DESKTOP-3DEQPUJ
-  # port: 1433 # Default SQL Server port
-  dataserver: JEWELDB2014\SQL2017
-  session_options: ["SET TEXTSIZE 1000000000", "SET LANGUAGE us_english"]
-  timeout: 0
-  pool: 5
+  username: viren
+  password: Viren@123
+  host: DESKTOP-3DEQPUJ
+  port: 1433 # Default SQL Server port
+
+# default: &default
+#   adapter: sqlserver
+#   encoding: utf8
+#   username: sa
+#   password: diaspark@123
+#   # host: DESKTOP-3DEQPUJ
+#   # port: 1433 # Default SQL Server port
+#   dataserver: JEWELDB2014\SQL2017
+#   session_options: ["SET TEXTSIZE 1000000000", "SET LANGUAGE us_english"]
+#   timeout: 0
+#   pool: 5
 
 development:
   <<: *default

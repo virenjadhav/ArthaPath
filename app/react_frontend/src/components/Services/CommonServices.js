@@ -194,3 +194,38 @@ export const useValidateLookupRecordAction = () => {
   return { validateLookupRecordAction };
 };
 
+export const useCommonServiceAction = () => {
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  const handleCommonServiceHandler = (response) => {};
+  const commonServiceAction = useCallback(
+    async (serviceId,payload=null, afterActionHandler = null, serviceDetail=null, axiosDetail = {baseURL: null, contentType:null}) => {
+      if (!payload) {
+        console.error("record is missing.");
+        return;
+      }
+      // const serviceDetail = {
+      //   id: "validate_lookup_value",
+      //   url: "/validate_lookup_value",
+      //   key: "validate_lookup_value",
+      //   name: "generic/validate_lookup_value",
+      //   method: "post",
+      // };
+      const response = await dispatch(
+        callApiService(
+          serviceId,
+          handleCommonServiceHandler,
+          payload,
+          afterActionHandler,
+          true,
+          serviceDetail,
+          axiosDetail
+        )
+      );
+    },
+    []
+  );
+
+  return { commonServiceAction };
+};
+

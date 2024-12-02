@@ -1,16 +1,25 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axiosService from "../../../apis/axiosService";
+import axiosService, { configureAxios } from "../../../apis/axiosService";
 
-const apiThunk = (actionType, method, baseUrl, payload = {}) => {
+const apiThunk = (actionType, method, baseUrl, payload = {}, axiosDetail = {
+  baseURL: null,
+  contentType: null,
+}) => {
   return createAsyncThunk(
     actionType,
     async ({ id1, data1, session1 } = {}, { rejectWithValue }) => {
+      configureAxios(axiosDetail);
       const { id, data, session } = payload;
       let response;
       // const params = {
       //   body: Array.isArray(data) ? data : [data], // Ensure data is always an array
       // };
-      const params = {
+      // const params = {
+      //   body: Array.isArray(data) ? data : data,
+      //   session: session,
+      //   id: id,
+      // };
+      const params = data instanceof FormData ? data : {
         body: Array.isArray(data) ? data : data,
         session: session,
         id: id,
