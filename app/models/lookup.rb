@@ -11,9 +11,9 @@ class Lookup < ApplicationRecord
             when "get_main_categories"
                 if (!searchValue.blank?)
                     # records = MainCategory.where("#{filterKeyLabelName} like '%#{searchValue}%'")
-                    records = UserCategory.where("#{filterKeyLabelName} like '%#{searchValue}%' and active = 1 and user_category_type = 'main'")
+                    records = UserCategory.where("#{filterKeyLabelName} like '%#{searchValue}%' and active = 1 and user_category_type = 'main' and code <> 'split'")
                 else
-                    records = UserCategory.where(:active => true, :user_category_type => 'main')
+                    records = UserCategory.where("active = 1 and code <> 'split' and user_category_type = 'main'")
                 end
                 return true, '', records
             # when "get_sub_categories"
@@ -24,6 +24,30 @@ class Lookup < ApplicationRecord
             #         records = UserCategory.where(:active => true, :user_category_type => 'sub')
             #     end
             #     return true, '', records
+        when "get_source_types"
+            if (!searchValue.blank?)
+                # records = MainCategory.where("#{filterKeyLabelName} like '%#{searchValue}%'")
+                records = UserCategory.where("#{filterKeyLabelName} = '#{searchValue}' and active = 1").select("distinct type")
+            else
+                records = UserCategory.where(:active => true, ).select("distinct type")
+            end
+            return true, '', records
+            when "get_banks"
+                if (!searchValue.blank?)
+                    # records = MainCategory.where("#{filterKeyLabelName} like '%#{searchValue}%'")
+                    records = Bank.where("#{filterKeyLabelName} like '%#{searchValue}%' and active = 1")
+                else
+                    records = Bank.where(:active => true)
+                end
+                return true, '', records
+            when "get_accounts"
+                if (!searchValue.blank?)
+                    # records = MainCategory.where("#{filterKeyLabelName} like '%#{searchValue}%'")
+                    records = Account.where("#{filterKeyLabelName} like '%#{searchValue}%' and active = 1 ")
+                else
+                    records = Account.where(:active => true)
+                end
+                return true, '', records
             else
                 return false, "Data source Name are not match", nil
             end
@@ -49,12 +73,20 @@ class Lookup < ApplicationRecord
             #         records = UserCategory.where(:active => true, :user_category_type => 'main')
             #     end
             #     return true, '', records
+            when "get_main_categories"
+                if (!searchValue.blank?)
+                    # records = MainCategory.where("#{filterKeyLabelName} like '%#{searchValue}%'")
+                    records = UserCategory.where("#{filterKeyLabelName} like '%#{searchValue}%' and active = 1 and user_category_type = 'main' and type='#{mainLookupValue}'  and code <> 'split'")
+                else
+                    records = UserCategory.where("active = 1 and user_category_type = 'main' and type = '#{mainLookupValue}' and code <> 'split'")
+                end
+                return true, '', records
             when "get_sub_categories"
                 if (!searchValue.blank?)
                     # records = MainCategory.where("#{filterKeyLabelName} like '%#{searchValue}%'")
-                    records = UserCategory.where("#{filterKeyLabelName} like '%#{searchValue}%' and active = 1 and user_category_type = 'sub' and ref_code = '#{mainLookupValue}'")
+                    records = UserCategory.where("#{filterKeyLabelName} like '%#{searchValue}%' and active = 1 and user_category_type = 'sub' and ref_code = '#{mainLookupValue}'  and code <> 'split'")
                 else
-                    records = UserCategory.where(:active => true, :user_category_type => 'sub', :ref_code => mainLookupValue)
+                    records = UserCategory.where("active = 1 and user_category_type = 'sub' and ref_code = '#{mainLookupValue}' and code <> 'split'")
                 end
                 return true, '', records
             else
@@ -84,6 +116,27 @@ class Lookup < ApplicationRecord
                 else
                     return false, 'Records not found!',nil
                 end
+            when "get_source_types"
+                records = UserCategory.where("#{labelColumnName} = '#{columnValue}' and active = 1").select("distinct type").order(type: :asc)
+                if !records.empty?
+                    return true, '', records.first
+                else
+                    return false, 'Records not found!',nil
+                end
+            when "get_banks"
+                records = Bank.where("#{labelColumnName} = '#{columnValue}' and active = 1").select("#{dataColumnName}, #{labelColumnName}")
+                if !records.empty?
+                    return true, '', records.first
+                else
+                    return false, 'Records not found!',nil
+                end
+            when "get_accounts"
+                records = Account.where("#{labelColumnName} = '#{columnValue}' and active = 1").select("#{dataColumnName}, #{labelColumnName}")
+                if !records.empty?
+                    return true, '', records.first
+                else
+                    return false, 'Records not found!',nil
+                end
             else
                 return false, 'Lookup type are not matched.',nil
             end
@@ -98,8 +151,15 @@ class Lookup < ApplicationRecord
             dataColumnName = doc["filterKeyDataName"]
             columnValue = doc["value"]  
             mainLookupName = doc["mainLookupName"]
-            mainLookupValue = doc["mainLookupValue"]          
+            mainLookupValue = doc["mainLookupValue"]   
             case lookupType
+            when "get_main_categories"
+                records = UserCategory.where("#{labelColumnName} = '#{columnValue}' and active = 1 and user_category_type = 'main' and type='#{mainLookupValue}'").select("#{dataColumnName}, #{labelColumnName}")
+                if !records.empty?
+                    return true, '', records.first
+                else
+                    return false, 'Records not found!',nil
+                end
             when "get_sub_categories"
                 records = UserCategory.where("#{labelColumnName} = '#{columnValue}' and active = 1 and user_category_type = 'sub' and ref_code = '#{mainLookupValue}'").select("#{dataColumnName}, #{labelColumnName}")
                 if !records.empty?

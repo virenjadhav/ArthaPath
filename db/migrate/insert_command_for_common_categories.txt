@@ -1,0 +1,7 @@
+
+
+insert into common_categories(created_at, updated_at, active, name, code, type, category_type)
+values(GETDATE(), GETDATE(), 1, 'Split', 'SPLIT','split', 'main')
+
+insert into common_categories(created_at, updated_at, active, name, code, type, category_type, ref_id, ref_code)
+values(GETDATE(), GETDATE(), 1, 'Split', 'SPLIT', 'split', 'sub', id_from_above_insert, code_from_above_insert)

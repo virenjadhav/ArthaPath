@@ -1,51 +1,53 @@
 import React from "react";
 import {
-  Table,
+  // Table,
   Button,
   Space,
-  Modal,
-  Form,
-  Input,
-  Pagination,
+  // Modal,
+  // Form,
+  // Input,
+  // Pagination,
   message,
+  Tooltip,
 } from "antd";
 import {
   PlusOutlined,
   DeleteOutlined,
   EditOutlined,
   ReloadOutlined,
-  ExclamationCircleOutlined,
+  // ExclamationCircleOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setIsEditing,
   setIsModelVisible,
-  setSelectedForm,
+  // setSelectedForm,
   setSelectedRecord,
+  setShowRecord,
 } from "../redux/features/generic/modelSlice";
 import { useNavigate } from "react-router-dom";
 import { setMessageState } from "../redux/features/generic/genericSlice";
 import {
-  setErrorMsg,
+  // setErrorMsg,
   setResult,
-  setSuccessMsg,
+  // setSuccessMsg,
   setWarningMsg,
 } from "../redux/features/generic/messageSlice";
 import { ModelConfirm } from "./ModelConfirm";
-import { ModelInfo } from "./ModelInfo";
-import useApiServiceCall from "../apis/ApiServiceCall";
-import FormAddEdit from "./FormComponent/FormAddEdit";
+// import { ModelInfo } from "./ModelInfo";
+// import useApiServiceCall from "../apis/ApiServiceCall";
+// import FormAddEdit from "./FormComponent/FormAddEdit";
 import {
   useFormDeleteAction,
   useFormRefreshAction,
-  useRefreshAction,
+  // useRefreshAction,
 } from "./Services/FormServices";
 import SearchCriteriaComponent from "./Criteria/SearchCriteriaComponent";
 
 const ButtonsAddEditComponent = ({
-  deleteAction,
-  navigatePath,
+  // deleteAction,
+  // navigatePath,
 
   moduleTitle,
   deleteVisible = true,
@@ -53,19 +55,20 @@ const ButtonsAddEditComponent = ({
   addVisible = true,
   editVisible = true,
   criteriaVisible = true,
-  afterRefreshHandler = null,
-  afterDeleteHandler = null,
-  afterAddHandler = null,
-  afterEditHandler = null
+  detailVisible = false,
+  // afterRefreshHandler = null,
+  // afterDeleteHandler = null,
+  // afterAddHandler = null,
+  // afterEditHandler = null
 }) => {
-  const isEditing = useSelector((state) => state.model.isEditing);
-  const form = useSelector((state) => state.model.setSelectedForm);
+  // const isEditing = useSelector((state) => state.model.isEditing);
+  // const form = useSelector((state) => state.model.setSelectedForm);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const searchCriteriaData = useSelector(
     (state) => state.model.searchCriteriaData
   );
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const { callApi } = useApiServiceCall();
   const { formRefreshAction } = useFormRefreshAction();
   const { formDeleteAction } = useFormDeleteAction();
@@ -73,6 +76,7 @@ const ButtonsAddEditComponent = ({
   const handleAddButtonClick = () => {
     dispatch(setIsModelVisible(true));
     dispatch(setIsEditing(false));
+    dispatch(setShowRecord(null));
     dispatch(setSelectedRecord(null));
   };
 
@@ -150,7 +154,7 @@ const ButtonsAddEditComponent = ({
     }
   };
 
-  const handleEditButtonClick = () => {
+  const handleEditButtonClick = async () => {
     if (selectedRecord) {
       dispatch(setIsEditing(true));
       dispatch(setIsModelVisible(true));
@@ -202,7 +206,8 @@ const ButtonsAddEditComponent = ({
     //   dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
     // }
   };
-  const handleSearchButtonClick = () => {};
+  // const handleSearchButtonClick = () => {};
+  const onDetailClickHandler = () => {};
 
   return (
     <>
@@ -213,37 +218,58 @@ const ButtonsAddEditComponent = ({
         {/* <span style={{ fontSize: "18px", fontWeight: "400" }}>
           {moduleTitle}
         </span> */}
-        { addVisible && <Button
-          type="primary"
-          onClick={handleAddButtonClick}
-          icon={<PlusOutlined />}
-          shape="circle"
-          title={`Add ${moduleTitle}`}
-        />}
-        { deleteVisible && <Button
-          danger
-          onClick={handleDeleteButtonClick}
-          icon={<DeleteOutlined />}
-          shape="circle"
-          title={`Delete ${moduleTitle}`}
-          disabled={!selectedRecord} // Disable delete button if no record selected
-        />}
-        {editVisible &&  <Button
-          onClick={handleEditButtonClick}
-          icon={<EditOutlined />}
-          shape="circle"
-          title={`Edit ${moduleTitle}`}
-          disabled={!selectedRecord} // Disable edit button if no record selected
-        /> }
-       {refreshVisible && <Button
-          type="default"
-          onClick={handleRefreshClick}
-          icon={<ReloadOutlined />}
-          shape="circle"
-          title={`Refresh ${moduleTitle}`}
-        /> }
-        {criteriaVisible && <SearchCriteriaComponent moduleTitle={moduleTitle} />}
-        
+        {addVisible && (
+          <Button
+            type="primary"
+            onClick={handleAddButtonClick}
+            icon={<PlusOutlined />}
+            shape="circle"
+            title={`Add ${moduleTitle}`}
+          />
+        )}
+        {deleteVisible && (
+          <Button
+            danger
+            onClick={handleDeleteButtonClick}
+            icon={<DeleteOutlined />}
+            shape="circle"
+            title={`Delete ${moduleTitle}`}
+            disabled={!selectedRecord} // Disable delete button if no record selected
+          />
+        )}
+        {editVisible && (
+          <Button
+            onClick={handleEditButtonClick}
+            icon={<EditOutlined />}
+            shape="circle"
+            title={`Edit ${moduleTitle}`}
+            disabled={!selectedRecord} // Disable edit button if no record selected
+          />
+        )}
+        {refreshVisible && (
+          <Button
+            type="default"
+            onClick={handleRefreshClick}
+            icon={<ReloadOutlined />}
+            shape="circle"
+            title={`Refresh ${moduleTitle}`}
+          />
+        )}
+        {criteriaVisible && (
+          <SearchCriteriaComponent moduleTitle={moduleTitle} />
+        )}
+        {detailVisible && (
+          <>
+            <Button
+              type="primary"
+              icon={<SearchOutlined />}
+              style={{ width: "120px" }}
+              onClick={onDetailClickHandler}
+            >
+              Show Detail
+            </Button>
+          </>
+        )}
       </Space>
     </>
   );

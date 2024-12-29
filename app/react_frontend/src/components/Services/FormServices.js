@@ -6,6 +6,7 @@ import {
   setIsEditing,
   setIsModelVisible,
   setSelectedRecord,
+  setShowRecord,
 } from "../../redux/features/generic/modelSlice";
 import {
   setResult,
@@ -61,6 +62,7 @@ export const useFormDeleteAction = () => {
     dispatch(setIsModelVisible(false));
     dispatch(setIsEditing(false));
     dispatch(setSelectedRecord(null));
+    dispatch(setShowRecord(null));
     // dispatch(refreshAction);
     formRefreshAction();
   };
@@ -75,6 +77,7 @@ export const useFormDeleteAction = () => {
     const response = await dispatch(
       callApiService("deleteRecord", handleDeleteClickHandler, {
         id: record?.id,
+        data: record,
       })
     );
   }, []);
@@ -106,6 +109,30 @@ export const useFormCreateAction = () => {
 
   return { formCreateAction };
 };
+export const useFormCreateOrSaveAction = () => {
+  // const { callApi } = useApiServiceCall();
+  const dispatch = useDispatch();
+  const handleFormCreateClickHandler = (response) => {};
+  const formCreateOrSaveAction = useCallback(
+    async (payload, afterActionHandler = null) => {
+      if (!payload) {
+        console.error("record is missing.");
+        return;
+      }
+      const response = await dispatch(
+        callApiService(
+          "createOrSaveRecord",
+          handleFormCreateClickHandler,
+          payload,
+          afterActionHandler
+        )
+      );
+    },
+    []
+  );
+
+  return { formCreateOrSaveAction };
+};
 
 export const useFormUpdateAction = () => {
   // const { callApi } = useApiServiceCall();
@@ -135,4 +162,34 @@ export const useFormUpdateAction = () => {
   );
 
   return { formUpdateAction };
+};
+
+export const useFormGetRecordAction = () => {
+  // const { callApi } = useApiServiceCall();
+  const dispatch = useDispatch();
+  const handleFormClickHandler = (response) => {};
+  const formGetRecordAction = useCallback(
+    async (payload, afterActionHandler = null) => {
+      // await callApi(
+      //   "updateRecord",
+      //   handleFormUpdateClickHandler,
+      //   afterActionHandler
+      // );
+      if (!payload) {
+        console.error("record is missing.");
+        return;
+      }
+      const response = await dispatch(
+        callApiService(
+          "getRecord",
+          handleFormClickHandler,
+          payload,
+          afterActionHandler
+        )
+      );
+    },
+    []
+  );
+
+  return { formGetRecordAction };
 };

@@ -1,0 +1,37 @@
+[
+    {
+        "id": "createRecord",
+        "url": "budgets/create_budget",
+        "key": "createRecord",
+        "name": "budget/create_budget",
+        "method": "post"
+    },
+    {
+        "id": "updateRecord",
+        "url": "budgets/update_budget",
+        "key": "updateRecord",
+        "name": "budget/update_budget",
+        "method": "put"
+    },
+    {
+        "id": "getRecord",
+        "url": "budgets/get_budget",
+        "key": "getRecord",
+        "name": "budget/get_budget",
+        "method": "get"
+    },
+    {
+        "id": "getList",
+        "url": "budgets/get_budgets",
+        "key": "getList",
+        "name": "budget/get_budgets",
+        "method": "get"
+    },
+    {
+        "id": "deleteRecord",
+        "url": "budgets/delete_budget",
+        "key": "deleteRecord",
+        "name": "budget/delete_budget",
+        "method": "delete"
+    }  
+]

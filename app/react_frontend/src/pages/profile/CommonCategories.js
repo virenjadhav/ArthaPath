@@ -69,10 +69,9 @@ const CommonCategories = () => {
       const defaultSelectedKeys = [];
 
       data.forEach((item) => {
-        if (item.category_type === "main") {
+        if (item.category_type === "main" && item.active == true) {
           const activeSubCategories =
             item.children?.filter((sub) => sub.active === true) || [];
-
           if (activeSubCategories.length === item.children?.length) {
             // All subcategories are active, select the main category
             defaultSelectedKeys.push(item.key);

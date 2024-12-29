@@ -1,7 +1,7 @@
 # require_dependency 'transaction_helper'
 class UserCategoryCrud < ApplicationRecord
     # require 'transaction_helper'
-    include TransactionHelper
+    include ModelHelper
     def self.get_user_categories(user_id, criteria_condition)
         begin 
             if !criteria_condition.blank?
@@ -56,7 +56,7 @@ class UserCategoryCrud < ApplicationRecord
             process_category = Proc.new do |category, active|
               category.update(active: active)
             end
-    
+            
             # Fetch or create main category
             main_category = UserCategory.find_or_initialize_by(
               common_category_code: value["code"],
@@ -100,7 +100,7 @@ class UserCategoryCrud < ApplicationRecord
             end
           end
         end
-        result, message = TransactionHelper.save_transaction(operations)
+        result, message = ModelHelper.save_transaction(operations)
         raise message unless result == true
         return true, 'Common Category in User Category is Updated.'
       rescue => e
@@ -108,7 +108,7 @@ class UserCategoryCrud < ApplicationRecord
       end
     
       def self.create_user_category(data, main_category_id = nil, main_category_code = nil)
-        common_category = CommonCategory.find_by(code: data["code"])
+        common_category = CommonCategory.find_by(code: data["code"], id: data["id"])
         raise "Common Category #{data['code']} not found!" unless common_category
     
         category = UserCategory.new(

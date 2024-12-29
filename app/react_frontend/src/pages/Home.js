@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Header from "../components/Header.js";
+import React from "react";
+// import Header from "../components/Header.js";
 // import Dashboard from "../components/Dashboard.js";
 // import Transactions from "../components/Transactions.js";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 
 function Home() {
   // const [selectedTab, setSelectedTab] = useState("1"); // Default to Dashboard

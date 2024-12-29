@@ -1,4 +1,9 @@
-import { setLoading, setError } from "../features/generic/genericSlice";
+import {
+  setLoading,
+  setError,
+  setMessageState,
+} from "../features/generic/genericSlice";
+import { setErrorMsg } from "../features/generic/messageSlice";
 
 const apiMiddleware =
   ({ dispatch, getState }) =>
@@ -17,10 +22,13 @@ const apiMiddleware =
       ) {
         //Action dispatched after api call
         dispatch(setLoading(false));
-
         if (action.type.endsWith("/rejected")) {
-          const errorMessage = action.error.message || "something went wrong";
-          dispatch(setError(errorMessage));
+          // const errorMessage = action.error.message || "something went wrong";
+          // const errorMessage =
+          //   action.payload?.message ||
+          //   action.payload?.error ||
+          //   "Something went wrong.";
+          // dispatch(setMessageState(setErrorMsg(errorMessage)));
         }
       }
     }

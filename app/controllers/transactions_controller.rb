@@ -1,92 +1,191 @@
 class TransactionsController < ApplicationController
-    before_action :set_transaction, only: [:show_transaction, :edit_transaction, :update_transaction, :destroy_transaction]
-    # before_create :set_trans_no
-  
-    # GET /transactions
-    def get_transactions
-      criteria_data = params[:criteriaSearchData]
-      criteria_condition = CommonModule.get_criteria_condition(criteria_data)
-      @transactions = Transaction.all.where("active = 1 #{!criteria_condition.blank? ? criteria_condition : "" } ").order(id: :desc).limit(100)
-      transactions = []
-      @transactions.each do |transaction| 
-        trans_date = transaction.trans_date.blank? ? nil: transaction.trans_date.strftime('%Y-%m-%d')
-        transaction.trans_date =  trans_date
-        transactions << transaction
-      end
-      render json: {data: transactions, message: 'Transactions Reload successfully.'}, status: :ok
+  def get_transactions
+    #   render json: {data: transactions, message: 'Transactions Reload successfully.'}, status: :ok
+        result, message, @transactions = @transactions = TransactionCrud.get_transactions(@doc)
+        if result
+            object = {data: @transactions, message: "Transactions Reload successfully.", status: "success"}
+            respond_to_action(object)
+        else 
+            msg = message.blank? ? "Something went wrong getting transactions." : message
+            respond_to_error(msg)
+        end
     end
   
-    # GET /transactions/1
     def show_transaction
+    # render json: transaction.as_json(include: :transaction_lines)
+    #   if @transaction
+    #     render json: { message: "Transaction# '#{@transaction.transaction_code}' get successfully", data: @transaction, status: "success" }, status: :ok
+    #   else
+    #     render json: { error: @transaction.errors }, status: :unprocessable_entity
+    #   end
+        result, message, @transaction = TransactionCrud.show_transaction(@doc)
+        if result
+            object = {data: @transaction, message: "Transaction# '#{@transaction.transaction_code}' get successfully", status: "success"}
+            respond_to_action(object)
+        else 
+            msg = message.blank? ? @transaction.errors : message
+            respond_to_error(msg)
+        end
     end
   
-    # GET /transactions/new
-    def new
-      @transaction = Transaction.new
+    # def new
+    #   @transaction = Transaction.new
+    # end
+  
+    def create_or_save_transaction      
+    #   @transaction = Transaction.new(transaction_params) 
+    #         if @transaction.save
+    #             render json: {data: @transaction, message: "Transaction# #{@transaction.transaction_code} was successfully created.", status: "success"}, status: :created
+    #           else
+    #             render json: {error: "something went wrong from server", status: "error"}, status: :unprocessable_entity
+    #           end
+        create_record = @doc[:id].blank? ? true : false
+        result, message, @transaction = TransactionCrud.create_or_save_transaction(transaction_params)
+        if result
+            # respond_to_action("show_transaction") 
+            object = {data: @transaction, message: "Transaction# #{@transaction.transaction_code} was successfully #{create_record ? "created" : "updated"}.", status: "success"}
+            respond_to_action(object)
+        else 
+            # @transaction.errors.add(message)
+            msg = message.blank? ? @transaction.errors : message
+            respond_to_error(msg)
+        end
     end
   
-    # POST /transactions
-    def create_transaction
-      @transaction = Transaction.new(transaction_params)   
-      if @transaction.save
-        # redirect_to @transaction, notice: 'Transaction was successfully created.'
-        render json: {data: @transaction, message: "Transaction# #{@transaction.trans_no} was successfully created."}, status: :created
-        # render 
-      else
-        render json: {error: @transaction.errors.full_messages}, status: :unprocessable_entity
-        # render :new
-      end
-    end
+    # def edit_transaction
+    # end
   
-    # GET /transactions/1/edit
-    def edit_transaction
-    end
+    # def update_transaction   
+    #     if @transaction.update(transaction_params)
+    #         render json: { message: "Transaction# '#{@transaction.transaction_code}' updated successfully", data: @transaction }, status: :ok
+    #     else
+    #         render json: { error: @transaction.errors.full_messages}, status: :unprocessable_entity
+    #     end
+    # end
   
-    # PATCH/PUT /transactions/1
-    def update_transaction
-      # if @transaction.update(transaction_params)
-      #   # redirect_to @transaction, notice: 'Transaction was successfully updated.'
-      #   render json: {transaction: @transaction, message: 'Transaction was successfully created.'}, status: :
-      # else
-      #   render :edit
-      # end
-      if @transaction.update(transaction_params)
-        render json: { message: "Transaction# '#{@transaction.trans_no}' updated successfully", data: @transaction }, status: :ok
-      else
-        render json: { error: @transaction.errors.full_messages }, status: :unprocessable_entity
-      end
-    end
-  
-    # DELETE /transactions/1
-    def destroy_transaction
-      # @transaction.destroy      
-      if @transaction.update(active: false)
-        render json: { message: "Transaction# '#{@transaction.trans_no}' deleted successfully" }, status: :ok
-      else
-        render json: { errors: @transaction.errors.full_messages }, status: :unprocessable_entity
-      end
+    def destroy_transaction     
+    #   if @transaction.update(active: false)
+    #     render json: { message: "Transaction# '#{@transaction.transaction_code}' deleted successfully" }, status: :ok
+    #   else
+    #     render json: { errors: @transaction.errors.full_messages }, status: :unprocessable_entity
+    #   end
+        result, message, @transaction = TransactionCrud.delete_transaction(@doc)
+        if result
+            object = {data: @transaction, message: "Transaction# '#{@transaction.transaction_code}' deleted successfully", status: "success"}
+            respond_to_action(object)
+        else 
+            msg = message.blank? ? @transaction.errors : message
+            respond_to_error(msg)
+        end
     end
   
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_transaction
-        begin
-          @transaction = Transaction.find(params[:id])
-        rescue Exception => e
-          render json: { errors: "Something wrong in fetching transaction." }, status: :unprocessable_entity
-        end
-      end
+    #   def set_transaction
+    #     begin
+    #       @transaction = Transaction.find(params[:id])
+    #     rescue Exception => e
+    #       render json: { errors: "Something wrong in fetching transaction." }, status: :unprocessable_entity
+    #     end
+    #   end
   
-      # Only allow a list of trusted parameters through.
       def transaction_params
-        params.require(:body).permit(:active, :amount, :main_category_id, :main_category_code, :sub_category_id, :sub_category_code, :user_category, :trans_date, :description, :user_id)
-      end
+        params.require(:body).permit(:id, :active,:user_id, :transaction_code, :transaction_name, :contact_no, :contact_email, :amount, :transaction_amount, :interest_type, :interest_rate, :due_date, :status, :transaction_type, :attachment_file_name, :payment_method, :description)
+      end  
+  
+  
+  # before_action :set_transaction, only: [:show_transaction, :edit_transaction, :update_transaction, :destroy_transaction]
+    # # before_create :set_trans_no
+  
+    # # GET /transactions
+    # def get_transactions
+    #   criteria_data = params[:criteriaSearchData]
+    #   criteria_condition = CommonModule.get_criteria_condition(criteria_data)
+    #   @transactions = Transaction.all.where("active = 1 #{!criteria_condition.blank? ? criteria_condition : "" } ").order(id: :desc).limit(100)
+    #   transactions = []
+    #   @transactions.each do |transaction| 
+    #     # trans_date = transaction.trans_date.blank? ? nil: transaction.trans_date.strftime('%Y-%m-%d')
+    #     # transaction.trans_date =  trans_date
+    #     transactions << transaction
+    #   end
+    #   render json: {data: transactions, message: 'Transactions Reload successfully.'}, status: :ok
+    # end
+  
+    # # GET /transactions/1
+    # def show_transaction
+    #   if @transaction
+    #     render json: { message: "Transaction# '#{@transaction.trans_no}' get successfully", data: @transaction }, status: :ok
+    #   else
+    #     render json: { error: @transaction.errors }, status: :unprocessable_entity
+    #   end
+    # end
+  
+    # # GET /transactions/new
+    # def new
+    #   @transaction = Transaction.new
+    # end
+  
+    # # POST /transactions
+    # def create_transaction      
+    #   @transaction = Transaction.new(transaction_params)         
+    #   if @transaction.save
+    #     # redirect_to @transaction, notice: 'Transaction was successfully created.'
+    #     render json: {data: @transaction, message: "Transaction# #{@transaction.trans_no} was successfully created."}, status: :created
+    #     # render 
+    #   else
+    #     render json: {error: @transaction.errors.full_messages}, status: :unprocessable_entity
+    #     # render :new
+    #   end
+    # end
+  
+    # # GET /transactions/1/edit
+    # def edit_transaction
+    # end
+  
+    # # PATCH/PUT /transactions/1
+    # def update_transaction
+    #   # if @transaction.update(transaction_params)
+    #   #   # redirect_to @transaction, notice: 'Transaction was successfully updated.'
+    #   #   render json: {transaction: @transaction, message: 'Transaction was successfully created.'}, status: :
+    #   # else
+    #   #   render :edit
+    #   # end
+    #   if @transaction.update(transaction_params)
+    #     render json: { message: "Transaction# '#{@transaction.trans_no}' updated successfully", data: @transaction }, status: :ok
+    #   else
+    #     render json: { error: @transaction.errors.full_messages }, status: :unprocessable_entity
+    #   end
+    # end
+  
+    # # DELETE /transactions/1
+    # def destroy_transaction
+    #   # @transaction.destroy      
+    #   if @transaction.update(active: false)
+    #     render json: { message: "Transaction# '#{@transaction.trans_no}' deleted successfully" }, status: :ok
+    #   else
+    #     render json: { errors: @transaction.errors.full_messages }, status: :unprocessable_entity
+    #   end
+    # end
+  
+    # private
+    #   # Use callbacks to share common setup or constraints between actions.
+    #   def set_transaction
+    #     begin
+    #       @transaction = Transaction.find(params[:id])
+    #     rescue Exception => e
+    #       render json: { errors: "Something wrong in fetching transaction." }, status: :unprocessable_entity
+    #     end
+    #   end
+  
+    #   # Only allow a list of trusted parameters through.
+    #   def transaction_params
+    #     params.require(:body).permit(:active, :amount, :main_category_id, :main_category_code, :sub_category_id, :sub_category_code, :user_category, :trans_date, :description, :user_id, :source_type, :payment_method)
+    #   end
 
-      # def set_trans_no
-      #   # Find the maximum `trans_no` and increment it by 1
-      #   max_trans_no = Transaction.maximum(:trans_no) || 5000
-      #   self.trans_no = max_trans_no + 1
-      # end
+    #   # def set_trans_no
+    #   #   # Find the maximum `trans_no` and increment it by 1
+    #   #   max_trans_no = Transaction.maximum(:trans_no) || 5000
+    #   #   self.trans_no = max_trans_no + 1
+    #   # end
   end
 
 

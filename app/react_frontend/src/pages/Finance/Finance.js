@@ -13,7 +13,7 @@ import Transactions from "../transaction/Transactions";
 import Budgets from "../budgets/Budgets";
 import SavingGoals from "../saving_goals/SavingGoals";
 import Investment from "../investment/Investment";
-import Debt from "../debt/Debt";
+import Debt from "../debt/Debts";
 import { useLocation, useNavigate } from "react-router-dom";
 // import "antd/dist/antd.css";
 
@@ -157,7 +157,13 @@ const Finance = () => {
   ];
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div
+      style={{
+        display: "flex",
+        height: "100%",
+        // paddingTop: "5px",
+      }}
+    >
       {/* Side Menu */}
       <div
         style={{
@@ -165,7 +171,8 @@ const Finance = () => {
           transition: "width 0.2s",
           backgroundColor: "#001529",
           padding: "10px",
-          height: "100%",
+          paddingTop: "2  0px",
+          // height: "100%",
         }}
       >
         <Button
@@ -190,7 +197,14 @@ const Finance = () => {
       </div>
 
       {/* Content Section */}
-      <div style={{ flexGrow: 1, padding: "20px" }}>
+      <div
+        style={{
+          flexGrow: 1,
+          marginLeft: "20px",
+          marginTop: "20px",
+          minHeight: "400px",
+        }}
+      >
         {/* <h1>{selectedKey.charAt(0).toUpperCase() + selectedKey.slice(1)}</h1>
         <p>
           This is where the {selectedKey} content will be displayed on the right

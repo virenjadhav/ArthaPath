@@ -1,0 +1,13 @@
+[
+    {
+      "title": "",
+      "dataIndex": "radio",
+      "key": "radio",
+      "width": 50
+    },
+    {
+      "title": "Code",
+      "dataIndex": "type"
+    }
+    
+  ]

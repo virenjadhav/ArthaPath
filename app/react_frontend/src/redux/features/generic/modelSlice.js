@@ -7,6 +7,7 @@ const modelSlice = createSlice({
     isModelVisible: false,
     selectedForm: {},
     selectedRecord: null,
+    showRecord: null,
     records: null,
     isEditing: false,
 
@@ -43,6 +44,9 @@ const modelSlice = createSlice({
     setColumnsData(state, action) {
       state.columnsData = action.payload;
     },
+    setShowRecord(state, action) {
+      state.showRecord = action.payload;
+    },
     clearModelReducer(state) {
       state.data = null;
       state.isModelVisible = false;
@@ -69,5 +73,6 @@ export const {
   setSearchCriteriaData,
   clearModelReducer,
   setColumnsData,
+  setShowRecord,
 } = modelSlice.actions;
 export default modelSlice.reducer;

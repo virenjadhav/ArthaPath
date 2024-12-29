@@ -35,7 +35,7 @@ const InputNumberComponent = ({
   stringMode = null,
   bordered = null,
   formComponentProps = null,
-  onChange = null,
+  onChangeHandler = null,
   handleFormPropsChange = null,
   customComponentProps = null,
   isBold = false,
@@ -51,8 +51,11 @@ const InputNumberComponent = ({
     if (handleFormPropsChange) {
       handleFormPropsChange(name, {
         ...customComponentProps,
-        value, // Pass the updated value back
+        value,
       });
+    }
+    if (onChangeHandler) {
+      onChangeHandler(value);
     }
   };
 
@@ -115,9 +118,9 @@ const InputNumberComponent = ({
     if (value && maxLength && value.toString().length > maxLength) {
       return;
     }
-    if (onChange) {
-      handleComponentChange(value);
-    }
+    // if (onChange) {
+    handleComponentChange(value);
+    // }
   };
   // Prevent non-numeric keys except navigation keys
   const handleKeyDown = (e) => {

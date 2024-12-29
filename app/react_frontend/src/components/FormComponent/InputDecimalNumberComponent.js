@@ -35,7 +35,7 @@ const InputDecimalNumberComponent = ({
   stringMode = null,
   bordered = null,
   formComponentProps = null,
-  onChange = null,
+  onChangeHandler = null,
   handleFormPropsChange = null,
   customComponentProps = null,
   isBold = false,
@@ -53,6 +53,9 @@ const InputDecimalNumberComponent = ({
         ...customComponentProps,
         value, // Pass the updated value back
       });
+    }
+    if (onChangeHandler) {
+      onChangeHandler(value);
     }
   };
 

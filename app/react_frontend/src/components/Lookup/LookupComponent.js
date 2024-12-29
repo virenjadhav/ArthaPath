@@ -60,6 +60,7 @@ const LookupComponent = ({
   handleFormPropsChange = null,
   customComponentProps = null,
   validationFlag = false,
+  form = null,
 }) => {
   const inputRef = useRef(null);
   const [isLookupModelVisible, setIsLookupModelVisible] = useState(false);
@@ -132,6 +133,8 @@ const LookupComponent = ({
     }
   };
   const validateLookup = async (value) => {
+    console.log("validateLookup");
+    console.log(value);
     if (value) {
       try {
         // const response = await dispatch(
@@ -291,36 +294,40 @@ const LookupComponent = ({
       // });
     }
   }, [isEditing, selectedRecord]);
-  // useEffect(() => {
-  //   let error = [];
-  //   if (form) {
-  //     if (rules) {
-  //       const [{ required, message }] = rules;
-  //       if (required && !inputValue) {
-  //         error = [message];
-  //       } else {
-  //         error = [];
-  //       }
-  //     }
-  //     // form.setFieldsValue({ [name]: inputValue });
-  //     form.setFields([
-  //       {
-  //         name: name,
-  //         value: inputValue, // you can set a value or keep it the same
-  //         // errors: [error], // clear any existing errors
-  //         errors: error?.length > 0 ? error : null,
-  //         // rules: [{ required: true, message: 'Updated: This field is now required!' }],
-  //         rules: error?.length > 0 ? rules : null,
-  //       },
-  //     ]);
-  //   }
-  // }, [inputValue, form, rules]);
+  useEffect(() => {
+    let errors = [];
+
+    if (form) {
+      if (rules) {
+        const [{ required, message }] = rules;
+        if (required && !inputValue) {
+          errors = [message];
+        } else {
+          errors = [];
+        }
+      }
+      // form.setFieldsValue({ [name]: inputValue });
+
+      form.setFields([
+        {
+          name: name,
+          value: inputValue, // you can set a value or keep it the same
+          // errors: [error], // clear any existing errors
+          errors: errors?.length > 0 ? errors : [],
+          // rules: [{ required: true, message: 'Updated: This field is now required!' }],
+          rules: errors?.length > 0 ? rules : [],
+        },
+      ]);
+    }
+  }, [inputValue, form, rules]);
 
   useEffect(() => {
     if (savedInputValue) {
       let labelValue = savedInputValue[labelTag];
       let dataValue = savedInputValue[dataTag];
       let formSaved = savedInputValue?.formSaved;
+      console.log("savedInput");
+      console.log(savedInputValue);
       setInputValue(labelValue);
       if (handleFormPropsChange) {
         handleFormPropsChange(name, {

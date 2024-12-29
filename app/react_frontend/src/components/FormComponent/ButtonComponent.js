@@ -2,12 +2,12 @@ import React from "react";
 import { Form, Button } from "antd";
 import { useSelector } from "react-redux";
 
-const ButtonComponent = ({ type = "primary", editForm = false }) => {
+const ButtonComponent = ({ label, type = "primary" }) => {
   return (
     <>
       <Form.Item>
         <Button type={type} htmlType="submit">
-          {editForm ? "Update" : "Add"}
+          {label}
         </Button>
       </Form.Item>
     </>

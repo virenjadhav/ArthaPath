@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from "react";
 import ModelComponent from "../../components/ModelComponent";
-import HeaderComponent from "../../components/Header";
+// import HeaderComponent from "../../components/Header";
 import columnsData from "./TransactionColumns.json";
 import transactionServicesData from "./TransactionServices.json";
 import transactionCriteriaDataStru from "./TransactionCriteria.json";
 // import moment from "moment";
 import dayjs from "dayjs"; // Import day.js
 import {
-  setDate,
-  setSelectedForm,
+  // setDate,
+  // setSelectedForm,
   setSelectedRecord,
   setServicesData,
   setCriteriaDataStru,
 } from "../../redux/features/generic/modelSlice";
 import TransactionAddEditForm from "./TransactionAddEditForm";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setColumns,
-  setData,
-} from "../../redux/features/transaction/transactionSlice.js";
+// import {
+//   setColumns,
+//   setData,
+// } from "../../redux/features/transaction/transactionSlice.js";
 // import './styles.css'; // Import the custom CSS
 
 import {
   delete_transaction,
   get_transactions,
 } from "../../redux/features/transaction/transactionApiThunk.js";
-import { setMessageState } from "../../redux/features/generic/genericSlice.js";
+// import { setMessageState } from "../../redux/features/generic/genericSlice.js";
 // import useApiServiceCall, {
 //   ApiServiceCall,
 // } from "../../apis/ApiServiceCall.js";
-import {
-  setErrorMsg,
-  setResult,
-} from "../../redux/features/generic/messageSlice.js";
+// import {
+//   setErrorMsg,
+//   setResult,
+// } from "../../redux/features/generic/messageSlice.js";
 
 const Transactions = ({ title }) => {
   // const [data, setData] = useState([

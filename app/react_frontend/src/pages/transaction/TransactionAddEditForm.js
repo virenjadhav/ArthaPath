@@ -1,326 +1,335 @@
-import React, { useEffect, useRef } from "react";
-import { message } from "antd";
+import React from "react";
+// import { message } from "antd";
 import InputComponent from "../../components/FormComponent/InputComponent";
 import {
-  Table,
-  Button,
-  Space,
-  Modal,
+  // Table,
+  // Button,
+  // Space,
+  // Modal,
   Form,
-  Input,
-  Pagination,
-  DatePicker,
-  InputNumber,
-  AutoComplete,
-  Select,
-  Menu,
+  // Input,
+  // Pagination,
+  // DatePicker,
+  // InputNumber,
+  // AutoComplete,
+  // Select,
+  // Menu,
 } from "antd";
-import {
-  setIsEditing,
-  setSelectedForm,
-  setSelectedRecord,
-} from "../../redux/features/generic/modelSlice";
-import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
-import dayjs from "dayjs";
-import {
-  create_transaction,
-  get_transactions,
-  update_transaction,
-} from "../../redux/features/transaction/transactionApiThunk";
-import {
-  setErrorMsg,
-  setResult,
-  setSuccessMsg,
-} from "../../redux/features/generic/messageSlice";
-import Lookup from "../../components/Lookup";
-import { setMessageState } from "../../redux/features/generic/genericSlice";
-import ButtonComponent from "../../components/FormComponent/ButtonComponent";
+// import {
+//   setIsEditing,
+//   setSelectedForm,
+//   setSelectedRecord,
+// } from "../../redux/features/generic/modelSlice";
+import { useSelector } from "react-redux";
+// import moment from "moment";
+// import dayjs from "dayjs";
+// import {
+//   create_transaction,
+//   get_transactions,
+//   update_transaction,
+// } from "../../redux/features/transaction/transactionApiThunk";
+// import {
+//   setErrorMsg,
+//   setResult,
+//   setSuccessMsg,
+// } from "../../redux/features/generic/messageSlice";
+// import Lookup from "../../components/Lookup";
+// import { setMessageState } from "../../redux/features/generic/genericSlice";
+// import ButtonComponent from "../../components/FormComponent/FormButtonComponent";
 import InputDecimalNumberComponent from "../../components/FormComponent/InputDecimalNumberComponent";
 import DateComponent from "../../components/FormComponent/DateComponent";
 import InputTextAreaComponent from "../../components/FormComponent/InputTextAreaComponent";
-import RadioComponent from "../../components/FormComponent/RadioComponent";
-import DropDownComponent from "../../components/FormComponent/DropDownComponent";
+// import RadioComponent from "../../components/FormComponent/RadioComponent";
+// import DropDownComponent from "../../components/FormComponent/DropDownComponent";
 import SelectComponent from "../../components/FormComponent/SelectComponents";
-import CheckBoxComponent from "../../components/FormComponent/CheckBoxComponent";
-import SingleCheckboxComponent from "../../components/FormComponent/SingleCheckboxComponent";
+// import CheckBoxComponent from "../../components/FormComponent/CheckBoxComponent";
+// import SingleCheckboxComponent from "../../components/FormComponent/SingleCheckboxComponent";
 import FormAddEdit from "../../components/FormComponent/FormAddEdit";
 import LookupComponent from "../../components/Lookup/LookupComponent";
 import DependentLookupComponent from "../../components/Lookup/DependentLookupComponent";
+// import LinkModel from "../../components/FormComponent/LinkModel";
+// import TableComponent from "../../components/TableComponent";
 // import transactionServicesData from "./TransactionServices.json";
+// import columnsData from "./TransactionColumns.json";
 
-const { TextArea } = Input;
+// const { TextArea } = Input;
 
 const TransactionAddEditForm = () => {
-  const user_id = useSelector((state) => state.generic.user?.user_id);
-  const dispatch = useDispatch();
+  // const user_id = useSelector((state) => state.generic.user?.user_id);
+  // const dispatch = useDispatch();
   const [form] = Form.useForm(); // Initialize form instance
-  const formComponentProps = useRef({});
-  const radioOptions = [
-    {
-      label: "Option VB",
-      value: "option1",
-      customProp: "CustomData1",
-      disabled: false,
-    },
-    {
-      label: "Option 2",
-      value: "option2",
-      customProp: "CustomData2",
-      disabled: false,
-    },
-    {
-      label: "Option 3",
-      value: "option3",
-      customProp: "CustomData3",
-      disabled: true,
-    },
-  ];
-  const selectOptions = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-  ];
-  // const  checkboxOptions = [
-  //   { label: "Option A", value: "A" },
-  //   { label: "Option B", value: "B" },
-  //   { label: "Option C", value: "C" }
+  // const formComponentProps = useRef({});
+  // const data = useSelector((state) => state.model.data);
+  // const radioOptions = [
+  //   {
+  //     label: "Option VB",
+  //     value: "option1",
+  //     customProp: "CustomData1",
+  //     disabled: false,
+  //   },
+  //   {
+  //     label: "Option 2",
+  //     value: "option2",
+  //     customProp: "CustomData2",
+  //     disabled: false,
+  //   },
+  //   {
+  //     label: "Option 3",
+  //     value: "option3",
+  //     customProp: "CustomData3",
+  //     disabled: true,
+  //   },
   // ];
-  const checkboxOptions = [
-    { label: "Option A", value: "A" }, // Normal
-    { label: "Option B", value: "B", disabled: true }, // Disabled option
-    { label: "Option C", value: "C" },
-    { label: "Option D", value: "D", disabled: true }, // Disabled option
-    { label: "Option E", value: "E" },
+  // const selectOptions = [
+  //   { value: "option1", label: "Option 1" },
+  //   { value: "option2", label: "Option 2" },
+  //   { value: "option3", label: "Option 3" },
+  // ];
+  // // const  checkboxOptions = [
+  // //   { label: "Option A", value: "A" },
+  // //   { label: "Option B", value: "B" },
+  // //   { label: "Option C", value: "C" }
+  // // ];
+  // const checkboxOptions = [
+  //   { label: "Option A", value: "A" }, // Normal
+  //   { label: "Option B", value: "B", disabled: true }, // Disabled option
+  //   { label: "Option C", value: "C" },
+  //   { label: "Option D", value: "D", disabled: true }, // Disabled option
+  //   { label: "Option E", value: "E" },
+  // ];
+  const paymentMethodOptions = [
+    { label: "UPI", value: "upi" },
+    { label: "Internet Banking UPI", value: "internet_banking" },
+    { label: "Debit Card", value: "debit_card" },
   ];
+  const onPaymentMethodChange = () => {};
+  // const handleCheckboxChange = (checkedValues) => {};
+  // const onDropdownClickHandler = () => {};
+  // const onDropDownSelectHandler = () => {};
+  // const DropdownMenus = (
+  //   <Menu onClick={onDropdownClickHandler} onSelect={onDropDownSelectHandler}>
+  //     <Menu.Item key="1">
+  //       <a href="https://www.google.com">Google</a>
+  //     </Menu.Item>
+  //     <Menu.Item key="2">
+  //       <a href="https://www.facebook.com">Facebook</a>
+  //     </Menu.Item>
+  //     <Menu.Item key="3">Option 3</Menu.Item>
+  //   </Menu>
+  // );
+  // const handleFormComponentChange = (name, props) => {
+  //   // if (type === "add") {
+  //   //   formComponentProps.current[name] = {
+  //   //     ...props.current[name],
+  //   //     componentType: componentTypeValue,
+  //   //   };
+  //   // } else {
+  //   //   formComponentProps.current[name] = props.current[name];
+  //   // }
+  //   let existingValues = formComponentProps.current[name];
+  //   formComponentProps.current[name] = { ...existingValues, ...props };
+  // };
 
-  const handleCheckboxChange = (checkedValues) => {};
-  const onDropdownClickHandler = () => {};
-  const onDropDownSelectHandler = () => {};
-  const DropdownMenus = (
-    <Menu onClick={onDropdownClickHandler} onSelect={onDropDownSelectHandler}>
-      <Menu.Item key="1">
-        <a href="https://www.google.com">Google</a>
-      </Menu.Item>
-      <Menu.Item key="2">
-        <a href="https://www.facebook.com">Facebook</a>
-      </Menu.Item>
-      <Menu.Item key="3">Option 3</Menu.Item>
-    </Menu>
-  );
-  const handleFormComponentChange = (name, props) => {
-    // if (type === "add") {
-    //   formComponentProps.current[name] = {
-    //     ...props.current[name],
-    //     componentType: componentTypeValue,
-    //   };
-    // } else {
-    //   formComponentProps.current[name] = props.current[name];
-    // }
-    let existingValues = formComponentProps.current[name];
-    formComponentProps.current[name] = { ...existingValues, ...props };
-  };
+  // // Handle form submission
+  // const handleModelOk = async (values) => {
+  //   // Example: Get form values and check their types
+  //   const { amount, description, is_active, trans_date, price, notes } = values;
 
-  // Handle form submission
-  const handleModelOk = async (values) => {
-    // Example: Get form values and check their types
-    const { amount, description, is_active, trans_date, price, notes } = values;
+  //   const customProps = formComponentProps.current;
+  //   // Switch case to handle different types
+  //   // Object.entries(values).forEach(([key, value]) => {
+  //   //   switch (typeof value) {
+  //   //     case "number":
 
-    const customProps = formComponentProps.current;
-    // Switch case to handle different types
-    // Object.entries(values).forEach(([key, value]) => {
-    //   switch (typeof value) {
-    //     case "number":
+  //   //       // Perform specific operations for numbers
+  //   //       break;
 
-    //       // Perform specific operations for numbers
-    //       break;
+  //   //     case "string":
 
-    //     case "string":
+  //   //       // Perform specific operations for strings
+  //   //       break;
 
-    //       // Perform specific operations for strings
-    //       break;
+  //   //     case "boolean":
 
-    //     case "boolean":
+  //   //       // Perform specific operations for boolean
+  //   //       break;
 
-    //       // Perform specific operations for boolean
-    //       break;
+  //   //     case "object":
+  //   //       // If the object is a date (Moment or DayJS object), handle it as a date
+  //   //       if (dayjs(value).isValid()) {
 
-    //     case "object":
-    //       // If the object is a date (Moment or DayJS object), handle it as a date
-    //       if (dayjs(value).isValid()) {
+  //   //         // Perform specific operations for dates
+  //   //       }
+  //   //       break;
 
-    //         // Perform specific operations for dates
-    //       }
-    //       break;
+  //   //     default:
 
-    //     default:
+  //   //   }
+  //   // });
+  //   // Iterate over each value in the form
+  //   // Object.entries(values).forEach(([key, value]) => {
+  //   //   const fieldInstance = form.getFieldInstance(key);
+  //   //   const componentType =
+  //   //     fieldInstance?.attributes?.componentType?.value || "defaultType";
+  //   //   const updateFlag = fieldInstance?.attributes?.updateFlag;
 
-    //   }
-    // });
-    // Iterate over each value in the form
-    // Object.entries(values).forEach(([key, value]) => {
-    //   const fieldInstance = form.getFieldInstance(key);
-    //   const componentType =
-    //     fieldInstance?.attributes?.componentType?.value || "defaultType";
-    //   const updateFlag = fieldInstance?.attributes?.updateFlag;
+  //   //   switch (componentType) {
+  //   //     case "formInput":
 
-    //   switch (componentType) {
-    //     case "formInput":
+  //   //       // Handle input (string) logic here
+  //   //       break;
 
-    //       // Handle input (string) logic here
-    //       break;
+  //   //     case "formInputTextArea":
 
-    //     case "formInputTextArea":
+  //   //       // Handle input (string) logic here
+  //   //       break;
+  //   //     case "formInputDecimal":
 
-    //       // Handle input (string) logic here
-    //       break;
-    //     case "formInputDecimal":
+  //   //       // Handle input (string) logic here
+  //   //       break;
 
-    //       // Handle input (string) logic here
-    //       break;
+  //   //     case "formDate":
+  //   //       if (dayjs(value).isValid()) {
 
-    //     case "formDate":
-    //       if (dayjs(value).isValid()) {
+  //   //         // Handle date logic here
+  //   //       }
+  //   //       break;
 
-    //         // Handle date logic here
-    //       }
-    //       break;
+  //   //     case "formRadio":
 
-    //     case "formRadio":
+  //   //       // Handle radio (boolean or string) logic here
+  //   //       break;
 
-    //       // Handle radio (boolean or string) logic here
-    //       break;
+  //   //     case "formCheckbox":
 
-    //     case "formCheckbox":
+  //   //       // Handle checkbox (array or boolean) logic here
+  //   //       break;
 
-    //       // Handle checkbox (array or boolean) logic here
-    //       break;
+  //   //     // case "number":
 
-    //     // case "number":
+  //   //     //   // Handle number logic here
+  //   //     //   break;
 
-    //     //   // Handle number logic here
-    //     //   break;
+  //   //     // case "custom":
 
-    //     // case "custom":
+  //   //     //   // Handle custom component logic here
+  //   //     //   break;
 
-    //     //   // Handle custom component logic here
-    //     //   break;
+  //   //     case "formSingleCheckbox":
 
-    //     case "formSingleCheckbox":
+  //   //       // Handle custom component logic here
+  //   //       break;
+  //   //     case "formSelect":
 
-    //       // Handle custom component logic here
-    //       break;
-    //     case "formSelect":
+  //   //       break;
 
-    //       break;
+  //   //     case "DropDown":
 
-    //     case "DropDown":
+  //   //       break;
 
-    //       break;
+  //   //     default:
 
-    //     default:
+  //   //   }
+  //   // });
 
-    //   }
-    // });
+  //   // let { id, trans_date, main_category, user_category, description, amount } =
+  //   //   values;
 
-    // let { id, trans_date, main_category, user_category, description, amount } =
-    //   values;
+  //   // try {
+  //   //   const formattedDate = trans_date
+  //   //     ? dayjs(trans_date).format("YYYY-MM-DD HH:mm:ss.SSS")
+  //   //     : null;
 
-    // try {
-    //   const formattedDate = trans_date
-    //     ? dayjs(trans_date).format("YYYY-MM-DD HH:mm:ss.SSS")
-    //     : null;
+  //   //   const transactionData = {
+  //   //     amount,
+  //   //     main_category,
+  //   //     user_category,
+  //   //     description,
+  //   //     trans_date: formattedDate,
+  //   //     user_id,
+  //   //     active: 1,
+  //   //   };
 
-    //   const transactionData = {
-    //     amount,
-    //     main_category,
-    //     user_category,
-    //     description,
-    //     trans_date: formattedDate,
-    //     user_id,
-    //     active: 1,
-    //   };
+  //   //   if (isEditing) {
+  //   //     // Edit existing transaction
+  //   //     const response = await dispatch(
+  //   //       update_transaction({ id, data: transactionData })
+  //   //     ).unwrap();
+  //   //     dispatch(setSelectedRecord(response.transaction));
+  //   //     // message.success({
+  //   //     //   content: response.message,
+  //   //     //   duration: 5, // Duration in seconds
+  //   //     //   style: {
+  //   //     //     fontSize: "18px", // Larger font size
+  //   //     //   },
+  //   //     // });
+  //   //     // dispatch(setResult("success"));
+  //   //     dispatch(setMessageState(setResult("success")));
+  //   //     // dispatch(setSuccessMsg(response?.message));
+  //   //     dispatch(setMessageState(setSuccessMsg(response?.message)));
+  //   //   } else {
+  //   //     // Create new transaction
+  //   //     const response = await dispatch(
+  //   //       create_transaction({ data: transactionData })
+  //   //     ).unwrap();
+  //   //     dispatch(setSelectedRecord(response?.transaction));
+  //   //     dispatch(setIsEditing(true));
+  //   //     dispatch(get_transactions());
+  //   //     // message.success({
+  //   //     //   content: response.message,
+  //   //     //   duration: 5, // Duration in seconds
+  //   //     //   style: {
+  //   //     //     fontSize: "18px", // Larger font size
+  //   //     //   },
+  //   //     // });
+  //   //     // dispatch(setResult("success"));
+  //   //     dispatch(setMessageState(setResult("success")));
+  //   //     // dispatch(setSuccessMsg(response?.message));
+  //   //     dispatch(setMessageState(setSuccessMsg(response?.message)));
+  //   //   }
+  //   //   dispatch(get_transactions());
+  //   // } catch (error) {
+  //   //   // message.error({
+  //   //   //   content: `Error : ${error?.error?.join(",")}`,
+  //   //   //   duration: 5, // Duration in seconds
+  //   //   //   style: {
+  //   //   //     fontSize: "18px", // Larger font size
+  //   //   //   },
+  //   //   // });
+  //   //   dispatch(setMessageState(setResult("error")));
+  //   //   dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
+  //   // }
+  // };
 
-    //   if (isEditing) {
-    //     // Edit existing transaction
-    //     const response = await dispatch(
-    //       update_transaction({ id, data: transactionData })
-    //     ).unwrap();
-    //     dispatch(setSelectedRecord(response.transaction));
-    //     // message.success({
-    //     //   content: response.message,
-    //     //   duration: 5, // Duration in seconds
-    //     //   style: {
-    //     //     fontSize: "18px", // Larger font size
-    //     //   },
-    //     // });
-    //     // dispatch(setResult("success"));
-    //     dispatch(setMessageState(setResult("success")));
-    //     // dispatch(setSuccessMsg(response?.message));
-    //     dispatch(setMessageState(setSuccessMsg(response?.message)));
-    //   } else {
-    //     // Create new transaction
-    //     const response = await dispatch(
-    //       create_transaction({ data: transactionData })
-    //     ).unwrap();
-    //     dispatch(setSelectedRecord(response?.transaction));
-    //     dispatch(setIsEditing(true));
-    //     dispatch(get_transactions());
-    //     // message.success({
-    //     //   content: response.message,
-    //     //   duration: 5, // Duration in seconds
-    //     //   style: {
-    //     //     fontSize: "18px", // Larger font size
-    //     //   },
-    //     // });
-    //     // dispatch(setResult("success"));
-    //     dispatch(setMessageState(setResult("success")));
-    //     // dispatch(setSuccessMsg(response?.message));
-    //     dispatch(setMessageState(setSuccessMsg(response?.message)));
-    //   }
-    //   dispatch(get_transactions());
-    // } catch (error) {
-    //   // message.error({
-    //   //   content: `Error : ${error?.error?.join(",")}`,
-    //   //   duration: 5, // Duration in seconds
-    //   //   style: {
-    //   //     fontSize: "18px", // Larger font size
-    //   //   },
-    //   // });
-    //   dispatch(setMessageState(setResult("error")));
-    //   dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
-    // }
-  };
-
-  const selectedRecord = useSelector((state) => state.model.selectedRecord);
+  // const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const isEditing = useSelector((state) => state.model.isEditing);
 
-  useEffect(() => {
-    // if (selectedRecord && isEditing) {
-    //   // Convert trans_date from string to dayjs object
-    //   const formattedDate = selectedRecord.trans_date
-    //     ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
-    //     : null;
-    //   form.setFieldsValue({ ...selectedRecord, trans_date: formattedDate });
-    if (selectedRecord && isEditing) {
-      const formattedDate = selectedRecord.trans_date
-        ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
-        : null;
+  // useEffect(() => {
+  //   // if (selectedRecord && isEditing) {
+  //   //   // Convert trans_date from string to dayjs object
+  //   //   const formattedDate = selectedRecord.trans_date
+  //   //     ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
+  //   //     : null;
+  //   //   form.setFieldsValue({ ...selectedRecord, trans_date: formattedDate });
+  //   if (selectedRecord && isEditing) {
+  //     const formattedDate = selectedRecord.trans_date
+  //       ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
+  //       : null;
 
-      form.setFieldsValue({
-        ...selectedRecord,
-        trans_date: formattedDate,
-      });
-    } else {
-      form.resetFields();
-    }
-  }, [selectedRecord, isEditing, form]);
+  //     form.setFieldsValue({
+  //       ...selectedRecord,
+  //       trans_date: formattedDate,
+  //     });
+  //   } else {
+  //     form.resetFields();
+  //   }
+  // }, [selectedRecord, isEditing, form]);
   // const options = [
   //   { value: "value1", label: "Label 1" },
   //   { value: "value2", label: "Label 2" },
   //   { value: "value3", label: "Label 3" },
   // ];
-  const { Option } = Select;
+  // const { Option } = Select;
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
   //   // setInputValue(value); // Update the input value
@@ -347,7 +356,7 @@ const TransactionAddEditForm = () => {
           rules={[{ required: true, message: "Please input the amount!" }]}
           step={0.01}
           min={0}
-          addonAfter="USD"
+          // addonAfter="INR"
           customComponentProps={{ updateFlag: true }}
         />
         <DateComponent
@@ -359,7 +368,30 @@ const TransactionAddEditForm = () => {
           formate={"YYYY-MM-DD"}
           customComponentProps={{ updateFlag: true }}
         />
+        {/* <LinkModel label="split" /> */}
         <LookupComponent
+          name="source_type"
+          label="Source Type"
+          labelField="type"
+          dataField="type"
+          dataSourceName="get_source_types"
+          lookupService="get_source_types"
+          lookupFormatUrl="source_type"
+          dataTag="source_type"
+          labelTag="source_type"
+          filterKeyLabelName="type"
+          filterKeyDataName="type"
+          validationFlag={true}
+          includeInLayout={true}
+          visible={true}
+          rules={[
+            {
+              required: true,
+              message: "Please Select Source Type!",
+            },
+          ]}
+        />
+        <DependentLookupComponent
           name="main_category"
           label="Main Category"
           labelField="code"
@@ -372,6 +404,8 @@ const TransactionAddEditForm = () => {
           filterKeyLabelName="code"
           filterKeyDataName="id"
           validationFlag={true}
+          mainLookupValue={form.getFieldValue("source_type")}
+          mainLookupName="source_type"
           rules={[
             {
               required: true,
@@ -403,11 +437,27 @@ const TransactionAddEditForm = () => {
             },
           ]}
         />
+        <SelectComponent
+          name="payment_method"
+          label="Payment Method"
+          customComponentProps={{ updateFlag: true }}
+          options={paymentMethodOptions}
+          defaultValue="upi"
+          placeholder="Choose an payment method"
+          rules={[{ required: true, message: "Please Select payment method!" }]}
+          onChangeHandler={onPaymentMethodChange}
+          // disabled={isEditing ? true : false}
+        />
         <InputTextAreaComponent
           name={"description"}
           label={"Description"}
           customComponentProps={{ updateFlag: true }}
         />
+        {/* <TableComponent
+          data={data}
+          columns={columnsData}
+          expandableTable={null}
+        /> */}
       </FormAddEdit>
       {/* <Form
         form={form}

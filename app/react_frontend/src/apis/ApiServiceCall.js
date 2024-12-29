@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { serviceCall } from "../redux/features/generic/genericApiThunk";
 import { setMessageState } from "../redux/features/generic/genericSlice";
 import { setErrorMsg, setResult } from "../redux/features/generic/messageSlice";
+import { ModelInfo } from "../components/ModelInfo";
+import { Alert } from "antd";
 
 // Utility function to get service details by ID
 const getServiceDetailsById = (servicesData, serviceId) => {
@@ -24,7 +26,7 @@ const callApi = async (
   afterActionHandler = null,
   genericService = false,
   serviceDetails = {},
-  axiosDetail = {baseURL: null, contentType:null}
+  axiosDetail = { baseURL: null, contentType: null }
 ) => {
   // Fetch the latest servicesData from Redux state
   const servicesData = getState().model.servicesData;
@@ -54,9 +56,14 @@ const callApi = async (
       throw new Error(
         `Please provide API method for this service: ${serviceId}`
       );
-    const getTransactionsAction = serviceCall(name, method, url, payload, axiosDetail);
+    const getTransactionsAction = serviceCall(
+      name,
+      method,
+      url,
+      payload,
+      axiosDetail
+    );
     const response = await dispatch(getTransactionsAction()).unwrap();
-
     if (response) {
       if (handleClickHandler) {
         handleClickHandler(response);
@@ -67,8 +74,15 @@ const callApi = async (
       }
     }
   } catch (err) {
-    dispatch(setMessageState(setResult("error")));
-    dispatch(setMessageState(setErrorMsg(err?.message)));
+    // dispatch(setMessageState(setResult("error")));
+    // dispatch(setMessageState(setErrorMsg(err?.message || err?.error)));
+    let msg =
+      err?.message ||
+      err?.error ||
+      "Something went wrong. Please contact system administrator!";
+    ModelInfo({
+      title: msg,
+    });
   }
 };
 
@@ -80,7 +94,7 @@ export const callApiService = (
   afterActionHandler = null,
   genericService,
   serviceDetails,
-  axiosDetail = {baseURL: null, contentType:null}
+  axiosDetail = { baseURL: null, contentType: null }
 ) => {
   return async (dispatch, getState) => {
     await callApi(

@@ -1,16 +1,23 @@
 import { Form, Modal } from "antd";
 import { useForm } from "antd/es/form/Form";
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import InputDecimalNumberComponent from "./InputDecimalNumberComponent";
 import DateComponent from "./DateComponent";
 import RadioComponent from "./RadioComponent";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
-import ButtonComponent from "./ButtonComponent";
+import ButtonComponent from "./FormButtonComponent";
 import {
   setIsEditing,
   setIsModelVisible,
   setSelectedRecord,
+  setShowRecord,
 } from "../../redux/features/generic/modelSlice";
 import { update_transaction } from "../../redux/features/transaction/transactionApiThunk";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
@@ -22,18 +29,19 @@ import {
 import useApiServiceCall from "../../apis/ApiServiceCall";
 import {
   useFormCreateAction,
+  useFormCreateOrSaveAction,
+  useFormGetRecordAction,
   useFormRefreshAction,
   useFormUpdateAction,
   useRefreshAction,
 } from "../Services/FormServices";
 import "../../assets/css/FormAddEditStyle.css";
 
-
 const FormAddEdit = ({ children, form: externalForm }) => {
   // const FormAddEdit = forwardRef(({ children, onValuesChangeCallback }, ref) => {
 
   // const [form] = useForm();
-  
+
   // // Expose the form instance to the parent component
   // useImperativeHandle(ref, () => ({
   //   getForm: () => form,
@@ -59,8 +67,10 @@ const FormAddEdit = ({ children, form: externalForm }) => {
   const [internalForm] = useForm();
   const form = externalForm || internalForm; // Use the external form if provided
   const { formRefreshAction } = useFormRefreshAction();
-  const { formCreateAction } = useFormCreateAction();
-  const { formUpdateAction } = useFormUpdateAction();
+  // const { formCreateAction } = useFormCreateAction();
+  // const { formUpdateAction } = useFormUpdateAction();
+  const { formCreateOrSaveAction } = useFormCreateOrSaveAction();
+  const { formGetRecordAction } = useFormGetRecordAction();
   const formComponentProps = useRef({});
   const [editingTransaction, setEditingTransaction] = useState(null);
   // const [isModalVisible, setIsModalVisible] = useState(false);
@@ -70,8 +80,9 @@ const FormAddEdit = ({ children, form: externalForm }) => {
   const isEditing = useSelector((state) => state.model.isEditing);
   const user_id = useSelector((state) => state.generic.user?.user_id);
   const servicesData = useSelector((state) => state.model.servicesData);
+  const showRecord = useSelector((state) => state.model.showRecord);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     // if (selectedRecord && isEditing) {
     //   // Convert trans_date from string to dayjs object
@@ -81,18 +92,83 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     //   form.setFieldsValue({ ...selectedRecord, trans_date: formattedDate });
     // initializeForm(form);
     if (selectedRecord && isEditing) {
-      const formattedDate = selectedRecord.trans_date
-        ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
-        : null;
+      // const formattedDate = selectedRecord.trans_date
+      //   ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
+      //   : null;
 
-      form.setFieldsValue({
-        ...selectedRecord,
-        trans_date: formattedDate,
-      });
+      // form.setFieldsValue({
+      //   ...selectedRecord,
+      //   trans_date: formattedDate,
+      // });
+      getShowRecord();
     } else {
       form.resetFields();
     }
   }, [selectedRecord, isEditing, form]);
+  useEffect(() => {
+    if (form && showRecord) {
+      let formattedRecord = convertDateFormate(showRecord);
+      form.setFieldsValue(formattedRecord);
+    }
+  }, [showRecord]);
+  const afterShowClickHandler = (response) => {
+    dispatch(setShowRecord(response?.data));
+    dispatch(setMessageState(setResult("success")));
+    dispatch(setMessageState(setSuccessMsg(response?.message)));
+  };
+  const getShowRecord = async () => {
+    if (selectedRecord && isEditing) {
+      let id = selectedRecord?.id;
+      let payload = {
+        id: id,
+        data: selectedRecord,
+      };
+      await formGetRecordAction(payload, afterShowClickHandler);
+    }
+  };
+  const convertDateFormate = (selectedRecord) => {
+    let formattedRecord = { ...selectedRecord };
+    if (!selectedRecord) {
+      return {};
+    }
+    const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/; // Strict ISO 8601 format
+    // date is follow strictly this formate : 2024-12-29T09:02:35.976Z if date is not in this formate it is considered as string
+    Object.keys(selectedRecord).forEach((key) => {
+      const value = selectedRecord[key];
+      // if (typeof value === "string") {
+      //   const dateInYYYYMMDD = dayjs(value).format("YYYY-MM-DD"); // Convert to YYYY-MM-DD
+      //   if (dayjs(dateInYYYYMMDD, "YYYY-MM-DD", true).isValid()) {
+      //     formattedRecord[key] = dayjs(value); // Convert to dayjs object
+      //   }
+      // }
+      switch (typeof value) {
+        case "string":
+          const dateInYYYYMMDD = dayjs(value).format("YYYY-MM-DD"); // Convert to YYYY-MM-DD
+          // if (dayjs(dateInYYYYMMDD, "YYYY-MM-DD", true).isValid()) {
+          //   formattedRecord[key] = dayjs(value); // Convert to dayjs object
+          // }
+          if (
+            dayjs(dateInYYYYMMDD, "YYYY-MM-DD", true).isValid() &&
+            isoDateRegex.test(value)
+          ) {
+            formattedRecord[key] = dayjs(value); // Convert to dayjs object
+          }
+          break;
+        case "object":
+          let newFormatedData = convertDateFormate(value);
+          if (newFormatedData) {
+            formattedRecord = {
+              ...formattedRecord,
+              newFormatedData,
+            };
+          }
+          break;
+        default:
+          return {};
+      }
+    });
+    return formattedRecord;
+  };
 
   const handleRefreshAction = async () => {
     // callApi("getList", handleRefreshClickHandler);
@@ -130,20 +206,27 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     }
   };
 
-  const handleCreateServiceHandler = (response) => {
-    console.log("response");
-    console.log(response);
-    dispatch(setSelectedRecord(response?.data));
-    dispatch(setIsEditing(true));
-    handleRefreshAction();
-    dispatch(setMessageState(setResult("success")));
-    dispatch(setMessageState(setSuccessMsg(response?.message)));
-  };
+  // const handleCreateServiceHandler = (response) => {
+  //   dispatch(setSelectedRecord(response?.data));
+  //   dispatch(setIsEditing(true));
+  //   handleRefreshAction();
+  //   dispatch(setMessageState(setResult("success")));
+  //   dispatch(setMessageState(setSuccessMsg(response?.message)));
+  // };
 
-  const handleUpdateServiceHandler = (response) => {
+  // const handleUpdateServiceHandler = (response) => {
+  //   dispatch(setSelectedRecord(response?.data));
+  //   dispatch(setMessageState(setResult("success")));
+  //   dispatch(setMessageState(setSuccessMsg(response?.message)));
+  // };
+  const handleCreateOrSaveServiceHandler = (response, id = null) => {
     dispatch(setSelectedRecord(response?.data));
+    // handleRefreshAction();
     dispatch(setMessageState(setResult("success")));
     dispatch(setMessageState(setSuccessMsg(response?.message)));
+    if (id) {
+      dispatch(setIsEditing(true));
+    }
   };
 
   const handleModelOk = async (values) => {
@@ -151,15 +234,13 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     // try {
     const customProps = formComponentProps.current;
 
-    let saveData = {
-      user_id,
-      active: 1,
-    };
+    let saveData = {};
 
     let id = null;
     id = selectedRecord?.id;
     console.log("values");
     console.log(values);
+    console.log("custom props");
     console.log(customProps);
     let errors = [];
     Object.entries(values).forEach(([key, value]) => {
@@ -175,6 +256,23 @@ const FormAddEdit = ({ children, form: externalForm }) => {
       let customPropForValue = customProps[key];
       switch (customPropForValue["componentType"]) {
         case "formInputDecimal":
+          if (customPropForValue["updateFlag"] == true) {
+            saveData = {
+              ...saveData,
+              [key]: value,
+            };
+          }
+          break;
+        case "formUpload":
+          let uploadImageName = customPropForValue["imageName"];
+          if (customPropForValue["updateFlag"] == true) {
+            saveData = {
+              ...saveData,
+              [key]: uploadImageName,
+            };
+          }
+          break;
+        case "formInputNumber":
           if (customPropForValue["updateFlag"] == true) {
             saveData = {
               ...saveData,
@@ -258,27 +356,52 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     }
     console.log("Save Data");
     console.log(saveData);
-
-    if (isEditing) {
-      let payload = {
-        id: id,
-        data: saveData,
-      };
-      await formUpdateAction(payload, handleUpdateServiceHandler);
-      // callApi("getList", handleUpdateServiceHandler);
-      // const response = dispatch(
-      //   callApiService("getList", handleRefreshClickHandler)
-      // );
-    } else {
-      let payload = {
-        data: saveData,
-      };
-      await formCreateAction(payload, handleCreateServiceHandler);
-      // const response = dispatch(
-      //   callApiService("getList", handleRefreshClickHandler)
-      // );
-      // callApi("getList", handleCreateServiceHandler);
+    if (Object.keys(saveData).length === 0) {
+      console.error("Form is empty Can't update record");
+      dispatch(setMessageState(setResult("error")));
+      dispatch(
+        setMessageState(
+          setErrorMsg(`Error : Form is empty Can't update record`)
+        )
+      );
+      return;
     }
+    saveData = {
+      ...saveData,
+      user_id,
+      active: 1,
+    };
+
+    // if (isEditing) {
+    //   let payload = {
+    //     id: id,
+    //     data: saveData,
+    //   };
+    //   await formUpdateAction(payload, handleUpdateServiceHandler);
+    //   // callApi("getList", handleUpdateServiceHandler);
+    //   // const response = dispatch(
+    //   //   callApiService("getList", handleRefreshClickHandler)
+    //   // );
+    // } else {
+    //   let payload = {
+    //     data: saveData,
+    //   };
+    //   await formCreateAction(payload, handleCreateServiceHandler);
+    //   // const response = dispatch(
+    //   //   callApiService("getList", handleRefreshClickHandler)
+    //   // );
+    //   // callApi("getList", handleCreateServiceHandler);
+    // }
+    saveData = {
+      ...saveData,
+      id,
+    };
+    let payload = {
+      data: saveData,
+    };
+    await formCreateOrSaveAction(payload, (response) =>
+      handleCreateOrSaveServiceHandler(response, id)
+    );
   };
   // const handleFormComponentChange = (name, props) => {
   //   // if (type === "add") {
@@ -312,6 +435,7 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     dispatch(setIsModelVisible(false));
     dispatch(setSelectedRecord(null));
     dispatch(setIsEditing(false));
+    dispatch(setShowRecord(null));
   };
 
   return (
