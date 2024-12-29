@@ -1,4 +1,5 @@
 class Budget < ApplicationRecord
+  include ModelHelper
     belongs_to :user
   
     validates :amount, presence: true

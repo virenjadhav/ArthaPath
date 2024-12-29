@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
   def get_transactions
     #   render json: {data: transactions, message: 'Transactions Reload successfully.'}, status: :ok
-        result, message, @transactions = @transactions = TransactionCrud.get_transactions(@doc)
+        result, message, @transactions =  TransactionCrud.get_transactions(@doc)
         if result
             object = {data: @transactions, message: "Transactions Reload successfully.", status: "success"}
             respond_to_action(object)
@@ -20,7 +20,7 @@ class TransactionsController < ApplicationController
     #   end
         result, message, @transaction = TransactionCrud.show_transaction(@doc)
         if result
-            object = {data: @transaction, message: "Transaction# '#{@transaction.transaction_code}' get successfully", status: "success"}
+            object = {data: @transaction, message: "Transaction# '#{@transaction.trans_no}' get successfully", status: "success"}
             respond_to_action(object)
         else 
             msg = message.blank? ? @transaction.errors : message
@@ -43,7 +43,7 @@ class TransactionsController < ApplicationController
         result, message, @transaction = TransactionCrud.create_or_save_transaction(transaction_params)
         if result
             # respond_to_action("show_transaction") 
-            object = {data: @transaction, message: "Transaction# #{@transaction.transaction_code} was successfully #{create_record ? "created" : "updated"}.", status: "success"}
+            object = {data: @transaction, message: "Transaction# #{@transaction.trans_no} was successfully #{create_record ? "created" : "updated"}.", status: "success"}
             respond_to_action(object)
         else 
             # @transaction.errors.add(message)
@@ -71,7 +71,7 @@ class TransactionsController < ApplicationController
     #   end
         result, message, @transaction = TransactionCrud.delete_transaction(@doc)
         if result
-            object = {data: @transaction, message: "Transaction# '#{@transaction.transaction_code}' deleted successfully", status: "success"}
+            object = {data: @transaction, message: "Transaction# '#{@transaction.trans_no}' deleted successfully", status: "success"}
             respond_to_action(object)
         else 
             msg = message.blank? ? @transaction.errors : message
@@ -88,9 +88,10 @@ class TransactionsController < ApplicationController
     #     end
     #   end
   
+        #   # Only allow a list of trusted parameters through.
       def transaction_params
-        params.require(:body).permit(:id, :active,:user_id, :transaction_code, :transaction_name, :contact_no, :contact_email, :amount, :transaction_amount, :interest_type, :interest_rate, :due_date, :status, :transaction_type, :attachment_file_name, :payment_method, :description)
-      end  
+        params.require(:body).permit(:active, :amount, :main_category_id, :main_category_code, :sub_category_id, :sub_category_code, :user_category, :trans_date, :description, :user_id, :source_type, :payment_method, :trans_no, :id)
+      end 
   
   
   # before_action :set_transaction, only: [:show_transaction, :edit_transaction, :update_transaction, :destroy_transaction]

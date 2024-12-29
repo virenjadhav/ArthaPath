@@ -10,7 +10,7 @@ import {
 } from "../../redux/features/generic/messageSlice";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
 import { useValidateLookupRecordAction } from "../Services/CommonServices";
-import { get_form } from "../FormComponent/FormAddEdit";
+// import { get_form } from "../FormComponent/FormAddEdit";
 // import { form } from "../FormComponent/FormAddEdit";
 
 const DependentLookupComponent = ({

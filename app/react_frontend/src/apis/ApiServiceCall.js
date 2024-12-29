@@ -11,9 +11,9 @@ const getServiceDetailsById = (servicesData, serviceId) => {
     const service = servicesData.find((service) => service.id === serviceId);
     return service
       ? { url: service.url, method: service.method, name: service.name }
-      : null;
+      : {};
   }
-  return null;
+  return {};
 };
 
 // Function to call API services dynamically
@@ -36,16 +36,16 @@ const callApi = async (
     console.error("Services data is null or undefined. Cannot make API call.");
     return; // Exit if servicesData is not available
   }
-
-  if (Object.keys(serviceDetails).length === 0) {
-    serviceDetails = getServiceDetailsById(servicesData, serviceId);
-  }
-  if (Object.keys(serviceDetails).length === 0) {
-    console.error(`Service not found for ID: ${serviceId}`);
-    return;
-  }
-
+  serviceDetails = {}
   try {
+    if (Object.keys(serviceDetails).length === 0) {
+      serviceDetails = getServiceDetailsById(servicesData, serviceId);
+    }
+    if (serviceDetails &&  Object.keys(serviceDetails).length === 0) {
+      console.error(`Service not found for ID: ${serviceId}`);
+      throw new Error(`Service not found for ID: ${serviceId}`);
+      return;
+    }
     const { name, method, url } = serviceDetails;
 
     if (!url)

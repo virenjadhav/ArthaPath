@@ -224,7 +224,7 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     // handleRefreshAction();
     dispatch(setMessageState(setResult("success")));
     dispatch(setMessageState(setSuccessMsg(response?.message)));
-    if (id) {
+    if (!id) {
       dispatch(setIsEditing(true));
     }
   };

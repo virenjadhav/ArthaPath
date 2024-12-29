@@ -1,24 +1,17 @@
 
 [
   {
-      "id": "createRecord",
-      "url": "banks/create_bank",
-      "key": "createRecord",
-      "name": "banks/create_bank",
+      "id": "createOrSaveRecord",
+      "url": "banks/create_or_save_bank",
+      "key": "createOrSaveRecord",
+      "name": "banks/create_or_save_bank",
       "method": "post"
   },
   {
-      "id": "updateRecord",
-      "url": "banks/update_bank",
-      "key": "updateRecord",
-      "name": "banks/update_bank",
-      "method": "put"
-  },
-  {
       "id": "getRecord",
-      "url": "banks/show_bank",
+      "url": "banks/get_bank",
       "key": "getRecord",
-      "name": "banks/show_bank",
+      "name": "banks/get_bank",
       "method": "get"
   },
   {
