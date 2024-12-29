@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import FormAddEdit, { get_form } from "../../components/FormComponent/FormAddEdit";
+import FormAddEdit, {
+  get_form,
+} from "../../components/FormComponent/FormAddEdit";
 import SelectComponent from "../../components/FormComponent/SelectComponents";
 import InputComponent from "../../components/FormComponent/InputComponent";
 import InputTextAreaComponent from "../../components/FormComponent/InputTextAreaComponent";
@@ -35,13 +37,11 @@ const bankOptions = [
   { value: "YesBank", label: "Yes Bank" },
 ];
 
-
-
 const BanksAddEdit = () => {
   const isEditing = useSelector((state) => state.model.isEditing);
   const [form] = Form.useForm();
-  
-  const selectedRecord = useSelector(state => state.model.selectedRecord)
+
+  const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const [imageName, setImageName] = useState("");
 
   // Handle image selection
@@ -67,9 +67,7 @@ const BanksAddEdit = () => {
   //   // Prevent default upload behavior
   //   return false;
   // };
-  const handleSelectImageHandler = () => {
-
-  }
+  const handleSelectImageHandler = () => {};
   const onChangeCategoryType = (fieldName, value) => {
     // const form = formAddEditRef?.current?.getForm();
     // const formInstance = formAddEditRef.current.getFormInstance();
@@ -78,13 +76,12 @@ const BanksAddEdit = () => {
     if (fieldName == "code") {
       // setIsSubCategoryVisible(isSub);
       bankOptions.map((bank) => {
-        
-        if(bank?.value === value){
-        form.setFieldsValue({
-          name: bank?.label
-        });
+        if (bank?.value === value) {
+          form.setFieldsValue({
+            name: bank?.label,
+          });
         }
-      } )
+      });
     }
   };
   useEffect(() => {
@@ -111,7 +108,7 @@ const BanksAddEdit = () => {
     <>
       {/* <FormAddEdit ref={formAddEditRef} onValuesChangeCallback={handleValuesChange}> */}
       <FormAddEdit form={form}>
-      {/* <FormAddEdit > */}
+        {/* <FormAddEdit > */}
         <SelectComponent
           name="code"
           label="Select Bank"
@@ -126,7 +123,6 @@ const BanksAddEdit = () => {
         <InputComponent
           name="name"
           label="Bank Name"
-          
           //   disabled={isEditing ? true : false}
           //   includeInLayout={isEditing ? true : false}
           customComponentProps={{ updateFlag: true }}
@@ -212,7 +208,7 @@ const BanksAddEdit = () => {
           rules={[{ required: true, message: "code is missing" }]}
           disabled={true}
         /> */}
-         <SelectComponent
+        <SelectComponent
           name="country"
           label="Country"
           customComponentProps={{ updateFlag: true }}
@@ -245,7 +241,7 @@ const BanksAddEdit = () => {
           //   addonAfter="USD"
           customComponentProps={{ updateFlag: true }}
         />
-         {/* <Form.Item
+        {/* <Form.Item
         label="Select Image"
         name="image"
         rules={[{ required: true, message: "Please upload an image!" }]}
@@ -262,7 +258,14 @@ const BanksAddEdit = () => {
       <Form.Item label="Image Name" name="image_name">
         <Input value={imageName} disabled /> 
       </Form.Item> */}
-      <UploadComponent name="icon" label="Icon" buttonLabel="Select Image"handleSelectImageHandler={handleSelectImageHandler} serviceId={"uploadBankIcon"} />
+        <UploadComponent
+          name="icon"
+          label="Icon"
+          buttonLabel="Select Image"
+          handleSelectImageHandler={handleSelectImageHandler}
+          serviceId={"uploadBankIcon"}
+          customComponentProps={{ updateFlag: true }}
+        />
       </FormAddEdit>
     </>
   );

@@ -36,7 +36,6 @@ export const useAxiosInterceptor = () => {
 
 export default axiosService;
 
-
 // import axios from "axios";
 
 // const axiosService = axios.create({

@@ -22,6 +22,9 @@ const TableComponent = ({ data, columns, expandableTable = null }) => {
     if (data) {
       setCurrentData(data.slice(0, pageSize));
       setCurrentPage(0);
+    } else {
+      setCurrentData(null);
+      setCurrentPage(1);
     }
   }, [data]);
 
@@ -35,7 +38,7 @@ const TableComponent = ({ data, columns, expandableTable = null }) => {
     setPageSize(pageSize);
     const start = (page - 1) * pageSize;
     const end = start + pageSize;
-    setCurrentData(data.slice(start, end)); // Slice the data for the current page
+    setCurrentData(data?.slice(start, end)); // Slice the data for the current page
   };
 
   // const handleChangePage = (page, pageSize) => {

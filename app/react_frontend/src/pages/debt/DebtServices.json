@@ -1,0 +1,37 @@
+[
+    {
+        "id": "createOrSaveRecord",
+        "url": "debts/create_or_save_debt",
+        "key": "createOrSaveRecord",
+        "name": "debt/create_or_save_debt",
+        "method": "post"
+    },
+    {
+        "id": "getRecord",
+        "url": "debts/get_debt",
+        "key": "getRecord",
+        "name": "debt/get_debt",
+        "method": "get"
+    },
+    {
+        "id": "getList",
+        "url": "debts/get_debts",
+        "key": "getList",
+        "name": "debt/get_debts",
+        "method": "get"
+    },
+    {
+        "id": "deleteRecord",
+        "url": "debts/delete_debt",
+        "key": "deleteRecord",
+        "name": "debt/delete_debt",
+        "method": "delete"
+    },
+    {
+        "id": "uploadDebtAttachmentFile",
+        "url": "image/upload_debt_attachment",
+        "key": "uploadDebtAttachmentFile",
+        "name": "image/upload_debt_attachment",
+        "method": "post"
+    }
+]

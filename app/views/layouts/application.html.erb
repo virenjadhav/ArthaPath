@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<%= csrf_meta_tags %>"> <!-- CSRF token meta tag -->
+  <title><%= content_for(:title) || 'My Application' %></title>
+  
+  <!-- Include the default Rails stylesheets and JavaScript -->
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  
+  <!-- Include application styles -->
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+
+  <!-- Include application JavaScript -->
+  <%= javascript_pack_tag 'application' %>
+  
+</head>
+<body>
+  <!-- Your common layout elements like navigation, header, footer -->
+  <header>
+    <!-- You can add a navigation bar here -->
+    <nav>
+      <!-- Navigation links -->
+    </nav>
+  </header>
+
+  <main>
+    <!-- This is where the content of individual views will be rendered -->
+    <%= yield %> <!-- The content from the individual view will be injected here -->
+  </main>
+
+  <footer>
+    <!-- Footer content -->
+  </footer>
+</body>
+</html>

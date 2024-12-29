@@ -2,13 +2,13 @@
 import React from "react";
 import Home from "../pages/Home";
 import LoginPage from "../pages/LoginPage";
-import Transactions from "../pages/transaction/Transactions";
+// import Transactions from "../pages/transaction/Transactions";
 import Dashboard from "../pages/Dashboard";
 import Finance from "../pages/Finance/Finance";
 import PageNotFound from "../pages/PageNotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import profileRoutes from "./profileRoutes"; // Import profile routes
-import Budgets from "../pages/budgets/Budgets";
+// import Budgets from "../pages/budgets/Budgets";
 const routes = [
   {
     path: "/",
@@ -22,14 +22,14 @@ const routes = [
     path: "/login",
     element: <LoginPage />,
   },
-  {
-    path: "/transactions",
-    element: (
-      <ProtectedRoute>
-        <Transactions />
-      </ProtectedRoute>
-    ),
-  },
+  // {
+  //   path: "/transactions",
+  //   element: (
+  //     <ProtectedRoute>
+  //       <Transactions />
+  //     </ProtectedRoute>
+  //   ),
+  // },
   {
     path: "/dashboard",
     element: (

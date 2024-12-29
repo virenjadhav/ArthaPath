@@ -17,6 +17,9 @@ const messageSlice = createSlice({
       state.successMsg = action.payload;
     },
     setErrorMsg(state, action) {
+      console.log("hello");
+      console.log(state);
+      console.log(action);
       state.errorMsg = action.payload;
     },
     setWarningMsg(state, action) {

@@ -1,10 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosService, { configureAxios } from "../../../apis/axiosService";
 
-const apiThunk = (actionType, method, baseUrl, payload = {}, axiosDetail = {
-  baseURL: null,
-  contentType: null,
-}) => {
+const apiThunk = (
+  actionType,
+  method,
+  baseUrl,
+  payload = {},
+  axiosDetail = {
+    baseURL: null,
+    contentType: null,
+  }
+) => {
   return createAsyncThunk(
     actionType,
     async ({ id1, data1, session1 } = {}, { rejectWithValue }) => {
@@ -19,11 +25,14 @@ const apiThunk = (actionType, method, baseUrl, payload = {}, axiosDetail = {
       //   session: session,
       //   id: id,
       // };
-      const params = data instanceof FormData ? data : {
-        body: Array.isArray(data) ? data : data,
-        session: session,
-        id: id,
-      };
+      const params =
+        data instanceof FormData
+          ? data
+          : {
+              body: Array.isArray(data) ? data : data,
+              session: session,
+              id: id,
+            };
       try {
         switch (method) {
           case "get":
@@ -46,6 +55,7 @@ const apiThunk = (actionType, method, baseUrl, payload = {}, axiosDetail = {
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response?.data || error.message);
+        // return rejectWithValue("err_msg");
       }
     }
   );

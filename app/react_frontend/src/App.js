@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setLoggedIn, setUser } from "./redux/features/generic/genericSlice";
 import { isUserLoggedIn } from "./redux/features/generic/genericApiThunk";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
@@ -10,7 +10,7 @@ import routes from "./routes/routes";
 import { clearModelReducer } from "./redux/features/generic/modelSlice";
 
 const App = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   return (
     <BrowserRouter>

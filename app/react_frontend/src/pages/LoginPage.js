@@ -1,28 +1,29 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/css/Login.scss";
-import { AuthContext } from "../hooks/contexts/AuthContext";
+// import { AuthContext } from "../hooks/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { message } from "antd";
+// import { message } from "antd";
 // import {
 //   login,
 //   setLoggedIn,
 //   signup,
 // } from "../redux/features/generic/genericSlice";
-import { login, signup } from "../redux/features/generic/genericApiThunk";
-import { setLoggedIn, setUser } from "../redux/features/generic/genericSlice";
+// import { login, signup } from "../redux/features/generic/genericApiThunk";
+// import { setLoggedIn, setUser } from "../redux/features/generic/genericSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Message from "../components/Message";
+// import Message from "../components/Message";
 import { setMessageState } from "../redux/features/generic/genericSlice";
 import {
   setErrorMsg,
   setResult,
-  setSuccessMsg,
+  // setSuccessMsg,
 } from "../redux/features/generic/messageSlice";
 import {
   useLoginAction,
-  useLogoutAction,
+  // useLogoutAction,
   useSignupAction,
 } from "../components/Services/CommonServices";
+import { Col, Row } from "antd";
 
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
@@ -163,6 +164,10 @@ const Login = () => {
   };
   return (
     <>
+      {/* <Row justify={"center"} align={"middle"} height="100vh"> 
+      <Col >
+      </Col>
+    </Row> */}
       <div className={`cont ${isSignup ? "s--signup" : ""}`}>
         <div class="form sign-in">
           <h2>Welcome</h2>
@@ -247,39 +252,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// // src/components/LoginPage.js
-// import React, { useState, useContext } from 'react';
-// // import { AuthContext } from '../contexts/AuthContext';
-// import { AuthContext } from '../hooks/contexts/AuthContext.js';
-
-// const LoginPage = () => {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const { login } = useContext(AuthContext);
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     login(email, password);
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <input
-//         type="email"
-//         value={email}
-//         onChange={(e) => setEmail(e.target.value)}
-//         placeholder="Email"
-//       />
-//       <input
-//         type="password"
-//         value={password}
-//         onChange={(e) => setPassword(e.target.value)}
-//         placeholder="Password"
-//       />
-//       <button type="submit">Login</button>
-//     </form>
-//   );
-// };
-
-// export default LoginPage;

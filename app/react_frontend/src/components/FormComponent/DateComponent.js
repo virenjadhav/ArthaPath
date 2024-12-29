@@ -84,7 +84,7 @@ const DateComponent = ({
           {visible && (
             <DatePicker
               // ref={datePickerRef}
-              format={format}
+              format={format || "YYYY-MM-DD"}
               allowClear={allowClear}
               autoFocus={autoFocus}
               disabled={disabled}

@@ -5,6 +5,7 @@ import {
   setIsEditing,
   setIsModelVisible,
   setSelectedRecord,
+  setShowRecord,
 } from "../redux/features/generic/modelSlice";
 
 const FormComponent = ({ FormCustomComponent }) => {
@@ -18,6 +19,7 @@ const FormComponent = ({ FormCustomComponent }) => {
     dispatch(setIsModelVisible(false));
     dispatch(setSelectedRecord(null));
     dispatch(setIsEditing(false));
+    dispatch(setShowRecord(null));
   };
   const handleModalOk = () => {};
   const handleSaveTransaction = () => {};

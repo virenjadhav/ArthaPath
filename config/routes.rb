@@ -8,10 +8,24 @@ Rails.application.routes.draw do
    # Route to change the user's password (requires authentication)
    scope :transactions do
     get 'get_transactions', to: 'transactions#get_transactions'
-    get 'get_transaction', to: 'transactions#show'
+    get 'get_transaction', to: 'transactions#show_transaction'
     post 'create_transaction', to: 'transactions#create_transaction'
     put 'update_transaction/:id', to: 'transactions#update_transaction'               # PUT request
     delete 'delete_transaction/:id', to: 'transactions#destroy_transaction'           # DELETE request
+  end
+  scope :budgets do
+    get 'get_budgets', to: 'budgets#get_budgets'
+    get 'get_budget', to: 'budgets#show'
+    post 'create_budget', to: 'budgets#create_budget'
+    put 'update_budget/:id', to: 'budgets#update_budget'               # PUT request
+    delete 'delete_budget/:id', to: 'budgets#destroy_budget'           # DELETE request
+  end
+  scope :debts do
+    get 'get_debts', to: 'debts#get_debts'
+    get 'get_debt', to: 'debts#show_debt'
+    post 'create_or_save_debt', to: 'debts#create_or_save_debt'
+    # put 'update_debt/:id', to: 'debts#update_debt'               # PUT request
+    delete 'delete_debt/:id', to: 'debts#destroy_debt'           # DELETE request
   end
   scope :banks do
     get 'get_banks_details', to: 'banks#get_banks_details'
@@ -20,12 +34,20 @@ Rails.application.routes.draw do
     put 'update_bank/:id', to: 'banks#update_bank'               # PUT request
     delete 'delete_bank/:id', to: 'banks#destroy_bank'           # DELETE request
   end
+  scope :accounts do
+    get 'get_accounts_details', to: 'accounts#get_accounts_details'
+    get 'show_account', to: 'accounts#show_account'
+    post 'create_account', to: 'accounts#create_account'
+    put 'update_account/:id', to: 'accounts#update_account'               # PUT request
+    delete 'delete_account/:id', to: 'accounts#destroy_account'           # DELETE request
+  end
   scope :common_category do 
     post 'save_common_category', to: 'common_category#save_common_category_to_user'
   end
   scope :image do 
     post 'upload_image', to: 'image#upload_image'
     post 'upload_bank_icon', to: 'image#upload_bank_icon'
+    post 'upload_debt_attachment', to: 'image#upload_debt_file'
   end
   scope :user_category do 
     get 'get_user_categories', to: 'user_category#get_user_categories'
