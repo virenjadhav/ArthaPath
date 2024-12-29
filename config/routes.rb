@@ -9,8 +9,8 @@ Rails.application.routes.draw do
    scope :transactions do
     get 'get_transactions', to: 'transactions#get_transactions'
     get 'get_transaction', to: 'transactions#show_transaction'
-    post 'create_transaction', to: 'transactions#create_transaction'
-    put 'update_transaction/:id', to: 'transactions#update_transaction'               # PUT request
+    post 'create_or_save_transaction', to: 'transactions#create_or_save_transaction'
+    # put 'update_transaction/:id', to: 'transactions#update_transaction'               # PUT request
     delete 'delete_transaction/:id', to: 'transactions#destroy_transaction'           # DELETE request
   end
   scope :budgets do
@@ -29,16 +29,17 @@ Rails.application.routes.draw do
   end
   scope :banks do
     get 'get_banks_details', to: 'banks#get_banks_details'
-    get 'show_bank', to: 'banks#show_bank'
-    post 'create_bank', to: 'banks#create_bank'
-    put 'update_bank/:id', to: 'banks#update_bank'               # PUT request
+    get 'get_bank', to: 'banks#show_bank'
+    # post 'create_bank', to: 'banks#create_bank'
+    # put 'update_bank/:id', to: 'banks#update_bank'               # PUT request
+    post 'create_or_save_bank', to: 'banks#create_or_save_bank'
     delete 'delete_bank/:id', to: 'banks#destroy_bank'           # DELETE request
   end
   scope :accounts do
     get 'get_accounts_details', to: 'accounts#get_accounts_details'
-    get 'show_account', to: 'accounts#show_account'
-    post 'create_account', to: 'accounts#create_account'
-    put 'update_account/:id', to: 'accounts#update_account'               # PUT request
+    get 'get_account', to: 'accounts#show_account'
+    post 'create_account', to: 'accounts#create_or_save_account'
+    # put 'update_account/:id', to: 'accounts#update_account'               # PUT request
     delete 'delete_account/:id', to: 'accounts#destroy_account'           # DELETE request
   end
   scope :common_category do 

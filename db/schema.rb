@@ -21,10 +21,10 @@ ActiveRecord::Schema[7.0].define(version: 202412103111423) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: false
-    t.string "bank_code"
-    t.decimal "balance", precision: 18
     t.string "code"
     t.integer "lock_version", default: 0, null: false
+    t.string "bank_code"
+    t.decimal "balance", precision: 18
     t.index ["bank_id"], name: "index_accounts_on_bank_id"
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 202412103111423) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "lock_version", default: 0, null: false
+    t.index ["code"], name: "index_banks_on_code", unique: true, where: "([active]=(1))"
     t.index ["user_id"], name: "index_banks_on_user_id"
   end
 
@@ -109,6 +110,7 @@ ActiveRecord::Schema[7.0].define(version: 202412103111423) do
   create_table "debt_lines", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: false, null: false
     t.bigint "user_id", null: false
     t.bigint "transaction_id", null: false
     t.bigint "debt_id", null: false
@@ -169,9 +171,9 @@ ActiveRecord::Schema[7.0].define(version: 202412103111423) do
     t.string "main_category_code"
     t.integer "sub_category_id"
     t.string "sub_category_code"
+    t.integer "lock_version", default: 0, null: false
     t.string "source_type"
     t.string "payment_method"
-    t.integer "lock_version", default: 0, null: false
     t.index ["trans_no"], name: "index_transactions_on_trans_no", unique: true
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end

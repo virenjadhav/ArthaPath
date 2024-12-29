@@ -1,5 +1,6 @@
 # app/models/user.rb
 class User < ApplicationRecord
+  include ModelHelper
     has_secure_password  # Provides methods like authenticate for password validation
   
     # validates :email, presence: true, uniqueness: true

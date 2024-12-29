@@ -1,24 +1,17 @@
 
 [
     {
-        "id": "createRecord",
-        "url": "accounts/create_account",
-        "key": "createRecord",
-        "name": "accounts/create_account",
+        "id": "createOrSaveRecord",
+        "url": "accounts/create_or_save_account",
+        "key": "createOrSaveRecord",
+        "name": "accounts/create_or_save_account",
         "method": "post"
     },
     {
-        "id": "updateRecord",
-        "url": "accounts/update_account",
-        "key": "updateRecord",
-        "name": "accounts/update_account",
-        "method": "put"
-    },
-    {
         "id": "getRecord",
-        "url": "accounts/show_account",
+        "url": "accounts/get_account",
         "key": "getRecord",
-        "name": "accounts/show_account",
+        "name": "accounts/get_account",
         "method": "get"
     },
     {

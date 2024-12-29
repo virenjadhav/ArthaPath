@@ -1,17 +1,10 @@
 [
     {
-        "id": "createRecord",
-        "url": "transactions/create_transaction",
-        "key": "createRecord",
-        "name": "transaction/create_transaction",
+        "id": "createOrSaveRecord",
+        "url": "transactions/create_or_save_transaction",
+        "key": "createOrSaveRecord",
+        "name": "transaction/create_or_save_transaction",
         "method": "post"
-    },
-    {
-        "id": "updateRecord",
-        "url": "transactions/update_transaction",
-        "key": "updateRecord",
-        "name": "transaction/update_transaction",
-        "method": "put"
     },
     {
         "id": "getRecord",

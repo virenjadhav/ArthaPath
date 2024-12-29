@@ -1,4 +1,5 @@
 class Lookup < ApplicationRecord
+    include ModelHelper
     def self.get_lookup_records(doc)
         begin 
             # dataSourceName = params[:dataSourceName]

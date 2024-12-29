@@ -2,7 +2,7 @@ class DebtsController < ApplicationController
     # before_action :set_debt, only: [:show_debt, :edit_debt, :update_debt, :destroy_debt]
     def get_debts
     #   render json: {data: debts, message: 'Debts Reload successfully.'}, status: :ok
-        result, message, @debts = @debts = DebtCrud.get_debts(@doc)
+        result, message, @debts  = DebtCrud.get_debts(@doc)
         if result
             object = {data: @debts, message: "Debts Reload successfully.", status: "success"}
             respond_to_action(object)

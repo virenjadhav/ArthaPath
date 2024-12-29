@@ -57,7 +57,7 @@ class TransactionCrud < ApplicationRecord
         begin
             transaction = Transaction.find_or_initialize_by(id: doc[:id])
             if transaction.new_record?
-                transaction.trans_no = auto_generated_trans_no
+                transaction.set_trans_no
             end
             transaction.assign_attributes(doc)
             return transaction
@@ -65,8 +65,9 @@ class TransactionCrud < ApplicationRecord
             raise ex.blank? ? "Something wrong in fetching transaction." : ex.to_s
         end
       end
-    def auto_generated_trans_no
+    def self.auto_generated_trans_no
         max_trans_no = Transaction.maximum(:trans_no) || 5000
-        self.trans_no = max_trans_no + 1
+        trans_no = max_trans_no + 1
+        return trans_no
     end
 end

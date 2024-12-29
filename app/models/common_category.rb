@@ -1,4 +1,5 @@
 class CommonCategory < ApplicationRecord
+  include ModelHelper
   self.inheritance_column = :_type_disabled
     validates :name, presence: true
     validates :code, presence: true
