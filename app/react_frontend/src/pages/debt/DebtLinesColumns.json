@@ -1,0 +1,31 @@
+[
+    {
+      "title": "",
+      "dataIndex": "radio",
+      "key": "radio",
+      "width": 10
+    },
+    {
+      "title": "Code#",
+      "dataIndex": "debt_code",
+      "key": "debt_code"
+    },
+      
+      {
+        "title": "Amount",
+        "dataIndex": "amount",
+        "key": "amount"
+      },
+      {
+        "title": "Remaining Amount",
+        "dataIndex": "debt_amount",
+        "key": "amount"
+      },
+      
+      {
+        "title": "Debt Type",
+        "dataIndex": "debt_type",
+        "key": "amount"
+      }
+     
+    ]

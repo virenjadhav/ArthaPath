@@ -1,17 +1,10 @@
 [
     {
-        "id": "createRecord",
-        "url": "budgets/create_budget",
-        "key": "createRecord",
-        "name": "budget/create_budget",
+        "id": "createOrSaveRecord",
+        "url": "budgets/create_or_save_budget",
+        "key": "createOrSaveRecord",
+        "name": "budget/create_or_save_budget",
         "method": "post"
-    },
-    {
-        "id": "updateRecord",
-        "url": "budgets/update_budget",
-        "key": "updateRecord",
-        "name": "budget/update_budget",
-        "method": "put"
     },
     {
         "id": "getRecord",

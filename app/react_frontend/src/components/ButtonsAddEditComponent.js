@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   // Table,
   Button,
@@ -20,8 +20,12 @@ import {
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setDetailState,
+  setIsDetailModel,
   setIsEditing,
   setIsModelVisible,
+  setModelRecordType,
+  setSelectedMainRecord,
   // setSelectedForm,
   setSelectedRecord,
   setShowRecord,
@@ -39,11 +43,17 @@ import { ModelConfirm } from "./ModelConfirm";
 // import useApiServiceCall from "../apis/ApiServiceCall";
 // import FormAddEdit from "./FormComponent/FormAddEdit";
 import {
+  useDetailFormRefreshAction,
   useFormDeleteAction,
   useFormRefreshAction,
   // useRefreshAction,
 } from "./Services/FormServices";
 import SearchCriteriaComponent from "./Criteria/SearchCriteriaComponent";
+import {
+  setDetailData,
+  setSelectedDetailRecord,
+} from "../redux/features/generic/detailSlice";
+import { ModelInfo } from "./ModelInfo";
 
 const ButtonsAddEditComponent = ({
   // deleteAction,
@@ -60,10 +70,18 @@ const ButtonsAddEditComponent = ({
   // afterDeleteHandler = null,
   // afterAddHandler = null,
   // afterEditHandler = null
+  isDetailModelComponent = false,
+  isShowDetailVisible = false,
 }) => {
   // const isEditing = useSelector((state) => state.model.isEditing);
   // const form = useSelector((state) => state.model.setSelectedForm);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
+  const selectedMainRecord = useSelector(
+    (state) => state.model.selectedMainRecord
+  );
+  const selectedDetailRecord = useSelector(
+    (state) => state.model.detail.selectedDetailRecord
+  );
   const searchCriteriaData = useSelector(
     (state) => state.model.searchCriteriaData
   );
@@ -72,15 +90,28 @@ const ButtonsAddEditComponent = ({
   // const { callApi } = useApiServiceCall();
   const { formRefreshAction } = useFormRefreshAction();
   const { formDeleteAction } = useFormDeleteAction();
-
+  const { detailFormRefreshAction } = useDetailFormRefreshAction();
+  const isDetailModel = useSelector((state) => state.model.isDetailModel);
+  useEffect(() => {
+    if (isDetailModel !== isDetailModelComponent) {
+      dispatch(setIsDetailModel(isDetailModelComponent));
+    }
+  }, [isDetailModelComponent]);
+  useEffect(() => {}, [isDetailModel]);
   const handleAddButtonClick = () => {
     dispatch(setIsModelVisible(true));
     dispatch(setIsEditing(false));
     dispatch(setShowRecord(null));
     dispatch(setSelectedRecord(null));
+    if (!isDetailModelComponent) {
+      dispatch(setSelectedMainRecord(null));
+      dispatch(setDetailState(setDetailData(null)));
+    }
+
+    dispatch(setDetailState(setSelectedDetailRecord(null)));
   };
 
-  const handleDeleteModalConfirmClickHandler = async () => {
+  const handleDeleteModalConfirmClickHandler = async (selectedRecordLocal) => {
     // try {
     //   const response = await dispatch(
     //     deleteAction({ id: selectedRecord.id })
@@ -115,17 +146,17 @@ const ButtonsAddEditComponent = ({
     // }
     // formDeleteAction();
     // await formDeleteAction();
-    if (!selectedRecord) {
+    if (!selectedRecordLocal) {
       console.error("No record selected for deletion.");
       return;
     }
 
     // Call formDeleteAction and pass the selectedRecord
-    await formDeleteAction(selectedRecord);
+    await formDeleteAction(selectedRecordLocal);
   };
 
-  const handleDeleteButtonClick = () => {
-    if (selectedRecord?.id) {
+  const handleDeleteButtonClick = (selectedRecordLocal) => {
+    if (selectedRecordLocal?.id) {
       // Modal.confirm({
       //   title: "Are you sure you want to delete this record?",
       //   okText: "Yes",
@@ -138,9 +169,33 @@ const ButtonsAddEditComponent = ({
       //   title={"Are you sure you want to delete this record?"}
       //   onOkHandler={handleDeleteModalConfirmClickHandler}
       // />;
+      let deleteMsg = "";
+      if (isDetailModelComponent) {
+        if (selectedRecordLocal.serial_no == 101) {
+          ModelInfo({
+            title: `Connot Delete Initial Line# 101, If you want to delete then delete main Record.`,
+          });
+          return;
+        }
+        deleteMsg = "Are you sure you want to delete this record?";
+      } else {
+        if (
+          selectedRecordLocal?.serial_no &&
+          selectedRecordLocal.serial_no == 101
+        ) {
+          ModelInfo({
+            title: `Connot Delete Initial Line# 101, If you want to delete then delete main Record.`,
+          });
+          return;
+        }
+        deleteMsg =
+          "This is main record if you want to delete this all Lines would also be deleted. Are you sure you want to delete this record?";
+      }
       ModelConfirm({
-        title: "Are you sure you want to delete this record?",
-        onOkHandler: handleDeleteModalConfirmClickHandler,
+        title: deleteMsg,
+        onOkHandler: () => {
+          handleDeleteModalConfirmClickHandler(selectedRecordLocal);
+        },
       });
       // ModelInfo({ title: "some message", content: "some content" });
     } else {
@@ -175,12 +230,30 @@ const ButtonsAddEditComponent = ({
     // const response = await dispatch(refreshAction).unwrap();
     // callApi("getList", handleRefreshClickHandler);
     // refreshAction();
-    let payload = {
-      data: {
-        criteriaSearchData: searchCriteriaData,
-      },
+    let data = {
+      criteriaSearchData: searchCriteriaData,
     };
-    await formRefreshAction(payload);
+    let payload = {
+      data,
+    };
+
+    if (isDetailModelComponent) {
+      // dispatch(setModelRecordType("line"));
+      payload = {
+        data,
+        isLineRecord: true,
+        mainRecord: selectedMainRecord,
+      };
+      await detailFormRefreshAction(payload);
+    } else {
+      // dispatch(setModelRecordType("main"));
+      payload = {
+        data,
+        isLineRecord: false,
+        mainRecord: null,
+      };
+      await formRefreshAction(payload);
+    }
     // await formRefreshAction();
     // message.success({
     //   content: response?.message,
@@ -206,14 +279,57 @@ const ButtonsAddEditComponent = ({
     //   dispatch(setMessageState(setErrorMsg(error?.error?.join(","))));
     // }
   };
+  const handleButtonClickHandler = (type, selectedRecordLocal) => {
+    switch (type) {
+      case "main":
+        // handle operation related to if any button click.
+        break;
+      case "add":
+        handleAddButtonClick();
+        break;
+      case "delete":
+        handleDeleteButtonClick(selectedRecordLocal);
+        break;
+      case "edit":
+        handleEditButtonClick();
+        break;
+      case "refresh":
+        handleRefreshClick();
+        break;
+      default:
+        console.error("Unknown button action");
+    }
+  };
+
+  const handleButtonClick = async (type) => {
+    let selectedRecordLocal = null;
+    if (type != "add" && type != "main") {
+      if (isDetailModelComponent) {
+        dispatch(setModelRecordType("line"));
+        dispatch(setSelectedRecord(selectedDetailRecord));
+        selectedRecordLocal = selectedDetailRecord;
+      } else {
+        dispatch(setModelRecordType("main"));
+        dispatch(setSelectedRecord(selectedMainRecord));
+        selectedRecordLocal = selectedMainRecord;
+      }
+    }
+    if (isDetailModel !== isDetailModelComponent) {
+      await dispatch(setIsDetailModel(isDetailModelComponent));
+      handleButtonClickHandler(type, selectedRecordLocal);
+    } else {
+      handleButtonClickHandler(type, selectedRecordLocal);
+    }
+  };
   // const handleSearchButtonClick = () => {};
   const onDetailClickHandler = () => {};
 
   return (
     <>
-      {/* Title placed above the buttons */}
-      <div style={{ fontSize: "24px", marginBottom: "8px" }}>{moduleTitle}</div>
-      <Space style={{ marginBottom: 16, marginTop: 12 }}>
+      <Space
+        style={{ marginBottom: 16, marginTop: 12 }}
+        onClick={() => handleButtonClick("main")}
+      >
         {/* # add label in this line  */}
         {/* <span style={{ fontSize: "18px", fontWeight: "400" }}>
           {moduleTitle}
@@ -221,44 +337,85 @@ const ButtonsAddEditComponent = ({
         {addVisible && (
           <Button
             type="primary"
-            onClick={handleAddButtonClick}
+            // onClick={handleAddButtonClick}
             icon={<PlusOutlined />}
             shape="circle"
             title={`Add ${moduleTitle}`}
+            onClick={() => handleButtonClick("add")}
+            // disabled={
+            //   isDetailModelComponent == true && !selectedMainRecord
+            //     ? true
+            //     : false
+            // }
+            disabled={
+              !selectedMainRecord && isDetailModelComponent ? true : false
+            }
           />
         )}
         {deleteVisible && (
           <Button
             danger
-            onClick={handleDeleteButtonClick}
+            // onClick={handleDeleteButtonClick}
             icon={<DeleteOutlined />}
             shape="circle"
             title={`Delete ${moduleTitle}`}
-            disabled={!selectedRecord} // Disable delete button if no record selected
+            // disabled={!selectedRecord} // Disable delete button if no record selected
+            // disabled={
+            //   (isDetailModel == isDetailModelComponent ? false : true) &&
+            //   selectedRecord
+            // }
+            disabled={
+              (!selectedMainRecord && isDetailModelComponent ? true : false) ||
+              !(!isDetailModelComponent || selectedDetailRecord) ||
+              !selectedMainRecord
+            }
+            onClick={() => handleButtonClick("delete")}
           />
         )}
         {editVisible && (
           <Button
-            onClick={handleEditButtonClick}
+            // onClick={handleEditButtonClick}
             icon={<EditOutlined />}
             shape="circle"
             title={`Edit ${moduleTitle}`}
-            disabled={!selectedRecord} // Disable edit button if no record selected
+            // disabled={!selectedRecord} // Disable delete button if no record selected
+            // disabled={
+            //   (isDetailModel == isDetailModelComponent ? false : true) &&
+            //   selectedRecord
+            // } // Disable edit button if no record selected
+            disabled={
+              (!selectedMainRecord && isDetailModelComponent ? true : false) ||
+              !(!isDetailModelComponent || selectedDetailRecord) ||
+              !selectedMainRecord
+            }
+            onClick={() => handleButtonClick("edit")}
           />
         )}
         {refreshVisible && (
           <Button
             type="default"
-            onClick={handleRefreshClick}
+            // onClick={handleRefreshClick}
             icon={<ReloadOutlined />}
             shape="circle"
             title={`Refresh ${moduleTitle}`}
+            onClick={() => handleButtonClick("refresh")}
+            // disabled={
+            //   isDetailModelComponent == true && !selectedMainRecord
+            //     ? true
+            //     : false
+            // }
+            disabled={
+              !selectedMainRecord && isDetailModelComponent ? true : false
+            }
           />
         )}
         {criteriaVisible && (
-          <SearchCriteriaComponent moduleTitle={moduleTitle} />
+          <SearchCriteriaComponent
+            moduleTitle={moduleTitle}
+            isDetailModelComponent={isDetailModelComponent}
+          />
         )}
-        {detailVisible && (
+        {isShowDetailVisible && (
           <>
             <Button
               type="primary"

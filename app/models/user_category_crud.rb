@@ -2,7 +2,12 @@
 class UserCategoryCrud < ApplicationRecord
     # require 'transaction_helper'
     include ModelHelper
-    def self.get_user_categories(user_id, criteria_condition)
+    def self.get_user_categories(doc)
+        user_id = doc[:user_id]
+        criteria_condition = doc[:criteria_condition]
+        criteria_data = doc[:criteriaSearchData]
+        criteria_data = doc["criteriaSearchData"]
+        criteria_condition = CommonModule.get_criteria_condition(criteria_data, true)
         begin 
             if !criteria_condition.blank?
                 main_category_id = criteria_condition["main_category_id"]
@@ -47,6 +52,28 @@ class UserCategoryCrud < ApplicationRecord
             return false, ex.to_s, nil
         end
     end
+    def self.show_user_category(doc)
+      begin
+          category = UserCategory.find(doc[:id])
+          return true, "", category
+      rescue Exception => ex 
+          return false, ex.to_s, nil
+      end
+    end
+    def self.delete_user_category(doc)
+        begin
+            category = UserCategory.find(doc[:id])
+            category.active = false 
+            save_proc = Proc.new do
+              category.save!
+            end
+            category.save_transaction(save_proc) if category.errors.empty?
+            raise category.errors.full_messages.join(",") if !category.errors.empty?
+            return true, "", category
+        rescue Exception => ex 
+            return false, ex.to_s, nil
+        end
+    end
 
     def self.create_common_category_for_user(doc)
         # ActiveRecord::Base.transaction do
@@ -72,7 +99,7 @@ class UserCategoryCrud < ApplicationRecord
               end
             else
               # New main category creation
-              main_category = create_user_category(value)
+              main_category = create_user_category_from_common_category(value)
               process_category.call(main_category, value["active"])
             end
     
@@ -93,21 +120,21 @@ class UserCategoryCrud < ApplicationRecord
                   end
                 else
                   # New subcategory creation with the main category as reference
-                  sub_category = create_user_category(child, main_category.id, main_category.code)
+                  sub_category = create_user_category_from_common_category(child, main_category.id, main_category.code)
                   process_category.call(sub_category, child["active"])
                 end
               end
             end
           end
         end
-        result, message = ModelHelper.save_transaction(operations)
+        result,message = ModelHelper.save_record(operations)
         raise message unless result == true
         return true, 'Common Category in User Category is Updated.'
       rescue => e
         return false, e.message
       end
     
-      def self.create_user_category(data, main_category_id = nil, main_category_code = nil)
+      def self.create_user_category_from_common_category(data, main_category_id = nil, main_category_code = nil)
         common_category = CommonCategory.find_by(code: data["code"], id: data["id"])
         raise "Common Category #{data['code']} not found!" unless common_category
     
@@ -125,5 +152,29 @@ class UserCategoryCrud < ApplicationRecord
         )
         category.save!
         category
+      end
+      def self.create_or_save_category(doc)
+        begin
+            categroy = find_or_create_category(doc)
+            save_proc = Proc.new do
+              categroy.save!
+            end
+            categroy.save_transaction(save_proc) if categroy.errors.empty?
+            raise categroy.errors.full_messages.join(",") if !categroy.errors.empty?
+            return true, "", categroy
+        rescue Exception => ex 
+            return false, ex.to_s, categroy      
+        end
+    end
+    
+    private
+    def self.find_or_create_category(doc)
+        begin
+            category = UserCategory.find_or_initialize_by(id: doc[:id])
+            category.assign_attributes(doc)
+          return category
+        rescue Exception => ex
+            raise ex.blank? ? "Something wrong in fetching Category." : ex.to_s
+        end
       end
 end

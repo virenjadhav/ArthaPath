@@ -3,27 +3,30 @@ import ModelComponent from "../../components/ModelComponent.js";
 import columnsData from "./DebtColumns.json";
 import debtServicesData from "./DebtServices.json";
 import debtCriteriaDataStru from "./DebtCriteria.json";
+import debtLinesCriteriaDataStru from "./DebtLinesCriteria.json";
+import debtLinesServicesData from "./DebtLinesServices.json";
+import debtLinesColumnsData from "./DebtLinesColumns.json";
 import dayjs from "dayjs";
 import {
   setSelectedRecord,
   setServicesData,
   setCriteriaDataStru,
+  setIsDetailModel,
+  setColumnsData,
 } from "../../redux/features/generic/modelSlice.js";
 import DebtAddEditForm from "./DebtAddEditForm";
 import { useDispatch, useSelector } from "react-redux";
+import DetailTab from "../../components/Detail/DetailTab.js";
+import Detail from "../../components/Detail/Detail.js";
+import TabPane from "antd/es/tabs/TabPane.js";
+import { Space } from "antd";
+import DebtLineAddEditForm from "./DebtLineAddEditForm";
 
 const Debts = ({ title }) => {
-  const [selectedRowKey, setSelectedRowKey] = useState(null);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.model.data);
   // const { callApi } = useApiServiceCall();
-
-  useEffect(() => {
-    if (!selectedRecord) {
-      setSelectedRowKey(null);
-    }
-  }, [selectedRecord, data]);
 
   useEffect(() => {
     if (debtServicesData) {
@@ -47,47 +50,42 @@ const Debts = ({ title }) => {
       }
     };
   }, [debtCriteriaDataStru]);
+  useEffect(() => {
+    if (columnsData) {
+      dispatch(setColumnsData(columnsData));
+    }
+  }, [columnsData]);
 
-  const handleSelectRow = (record) => {
-    setSelectedRowKey(record.id);
-    dispatch(setSelectedRecord(record));
-  };
-  const columns = columnsData.map((column) => {
-    if (column.dataIndex === "trans_date") {
-      return {
-        ...column,
-        // render: (text) => dayjs(text).format("DD MMM YYYY"), // Format date using day.js
-        // let Date = selectedRecord.trans_date
-        // ? dayjs(selectedRecord.trans_date, "YYYY-MM-DD HH:mm:ss.SSS")
-        // : null;
-        // render: (text) => dayjs(text).format("YYYY-MM-DD"),
-        render: (text) => dayjs(text).format("YYYY-MM-DD"),
-      };
-    }
-    if (column.dataIndex === "radio") {
-      return {
-        ...column,
-        className: "radio-button-column",
-        render: (_, record) => (
-          <input
-            type="radio"
-            checked={record.id === selectedRowKey}
-            onChange={() => handleSelectRow(record)}
-          />
-        ),
-      };
-    }
-    return column;
-  });
   return (
     <>
       <ModelComponent
         data={data}
-        columns={columns}
+        columnsData={columnsData}
         FormCustomComponent={DebtAddEditForm}
         navigatePath="/debts" // Path to navigate after delete
         moduleTitle={title}
-      />
+        showDetail={true}
+      >
+        <DetailTab activeTabKey={"debt_lines"}>
+          <TabPane tab={"Debt Lines"} key={"debt_lines"}>
+            <Detail
+              id="debtLines"
+              detailKey={"debt_lines"}
+              detailTag="debt_lines"
+              detailServicesData={debtLinesServicesData}
+              detailCriteriaData={debtLinesCriteriaDataStru}
+              detailColumnsData={debtLinesColumnsData}
+              detailAddEditComponent={DebtLineAddEditForm}
+            />
+          </TabPane>
+          <TabPane tab={"tab5"} key={"5"}>
+            Hello from tab 5 <br /> <br />
+            Hello from tab 5 <br /> <br />
+            Hello from tab 5 <br /> <br />
+            Hello from tab 5 <br /> <br />
+          </TabPane>
+        </DetailTab>
+      </ModelComponent>
     </>
   );
 };

@@ -14,8 +14,10 @@ import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import ButtonComponent from "./FormButtonComponent";
 import {
+  setDetailState,
   setIsEditing,
   setIsModelVisible,
+  setSelectedMainRecord,
   setSelectedRecord,
   setShowRecord,
 } from "../../redux/features/generic/modelSlice";
@@ -36,8 +38,16 @@ import {
   useRefreshAction,
 } from "../Services/FormServices";
 import "../../assets/css/FormAddEditStyle.css";
+import {
+  setDetailData,
+  setSelectedDetailRecord,
+} from "../../redux/features/generic/detailSlice";
 
-const FormAddEdit = ({ children, form: externalForm }) => {
+const FormAddEdit = ({
+  children,
+  form: externalForm,
+  preSaveHandler = null,
+}) => {
   // const FormAddEdit = forwardRef(({ children, onValuesChangeCallback }, ref) => {
 
   // const [form] = useForm();
@@ -82,6 +92,10 @@ const FormAddEdit = ({ children, form: externalForm }) => {
   const servicesData = useSelector((state) => state.model.servicesData);
   const showRecord = useSelector((state) => state.model.showRecord);
   const dispatch = useDispatch();
+  const isDetailModel = useSelector((state) => state.model.isDetailModel);
+  const selectedMainRecord = useSelector(
+    (state) => state.model.selectedMainRecord
+  );
 
   useEffect(() => {
     // if (selectedRecord && isEditing) {
@@ -221,6 +235,15 @@ const FormAddEdit = ({ children, form: externalForm }) => {
   // };
   const handleCreateOrSaveServiceHandler = (response, id = null) => {
     dispatch(setSelectedRecord(response?.data));
+    console.log("response");
+    console.log(response);
+    if (isDetailModel) {
+      dispatch(setSelectedDetailRecord(response?.data));
+      dispatch(setSelectedMainRecord(response?.mainRecord));
+    } else {
+      dispatch(setSelectedMainRecord(response?.data));
+    }
+    dispatch(setDetailState(setSelectedDetailRecord(null)));
     // handleRefreshAction();
     dispatch(setMessageState(setResult("success")));
     dispatch(setMessageState(setSuccessMsg(response?.message)));
@@ -228,10 +251,7 @@ const FormAddEdit = ({ children, form: externalForm }) => {
       dispatch(setIsEditing(true));
     }
   };
-
-  const handleModelOk = async (values) => {
-    // const { amount, description, is_active, trans_date, price, notes } = values;
-    // try {
+  const saveHandler = async (values) => {
     const customProps = formComponentProps.current;
 
     let saveData = {};
@@ -357,11 +377,17 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     console.log("Save Data");
     console.log(saveData);
     if (Object.keys(saveData).length === 0) {
-      console.error("Form is empty Can't update record");
+      console.error(
+        `Form is empty Can't ${isEditing ? "update" : "create"} record`
+      );
       dispatch(setMessageState(setResult("error")));
       dispatch(
         setMessageState(
-          setErrorMsg(`Error : Form is empty Can't update record`)
+          setErrorMsg(
+            `Error : Form is empty Can't ${
+              isEditing ? "update" : "create"
+            } record`
+          )
         )
       );
       return;
@@ -392,16 +418,43 @@ const FormAddEdit = ({ children, form: externalForm }) => {
     //   // );
     //   // callApi("getList", handleCreateServiceHandler);
     // }
-    saveData = {
-      ...saveData,
-      id,
-    };
+    if (isDetailModel) {
+      saveData = {
+        ...saveData,
+        id,
+        isDetail: isDetailModel,
+        mainRecord: selectedMainRecord,
+      };
+    } else {
+      saveData = {
+        ...saveData,
+        id,
+      };
+    }
+
     let payload = {
       data: saveData,
     };
+    console.log("update data");
+    console.log(payload);
+    console.log(saveData);
+    console.log(selectedRecord);
+
     await formCreateOrSaveAction(payload, (response) =>
       handleCreateOrSaveServiceHandler(response, id)
     );
+  };
+  const handleModelOk = async (values) => {
+    // const { amount, description, is_active, trans_date, price, notes } = values;
+    // try {
+    let result = true;
+    if (preSaveHandler) {
+      result = preSaveHandler(values);
+    }
+    if (!result) {
+      return;
+    }
+    saveHandler(values);
   };
   // const handleFormComponentChange = (name, props) => {
   //   // if (type === "add") {
@@ -424,16 +477,73 @@ const FormAddEdit = ({ children, form: externalForm }) => {
   };
 
   // Clone children to inject formComponentProps and handleFormComponentChange
-  const enhancedChildren = React.Children.map(children, (child) =>
-    React.cloneElement(child, {
-      formComponentProps,
-      handleFormPropsChange: handleFormComponentChange,
-    })
+  // const enhancedChildren = React.Children.map(children, (child) =>
+  //   React.cloneElement(child, {
+  //     formComponentProps,
+  //     handleFormPropsChange: handleFormComponentChange,
+  //   })
+  // );
+  const enhanceChildrenIteratively = (
+    children,
+    formComponentProps,
+    handleFormComponentChange
+  ) => {
+    const stack = [...React.Children.toArray(children)]; // Ensure children are in an array
+    const enhancedChildren = []; // To store enhanced children
+
+    while (stack.length > 0) {
+      const child = stack.shift(); // Take the first child (FIFO behavior)
+
+      if (React.isValidElement(child)) {
+        if (child.props?.children) {
+          // Recursively enhance children of the current child
+          const enhancedNestedChildren = enhanceChildrenIteratively(
+            child.props.children,
+            formComponentProps,
+            handleFormComponentChange
+          );
+
+          // Enhance the current child with its nested children
+          enhancedChildren.push(
+            React.cloneElement(child, {
+              // ...formComponentProps,
+              formComponentProps,
+              handleFormPropsChange: handleFormComponentChange,
+              children: enhancedNestedChildren, // Replace with enhanced nested children
+            })
+          );
+        } else {
+          // No nested children, enhance directly
+          enhancedChildren.push(
+            React.cloneElement(child, {
+              // ...formComponentProps,
+              formComponentProps,
+              handleFormPropsChange: handleFormComponentChange,
+            })
+          );
+        }
+      } else {
+        // For non-React elements, add them as is
+        enhancedChildren.push(child);
+      }
+    }
+
+    return enhancedChildren;
+  };
+  const enhancedChildren = enhanceChildrenIteratively(
+    children,
+    formComponentProps,
+    handleFormComponentChange
   );
   const handleModalCancel = () => {
     form.resetFields();
     dispatch(setIsModelVisible(false));
     dispatch(setSelectedRecord(null));
+    if (!isDetailModel) {
+      dispatch(setSelectedMainRecord(null));
+      dispatch(setDetailState(setDetailData(null)));
+    }
+    dispatch(setDetailState(setSelectedDetailRecord(null)));
     dispatch(setIsEditing(false));
     dispatch(setShowRecord(null));
   };

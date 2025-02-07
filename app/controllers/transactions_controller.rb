@@ -89,8 +89,17 @@ class TransactionsController < ApplicationController
     #   end
   
         #   # Only allow a list of trusted parameters through.
-      def transaction_params
-        params.require(:body).permit(:active, :amount, :main_category_id, :main_category_code, :sub_category_id, :sub_category_code, :user_category, :trans_date, :description, :user_id, :source_type, :payment_method, :trans_no, :id)
+    #   def transaction_params
+    #     params.require(:body).permit(:active, :amount, :main_category_id, :main_category_code, :sub_category_id, :sub_category_code, :trans_date, :description, :user_id, :source_type, :payment_method, :trans_no, :id)
+    #   end
+    def transaction_params
+        # params.require(:body).permit(:active, :amount, :main_category_id, :main_category_code, :sub_category_id, :sub_category_code, :trans_date, :description, :user_id, :source_type, :payment_method, :trans_no, :id)
+        allowed_attributes = Transaction.column_names.map(&:to_sym) 
+        # if you don't want to add all colunms  in allowed attributes then you can write like this : 
+        # allowed_attributes = [:id, :active, :amount] like this all you want to indivisual column
+        extra_attributes = [:debt_name, :contact_no, :contact_email, :debt_type, :initial_amount, :debt_amount, :extra_amount, :due_date, :attachment_file_name, :link_model_type, :link_model_code, :debt_payment_type]
+        allowed_attributes = allowed_attributes + extra_attributes
+        @doc&.transform_keys(&:to_sym)&.slice(*allowed_attributes)
       end 
   
   

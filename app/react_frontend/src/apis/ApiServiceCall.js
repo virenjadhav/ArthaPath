@@ -30,18 +30,40 @@ const callApi = async (
 ) => {
   // Fetch the latest servicesData from Redux state
   const servicesData = getState().model.servicesData;
+  const detailServicesData = getState().model.detail.detailServicesData;
+  const isDetailModel = getState().model.isDetailModel;
 
-  // Ensure servicesData is available before proceeding
-  if (genericService == false && !servicesData) {
-    console.error("Services data is null or undefined. Cannot make API call.");
-    return; // Exit if servicesData is not available
-  }
-  serviceDetails = {}
   try {
-    if (Object.keys(serviceDetails).length === 0) {
-      serviceDetails = getServiceDetailsById(servicesData, serviceId);
+    // Ensure servicesData is available before proceeding
+    if (isDetailModel) {
+      if (genericService == false && !detailServicesData) {
+        console.error(
+          "Services data is null or undefined. Cannot make API call."
+        );
+        throw new Error(
+          "Services data is null or undefined. Cannot make API call."
+        );
+        return; // Exit if servicesData is not available
+      }
+      if (Object.keys(serviceDetails).length === 0) {
+        serviceDetails = getServiceDetailsById(detailServicesData, serviceId);
+      }
+    } else {
+      if (genericService == false && !servicesData) {
+        console.error(
+          "Services data is null or undefined. Cannot make API call."
+        );
+        throw new Error(
+          "Services data is null or undefined. Cannot make API call."
+        );
+        return; // Exit if servicesData is not available
+      }
+      if (Object.keys(serviceDetails).length === 0) {
+        serviceDetails = getServiceDetailsById(servicesData, serviceId);
+      }
     }
-    if (serviceDetails &&  Object.keys(serviceDetails).length === 0) {
+
+    if (serviceDetails && Object.keys(serviceDetails).length === 0) {
       console.error(`Service not found for ID: ${serviceId}`);
       throw new Error(`Service not found for ID: ${serviceId}`);
       return;

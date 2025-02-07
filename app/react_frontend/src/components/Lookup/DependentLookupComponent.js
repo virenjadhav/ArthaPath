@@ -34,7 +34,8 @@ const DependentLookupComponent = ({
   type = null,
   onPressEnterHandler = null,
   autoFocus = null,
-  defaultValue = "",
+  // defaultDataValue = null,
+  // defaultLabelValue = null,
   onFocusHandler = null,
   onhandleFocusOut = null,
   loading = true,
@@ -63,18 +64,26 @@ const DependentLookupComponent = ({
   customComponentProps = null,
   validationFlag = false,
   form = null,
+  changeValuesData = null,
+  onValidateHandle = null,
 }) => {
   const inputRef = useRef(null);
   const [isLookupModelVisible, setIsLookupModelVisible] = useState(false);
   const [inputValue, setInputValue] = useState(null);
   const dispatch = useDispatch();
   const { validateLookupRecordAction } = useValidateLookupRecordAction();
+  const userId = useSelector((state) => state.generic.user.user_id);
   // const [dataValue, setDataValue] = useState(null);
   // const [labelValue, setLabelValue] = useState(null);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const [mainLookupValue, setMainLookupValue] = useState(mainLookupValueProp); // Define state
   const isEditing = useSelector((state) => state.model.isEditing);
   const [savedInputValue, setSavedInputValue] = useState({});
+  const [changeValues, setChangeValues] = useState({
+    dataValue: null,
+    labelValue: null,
+  });
+  const isModelVisible = useSelector((state) => state.model.isModelVisible);
   // const form = get_form();
 
   const handleLookupClick = (e) => {
@@ -165,6 +174,7 @@ const DependentLookupComponent = ({
             dependentLookup: true,
             mainLookupName: mainLookupName,
             mainLookupValue: mainLookupValue,
+            user_id: userId,
           },
         };
         await validateLookupRecordAction(
@@ -192,6 +202,9 @@ const DependentLookupComponent = ({
       //   labelValue: labelValue,
       // });
       setSavedInputValue({ [dataTag]: dataValue, [labelTag]: labelValue });
+      if (onValidateHandle) {
+        onValidateHandle(labelValue);
+      }
     }
   };
   const handelSaveClickHandler = (record) => {
@@ -311,7 +324,14 @@ const DependentLookupComponent = ({
           formSaved: true,
         });
       }
-    } else {
+    }
+    // else if (defaultDataValue || defaultLabelValue) {
+    //   setSavedInputValue({
+    //     [dataTag]: defaultDataValue,
+    //     [labelTag]: defaultLabelValue,
+    //   });
+    // }
+    else {
       // setInputValue(null);
       // form.setFieldsValue({ [name]: null });
       // handleFormPropsChange(name, {
@@ -325,7 +345,46 @@ const DependentLookupComponent = ({
         formSaved: true,
       });
     }
-  }, [isEditing, selectedRecord]);
+    if (!isModelVisible) {
+      setChangeValues({ dataValue: null, labelValue: null });
+    }
+  }, [isEditing, selectedRecord, isModelVisible]);
+  useEffect(() => {
+    if (
+      !isEditing &&
+      !selectedRecord &&
+      (changeValuesData?.dataValue || changeValuesData?.labelValue)
+    ) {
+      let labelValue = changeValues?.labelValue;
+      let dataValue = changeValues?.dataValue;
+      // if (
+      //   !(
+      //     labelValue == changeValuesData?.labelValue ||
+      //     dataValue == changeValues?.dataValue
+      //   )
+      // ) {
+      setChangeValues(changeValuesData);
+      // }
+      // setSavedInputValue({
+      //   [dataTag]: changeValuesData?.dataValue,
+      //   [labelTag]: changeValuesData?.labelValue,
+      // });
+    }
+  }, [changeValuesData, isEditing]);
+
+  useEffect(() => {
+    let defaultDataValueData = changeValues?.dataValue;
+    let defaultLabelValueData = changeValues?.labelValue;
+    if (
+      isModelVisible &&
+      !(
+        (defaultLabelValueData && defaultLabelValueData == inputValue) ||
+        (defaultDataValueData && defaultDataValueData == inputValue)
+      )
+    ) {
+      validateLookup(defaultLabelValueData);
+    }
+  }, [changeValues]);
   useEffect(() => {
     if (form) {
       let errors = [];
@@ -356,6 +415,9 @@ const DependentLookupComponent = ({
       let dataValue = savedInputValue[dataTag];
       let formSaved = savedInputValue?.formSaved;
       setInputValue(labelValue);
+      if (isEditing && selectedRecord) {
+        setChangeValues({ dataValue: dataValue, labelValue: labelValue });
+      }
       if (handleFormPropsChange) {
         handleFormPropsChange(name, {
           ...customComponentProps,
@@ -380,6 +442,9 @@ const DependentLookupComponent = ({
       }
     } else {
       setInputValue(null);
+      if (isEditing && selectedRecord) {
+        setChangeValues({ dataValue: null, labelValue: null });
+      }
       if (handleFormPropsChange) {
         handleFormPropsChange(name, {
           ...customComponentProps,
@@ -437,7 +502,7 @@ const DependentLookupComponent = ({
                 type={type}
                 onPressEnter={onPressEnterHandler}
                 autoFocus={autoFocus}
-                defaultValue={defaultValue}
+                // defaultValue={defaultValue}
                 onFocus={onFocusHandler}
                 loading={loading}
                 addonBefore={addonBefore}

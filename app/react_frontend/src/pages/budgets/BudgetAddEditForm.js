@@ -120,7 +120,7 @@ const BudgetAddEditForm = () => {
   }, [selectedRecord, isEditing, form]);
 
   return (
-    <FormAddEdit>
+    <FormAddEdit form={form}>
       <LookupComponent
         name="account"
         label="Account"

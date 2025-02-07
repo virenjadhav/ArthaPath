@@ -31,7 +31,7 @@ class AccountCrud < ApplicationRecord
             save_proc = Proc.new do
                 account.save!
             end
-            account.save_account(save_proc) if account.errors.empty?
+            account.save_transaction(save_proc) if account.errors.empty?
             raise account.errors.full_messages.join(",") if !account.errors.empty?
             return true, "", account
         rescue Exception => ex 
@@ -44,7 +44,7 @@ class AccountCrud < ApplicationRecord
             save_proc = Proc.new do
                 account.save!
             end
-            account.save_account(save_proc) if account.errors.empty?
+            account.save_transaction(save_proc) if account.errors.empty?
             raise account.errors.full_messages.join(",") if !account.errors.empty?
             return true, "", account
         rescue Exception => ex 

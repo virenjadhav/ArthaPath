@@ -8,7 +8,6 @@ class LookupController < ApplicationController
         else
             result, msg, records = Lookup.get_lookup_records(doc)
         end
-        
         if result 
             render json: {message: "#{msg}", result: 'success', records: records}, status: :ok
         else 

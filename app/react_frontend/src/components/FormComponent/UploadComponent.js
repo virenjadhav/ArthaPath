@@ -84,11 +84,9 @@ const UploadComponent = ({
     //   .get("/endpoint") // '/endpoint' will be appended to baseURL
     //   .then((response) => {
     //     // setData(response.data); // Save response data
-    //     console.log(response)
     //   })
     //   .catch((err) => {
     //     // setError(err.message); // Handle error
-    //     console.log(err)
     //   });
     let urlId = "";
     let serviceDetail = {};

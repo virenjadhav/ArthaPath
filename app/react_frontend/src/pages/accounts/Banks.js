@@ -10,6 +10,7 @@ import FormComponent from "../../components/FormComponent";
 import {
   setIsEditing,
   setIsModelVisible,
+  setSelectedMainRecord,
   setSelectedRecord,
   setServicesData,
   setShowRecord,
@@ -80,9 +81,11 @@ const Banks = () => {
     dispatch(setIsEditing(false));
     dispatch(setShowRecord(null));
     dispatch(setSelectedRecord(null));
+    dispatch(setSelectedMainRecord(null));
   };
   const handleEditButtonClick = (key) => {
     dispatch(setSelectedRecord(data?.[key]));
+    dispatch(setSelectedMainRecord(data?.[key]));
     // if (selectedRecord) {
     dispatch(setIsEditing(true));
     dispatch(setIsModelVisible(true));
@@ -99,6 +102,7 @@ const Banks = () => {
   const handleDeleteButtonClick = async (key) => {
     // handleEditButtonClick(key);
     dispatch(setSelectedRecord(data?.[key]));
+    dispatch(setSelectedMainRecord(data?.[key]));
     let record = data?.[key];
     if (record?.id) {
       ModelConfirm({

@@ -225,7 +225,7 @@ const Transactions = ({ title }) => {
       {/* <HeaderComponent /> */}
       <ModelComponent
         data={data}
-        columns={columns}
+        columnsData={columnsData}
         FormCustomComponent={TransactionAddEditForm}
         deleteAction={delete_transaction}
         navigatePath="/transactions" // Path to navigate after delete

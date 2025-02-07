@@ -157,62 +157,77 @@ const Finance = () => {
   ];
 
   return (
-    <div
+    <section
       style={{
+        // width: "100%",
+        // height: "100%",
+        flexGrow: 1,
         display: "flex",
-        height: "100%",
-        // paddingTop: "5px",
+        flexDirection: "row",
       }}
     >
-      {/* Side Menu */}
       <div
         style={{
-          width: collapsed ? 100 : 256,
-          transition: "width 0.2s",
-          backgroundColor: "#001529",
-          padding: "10px",
-          paddingTop: "2  0px",
-          // height: "100%",
+          display: "flex",
+          flexDirection: "row", // Side Menu and Content Section side by side
+          // height: "100%", // Full height of the viewport
+          flexGrow: 1,
         }}
       >
-        <Button
-          type="primary"
-          onClick={toggleCollapsed}
+        {/* Side Menu */}
+        <div
           style={{
-            marginBottom: 16,
-            width: "100%",
+            width: collapsed ? 100 : 256,
+            transition: "width 0.2s",
+            backgroundColor: "#001529",
+            padding: "10px",
+            paddingTop: "2  0px",
+            // position: "fixed",
+            // height: "100%", // Take full height
           }}
         >
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        </Button>
-        <Menu
-          defaultSelectedKeys={[]}
-          mode="inline"
-          theme="dark"
-          inlineCollapsed={collapsed}
-          items={items}
-          onClick={onMenuClick}
-          selectedKeys={[selectedKey]}
-        />
-      </div>
+          <Button
+            type="primary"
+            onClick={toggleCollapsed}
+            style={{
+              marginBottom: 16,
+              width: "100%",
+            }}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </Button>
+          <Menu
+            defaultSelectedKeys={[]}
+            mode="inline"
+            theme="dark"
+            inlineCollapsed={collapsed}
+            items={items}
+            onClick={onMenuClick}
+            selectedKeys={[selectedKey]}
+          />
+        </div>
 
-      {/* Content Section */}
-      <div
-        style={{
-          flexGrow: 1,
-          marginLeft: "20px",
-          marginTop: "20px",
-          minHeight: "400px",
-        }}
-      >
-        {/* <h1>{selectedKey.charAt(0).toUpperCase() + selectedKey.slice(1)}</h1>
+        {/* Content Section */}
+        <div
+          style={{
+            flexGrow: 1,
+            marginLeft: "20px",
+            marginTop: "20px",
+            minHeight: "400px",
+            maxWidth: `calc(100vw - ${collapsed ? 100 : 256}px - 50px)`,
+            // height: "100%", // Take full height of the parent container
+            overflow: "auto", // Prevent scrollbars
+          }}
+        >
+          {/* <h1>{selectedKey.charAt(0).toUpperCase() + selectedKey.slice(1)}</h1>
         <p>
           This is where the {selectedKey} content will be displayed on the right
           side.
         </p> */}
-        {content}
+          {content}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

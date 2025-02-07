@@ -1,0 +1,4 @@
+Start Time - 2025-01-31 14:51:58
+Error - undefined method `initial_amount' for #<Account id: 1, user_id: 1, bank_id: 1, name: "SBI Account", currency: "INR", initial_balance: 0.12e3, description: "SBI account", created_at: "2024-12-03 12:57:38.312462000 +0000", updated_at: "2024-12-13 10:48:38.086644000 +0000", active: true, bank_code: "SBI", balance: 120, code: "SBI", lock_version: 0>
+Did you mean?  initial_balance
+End Time - 2025-01-31 14:51:59

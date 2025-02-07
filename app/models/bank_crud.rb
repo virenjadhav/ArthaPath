@@ -31,7 +31,7 @@ class BankCrud < ApplicationRecord
             save_proc = Proc.new do
                 bank.save!
             end
-            bank.save_bank(save_proc) if bank.errors.empty?
+            bank.save_transaction(save_proc) if bank.errors.empty?
             raise bank.errors.full_messages.join(",") if !bank.errors.empty?
             return true, "", bank
         rescue Exception => ex 
@@ -44,7 +44,7 @@ class BankCrud < ApplicationRecord
             save_proc = Proc.new do
                 bank.save!
             end
-            bank.save_bank(save_proc) if bank.errors.empty?
+            bank.save_transaction(save_proc) if bank.errors.empty?
             raise bank.errors.full_messages.join(",") if !bank.errors.empty?
             return true, "", bank
         rescue Exception => ex 

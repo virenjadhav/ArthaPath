@@ -1,0 +1,38 @@
+[
+    {
+      "title": "",
+      "dataIndex": "radio",
+      "key": "radio",
+      "width": 50
+    },
+    {
+      "title": "Model Code",
+      "dataIndex": "link_model_code",
+      "width": 100
+    },
+    {
+      "title": "Model Name",
+      "dataIndex": "link_model_name",
+      "width": 100
+    },
+    {
+      "title": "Total Amount",
+      "dataIndex": "total_amount",
+      "width": 100
+    },
+    {
+      "title": "Paid Amount",
+      "dataIndex": "paid_amount",
+      "width": 100
+    },
+    {
+      "title": "Remaining Amount",
+      "dataIndex": "remaining_amount",
+      "width": 100
+    },
+    {
+      "title": "Debt Type",
+      "dataIndex": "debt_type",
+      "width": 100
+    }
+  ]

@@ -11,7 +11,7 @@ import {
   Col,
   Input,
 } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { get_lookup_record } from "../../redux/features/generic/LookupApiThunk";
 import { setMessageState } from "../../redux/features/generic/genericSlice";
@@ -49,6 +49,7 @@ const LookupModel = ({
   const [data, setData] = useState(null);
   const [searchValue, setSearchValue] = useState(initialSearchValue);
   const { lookupRecordAction } = useLookupRecordAction();
+  const userId = useSelector((state) => state.generic.user.user_id);
 
   const columnsData2 = [
     {
@@ -146,6 +147,7 @@ const LookupModel = ({
           dependentLookup: dependentLookup,
           mainLookupName: mainLookupName,
           mainLookupValue: mainLookupValue,
+          user_id: userId,
         },
       };
       await lookupRecordAction(payload, handleLookupRecordHandler);
@@ -174,7 +176,7 @@ const LookupModel = ({
       const data = getLookupFormatData(lookupFormatUrl);
       setColumnsData(data);
     }
-  }, [columnsData, lookupService, lookupFormatUrl]);
+  }, [lookupService, lookupFormatUrl]);
   useEffect(() => {
     if (isLookupModalVisible) {
       setSelectedRowKey(null);
@@ -284,6 +286,7 @@ const LookupModel = ({
         onCancel={handleModalCancel}
         // onOk={}
         footer={null}
+        style={{ width: "100%", height: "100%" }}
       >
         {/* <Table data={data} columns={columns} /> */}
         {/* <div> */}
@@ -311,7 +314,7 @@ const LookupModel = ({
           columns={columns}
           dataSource={data}
           pagination={false}
-          scroll={{ y: 70 * 5 }}
+          scroll={{ y: 70 * 5, x: "max-content" }}
         />
         <div
           style={{

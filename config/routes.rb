@@ -15,9 +15,10 @@ Rails.application.routes.draw do
   end
   scope :budgets do
     get 'get_budgets', to: 'budgets#get_budgets'
-    get 'get_budget', to: 'budgets#show'
-    post 'create_budget', to: 'budgets#create_budget'
-    put 'update_budget/:id', to: 'budgets#update_budget'               # PUT request
+    get 'get_budget', to: 'budgets#show_budget'
+    post 'create_or_save_budget', to: 'budgets#create_or_save_budget'
+    # post 'create_budget', to: 'budgets#create_budget'
+    # put 'update_budget/:id', to: 'budgets#update_budget'               # PUT request
     delete 'delete_budget/:id', to: 'budgets#destroy_budget'           # DELETE request
   end
   scope :debts do
@@ -26,6 +27,11 @@ Rails.application.routes.draw do
     post 'create_or_save_debt', to: 'debts#create_or_save_debt'
     # put 'update_debt/:id', to: 'debts#update_debt'               # PUT request
     delete 'delete_debt/:id', to: 'debts#destroy_debt'           # DELETE request
+    get 'get_debt_lines', to: 'debts#get_debt_lines'
+    get 'get_debt_line', to: 'debts#show_debt_line'
+    post 'create_or_save_debt_line', to: 'debts#create_or_save_debt_line'
+    # put 'update_debt/:id', to: 'debts#update_debt'               # PUT request
+    delete 'delete_debt_line/:id', to: 'debts#destroy_debt_line'           # DELETE request
   end
   scope :banks do
     get 'get_banks_details', to: 'banks#get_banks_details'
@@ -38,7 +44,7 @@ Rails.application.routes.draw do
   scope :accounts do
     get 'get_accounts_details', to: 'accounts#get_accounts_details'
     get 'get_account', to: 'accounts#show_account'
-    post 'create_account', to: 'accounts#create_or_save_account'
+    post 'create_or_save_account', to: 'accounts#create_or_save_account'
     # put 'update_account/:id', to: 'accounts#update_account'               # PUT request
     delete 'delete_account/:id', to: 'accounts#destroy_account'           # DELETE request
   end
@@ -53,8 +59,9 @@ Rails.application.routes.draw do
   scope :user_category do 
     get 'get_user_categories', to: 'user_category#get_user_categories'
     get 'get_user_category', to: 'user_category#show_user_category'
-    post 'create_user_category', to: 'user_category#create_user_category'
-    put 'update_user_category/:id', to: 'user_category#update_user_category'               # PUT request
+    # post 'create_user_category', to: 'user_category#create_user_category'
+    # put 'update_user_category/:id', to: 'user_category#update_user_category'               # PUT request
+    post 'create_or_save_category', to: 'user_category#create_or_save_category'
     delete 'delete_user_category/:id', to: 'user_category#destroy_user_category' 
   end
   

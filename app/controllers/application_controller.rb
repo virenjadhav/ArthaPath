@@ -86,31 +86,54 @@ class ApplicationController < ActionController::API
     #     end
     #   end
     # end
-    def respond_to_action(object,message = "", type = "json")
-      # respond_to do |format|
-      #   case type
-      #   when 'json'   then format.json { render json: object }
-      #   when 'xml'    then format.xml { render xml: object }
-      #   when 'html'   then format.html { render object }
-      #   when 'partial' then format.html { render partial: object }
-      #   when 'plain'  then format.html { render plain: object }
-      #   when 'inline' then format.html { render inline: object }
-      #   when 'file'   then format.html { render file: object }
-      #   else
-      #     format.html { render object }
-      #   end
-      # end
-      case type
-      when 'json'   then render json: object, status: :ok
-      when 'xml'    then render xml: object, status: :ok
-      when 'html'   then  render object, status: :ok
-      when 'partial' then  render partial: object, status: :ok
-      when 'plain'  then render plain: object, status: :ok
-      when 'inline' then render inline: object, status: :ok
-      when 'file'   then render file: object, status: :ok
-      else
-        render object, status: :ok
+    # def respond_to_action(object,message = "", type = "json", includeLines = nil)
+    #   # respond_to do |format|
+    #   #   case type
+    #   #   when 'json'   then format.json { render json: object }
+    #   #   when 'xml'    then format.xml { render xml: object }
+    #   #   when 'html'   then format.html { render object }
+    #   #   when 'partial' then format.html { render partial: object }
+    #   #   when 'plain'  then format.html { render plain: object }
+    #   #   when 'inline' then format.html { render inline: object }
+    #   #   when 'file'   then format.html { render file: object }
+    #   #   else
+    #   #     format.html { render object }
+    #   #   end
+    #   # end
+    #   case type
+    #   when 'json'   then render json: object, status: :ok
+    #   when 'xml'    then render xml: object, status: :ok
+    #   when 'html'   then  render object, status: :ok
+    #   when 'partial' then  render partial: object, status: :ok
+    #   when 'plain'  then render plain: object, status: :ok
+    #   when 'inline' then render inline: object, status: :ok
+    #   when 'file'   then render file: object, status: :ok
+    #   else
+    #     render object, status: :ok
 
+    #   end
+    # end
+    def respond_to_action(object, include_lines: nil, status: :ok, type: "json")
+      # Ensure the object includes additional data if specified
+      object.data = object.as_json(include: include_lines) if include_lines.present? && type == "json" && object && object.data
+      # Render based on the specified type
+      case type
+      when "json"
+        render json: object, status: status
+      when "xml"
+        render xml: object, status: status
+      when "html"
+        render html: object, status: status
+      when "partial"
+        render partial: object, status: status
+      when "plain"
+        render plain: object, status: status
+      when "inline"
+        render inline: object, status: status
+      when "file"
+        render file: object, status: status
+      else
+        render plain: "Unsupported response type: #{type}", status: :bad_request
       end
     end
   

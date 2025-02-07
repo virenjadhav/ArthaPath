@@ -1,0 +1,3 @@
+Start Time - 2025-01-31 14:52:39
+Error - TinyTds::Error: Invalid column name 'account_id'.
+End Time - 2025-01-31 14:52:39

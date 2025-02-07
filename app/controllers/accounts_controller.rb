@@ -13,7 +13,7 @@ class AccountsController < ApplicationController
       def show_account
           result, message, @account = AccountCrud.show_account(@doc)
           if result
-              object = {data: @account, message: "Account# '#{@account.trans_no}' get successfully", status: "success"}
+              object = {data: @account, message: "Account# '#{@account.code}' get successfully", status: "success"}
               respond_to_action(object)
           else 
               msg = message.blank? ? @account.errors : message
@@ -25,7 +25,7 @@ class AccountsController < ApplicationController
           result, message, @account = AccountCrud.create_or_save_account(account_params)
           if result
               # respond_to_action("show_account") 
-              object = {data: @account, message: "Account# #{@account.trans_no} was successfully #{create_record ? "created" : "updated"}.", status: "success"}
+              object = {data: @account, message: "Account# #{@account.code} was successfully #{create_record ? "created" : "updated"}.", status: "success"}
               respond_to_action(object)
           else 
               # @account.errors.add(message)
@@ -36,7 +36,7 @@ class AccountsController < ApplicationController
       def destroy_account     
           result, message, @account = AccountCrud.delete_account(@doc)
           if result
-              object = {data: @account, message: "Account# '#{@account.trans_no}' deleted successfully", status: "success"}
+              object = {data: @account, message: "Account# '#{@account.code}' deleted successfully", status: "success"}
               respond_to_action(object)
           else 
               msg = message.blank? ? @account.errors : message
@@ -46,14 +46,12 @@ class AccountsController < ApplicationController
     
       private
         def account_params
-          params.require(:body).permit(:active, :name, :user_id, :bank_id, :currency, :initial_balance, :description, :bank_code, :code)
+          params.require(:body).permit(:id,:active, :name, :user_id, :bank_id, :currency, :initial_balance, :description, :bank_code, :code, :balance)
       end 
         
   
   # before_action :set_account, only: [:show_account, :edit_account, :update_account, :destroy_account]
     # def get_accounts_details
-        
-    #     # binding.pry
         
     #   criteria_data = params[:criteriaSearchData]
     #   criteria_condition = CommonModule.get_criteria_condition(criteria_data)

@@ -26,5 +26,21 @@ module ModelHelper
         proc.call
       end
     end
+    def self.save_record(proc)
+      begin
+        ActiveRecord::Base.transaction do
+          proc.call
+        end
+        return true, ""
+      rescue ActiveRecord::StaleObjectError
+        return true, " data changed for #{self.class}: Please refresh and try again."
+      rescue ActiveRecord::RecordInvalid => invalid
+        if "#{invalid.record.class}" !=  "#{self.class}"
+          return true, "#{invalid.to_s}"
+        end
+      rescue Exception => exp
+        return true, "#{exp.to_s}"
+      end
+    end
   end
   
