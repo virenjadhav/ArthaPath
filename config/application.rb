@@ -19,6 +19,7 @@ module FinanceManagementSystem
     config.api_only = true
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore, key: '_finance_app_session'
+    config.autoloader = :zeitwerk
 
 
     # Configuration for the application, engines, and railties goes here.

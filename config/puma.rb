@@ -41,3 +41,31 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
+
+# config/puma.rb
+# require 'dotenv/load'
+
+# Specifies the number of threads (minimum and maximum)
+# threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+# threads threads_count, threads_count
+
+# # Set workers to 1 for development (Cluster mode is not ideal for development)
+# workers 1 if ENV.fetch("RAILS_ENV") { "development" }
+
+# # Don't preload the app in development (to allow code reloading)
+# preload_app! unless ENV.fetch("RAILS_ENV") == "development"
+
+# # Bind to a port
+# # port ENV.fetch("PORT") { 9000 }
+
+# environment ENV.fetch("RAILS_ENV", "development")
+# port ENV.fetch("PORT", 3000)
+
+# # Allow `rails restart` to restart Puma
+# plugin :tmp_restart
+# stdout_redirect nil, nil, true  # Disable redirecting logs to files
+# threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+# threads threads_count, threads_count
+
+# port ENV.fetch("PORT") { 3000 }
+# environment ENV.fetch("RAILS_ENV") { "development" }

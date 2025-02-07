@@ -35,6 +35,7 @@ const InputComponent = ({
   customComponentProps = null,
   formStyle = null,
   style = null,
+  help = null,
 }) => {
   const inputRef = useRef(null);
   useEffect(() => {
@@ -74,7 +75,13 @@ const InputComponent = ({
   return (
     <>
       {includeInLayout && (
-        <Form.Item name={name} label={label} rules={rules} style={formStyle}>
+        <Form.Item
+          name={name}
+          label={label}
+          rules={rules}
+          style={formStyle}
+          help={help}
+        >
           {visible && (
             <Input
               ref={inputRef} // This allows us to control the input programmatically

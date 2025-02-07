@@ -39,6 +39,7 @@ const InputDecimalNumberComponent = ({
   handleFormPropsChange = null,
   customComponentProps = null,
   isBold = false,
+  initialValue = null,
 }) => {
   const inputRef = useRef(null);
   // const handleComponentChange = (e) => {
@@ -117,7 +118,12 @@ const InputDecimalNumberComponent = ({
   return (
     <>
       {includeInLayout && (
-        <Form.Item name={name} label={label} rules={rules}>
+        <Form.Item
+          name={name}
+          label={label}
+          rules={rules}
+          initialValue={initialValue}
+        >
           {visible && (
             <InputNumber
               ref={inputRef} // This allows us to control the input programmatically
@@ -128,7 +134,7 @@ const InputDecimalNumberComponent = ({
               type={type}
               onPressEnter={onPressEnterHandler}
               autoFocus={autoFocus}
-              defaultValue={defaultValue}
+              defaultValue={defaultValue ? defaultValue : 0}
               onFocus={onFocusHandler}
               loading={loading}
               addonBefore={addonBefore}

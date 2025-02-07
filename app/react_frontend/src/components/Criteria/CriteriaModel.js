@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import InputComponent from "../FormComponent/InputComponent";
 import DateTimeComponent from "../FormComponent/DateTimeComponent";
 import { useForm } from "antd/es/form/Form";
-import { useFormRefreshAction } from "../Services/FormServices";
+import {
+  useDetailFormRefreshAction,
+  useFormRefreshAction,
+} from "../Services/FormServices";
 import dayjs from "dayjs";
 import { setSearchCriteriaData } from "../../redux/features/generic/modelSlice";
 import "../../assets/css/CriteriaStyle.css";
@@ -12,12 +15,20 @@ import InputDecimalNumberComponent from "../FormComponent/InputDecimalNumberComp
 import LookupComponent from "../Lookup/LookupComponent";
 import DependentLookupComponent from "../Lookup/DependentLookupComponent";
 
-const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
+const CriteriaModel = ({
+  isSearchModelVisible,
+  setIsSearchModelVisible,
+  isDetailModelComponent,
+}) => {
   const criteriaDataStru = useSelector((state) => state.model.criteriaDataStru);
+  const selectedMainRecord = useSelector(
+    (state) => state.model.selectedMainRecord
+  );
   const [form] = useForm();
   const { formRefreshAction } = useFormRefreshAction();
   const dispatch = useDispatch();
   const formComponentProps = useRef({});
+  const { detailFormRefreshAction } = useDetailFormRefreshAction();
 
   const renderInputField = (field) => {
     switch (field.dataType) {
@@ -295,11 +306,11 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
               //     }
               //     break;
               default:
-                console.log("Unhandled date type");
+                console.error("Unhandled date type");
             }
             break;
           default:
-            console.log("default");
+            console.error("default");
         }
       });
       dispatch(setSearchCriteriaData(searchData));
@@ -307,8 +318,29 @@ const CriteriaModel = ({ isSearchModelVisible, setIsSearchModelVisible }) => {
       let data = {
         criteriaSearchData: searchData,
       };
+      let payload = {
+        data,
+      };
 
-      await formRefreshAction(data);
+      // await formRefreshAction(data);
+      if (isDetailModelComponent) {
+        // dispatch(setModelRecordType("line"));
+
+        payload = {
+          data,
+          isLineRecord: true,
+          mainRecord: selectedMainRecord,
+        };
+        await detailFormRefreshAction(payload);
+      } else {
+        // dispatch(setModelRecordType("main"));
+        payload = {
+          data,
+          isLineRecord: false,
+          mainRecord: null,
+        };
+        await formRefreshAction(payload);
+      }
       handleCancelModelClickHandler();
     }
   };

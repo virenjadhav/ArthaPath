@@ -2,6 +2,7 @@ import React from "react";
 import mainCategoryData from "./LookupXml/main_categories.json";
 import sourceTypeData from "./LookupXml/source_type.json";
 import accountData from "./LookupXml/account.json";
+import linkModelData from "./LookupXml/link_model.json";
 
 const LookupFormatUrl = (LookupFormatUrl) => {
   if (LookupFormatUrl) {
@@ -16,6 +17,8 @@ const LookupFormatUrl = (LookupFormatUrl) => {
         return sourceTypeData;
       case "account_format":
         return accountData;
+      case "link_models":
+        return linkModelData;
       default:
         return [];
     }

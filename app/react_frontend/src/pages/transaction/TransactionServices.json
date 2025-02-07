@@ -26,5 +26,12 @@
         "key": "deleteRecord",
         "name": "transaction/delete_transaction",
         "method": "delete"
-    }  
+    },
+    {
+        "id": "uploadDebtAttachmentFile",
+        "url": "image/upload_debt_attachment",
+        "key": "uploadDebtAttachmentFile",
+        "name": "image/upload_debt_attachment",
+        "method": "post"
+    }
 ]

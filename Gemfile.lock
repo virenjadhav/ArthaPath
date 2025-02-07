@@ -74,7 +74,6 @@ GEM
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     builder (3.3.0)
-    byebug (11.1.3)
     coderay (1.1.3)
     concurrent-ruby (1.3.4)
     crass (1.0.6)
@@ -88,6 +87,10 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    dotenv (3.1.7)
+    dotenv-rails (3.1.7)
+      dotenv (= 3.1.7)
+      railties (>= 6.1)
     erubi (1.13.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -127,11 +130,6 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.10.1)
-      byebug (~> 11.0)
-      pry (>= 0.13, < 0.15)
-    pry-rails (0.3.11)
-      pry (>= 0.13.0)
     puma (5.6.8)
       nio4r (~> 2.0)
     racc (1.8.1)
@@ -197,9 +195,9 @@ DEPENDENCIES
   bootsnap
   debug
   devise
+  dotenv-rails
   jwt
-  pry-byebug
-  pry-rails
+  pry
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.8, >= 7.0.8.4)

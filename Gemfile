@@ -14,6 +14,8 @@ gem "puma", "~> 5.0"
 
 gem 'devise'
 
+gem 'dotenv-rails', groups: [:development, :test]
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
@@ -31,6 +33,7 @@ gem 'devise'
 gem "tzinfo-data"
 
 gem 'rack-cors'
+gem 'pry'
 
 # Gemfile
 gem 'jwt'         # For encoding and decoding JWT tokens
@@ -38,8 +41,7 @@ gem 'bcrypt', '~> 3.1.7'  # For securely hashing passwords
 
 gem 'tiny_tds'
 
-gem 'pry-rails'
-gem 'pry-byebug'
+
 
 
 

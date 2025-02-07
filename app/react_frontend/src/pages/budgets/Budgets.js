@@ -123,7 +123,7 @@ const Budgets = ({ title }) => {
     <>
       <ModelComponent
         data={data}
-        columns={columns}
+        columnsData={columnsData}
         FormCustomComponent={BudgetAddEditForm}
         deleteAction={delete_budget}
         navigatePath="/budgets" // Path to navigate after delete

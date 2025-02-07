@@ -106,6 +106,8 @@ const TableComponent = ({ data, columns, expandableTable = null }) => {
         // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Shadow effect
         borderRadius: "4px", // Optional: rounded corners
         backgroundColor: "#fff", // Optional: background color to ensure table visibility
+        height: "100%", // Optional:
+        width: "100%", // Optional:
       }}
     >
       {/* <Space style={{ marginBottom: 16 }}>

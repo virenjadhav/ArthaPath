@@ -13,7 +13,7 @@ class BanksController < ApplicationController
     def show_bank
         result, message, @bank = BankCrud.show_bank(@doc)
         if result
-            object = {data: @bank, message: "Bank# '#{@bank.bank_code}' get successfully", status: "success"}
+            object = {data: @bank, message: "Bank# '#{@bank.code}' get successfully", status: "success"}
             respond_to_action(object)
         else 
             msg = message.blank? ? @bank.errors : message
@@ -24,7 +24,7 @@ class BanksController < ApplicationController
         create_record = @doc[:id].blank? ? true : false
         result, message, @bank = BankCrud.create_or_save_bank(bank_params)
         if result
-            object = {data: @bank, message: "Bank# #{@bank.bank_code} was successfully #{create_record ? "created" : "updated"}.", status: "success"}
+            object = {data: @bank, message: "Bank# #{@bank.code} was successfully #{create_record ? "created" : "updated"}.", status: "success"}
             respond_to_action(object)
         else 
             msg = message.blank? ? @bank.errors : message
@@ -34,7 +34,7 @@ class BanksController < ApplicationController
     def destroy_bank     
         result, message, @bank = BankCrud.delete_bank(@doc)
         if result
-            object = {data: @bank, message: "Bank# '#{@bank.bank_code}' deleted successfully", status: "success"}
+            object = {data: @bank, message: "Bank# '#{@bank.code}' deleted successfully", status: "success"}
             respond_to_action(object)
         else 
             msg = message.blank? ? @bank.errors : message
@@ -44,12 +44,10 @@ class BanksController < ApplicationController
   
     private  
        def bank_params
-        params.require(:body).permit(:active, :code, :name, :user_id, :bank_owner_name, :address1, :address2, :city, :state, :zip_code ,:country, :ifsc_code, :account_number, :icon)
+        params.require(:body).permit(:id,:active, :code, :name, :user_id, :bank_owner_name, :address1, :address2, :city, :state, :zip_code ,:country, :ifsc_code, :account_number, :icon)
       end
     # before_action :set_bank, only: [:show_bank, :edit_bank, :update_bank, :destroy_bank]
     # def get_banks_details
-        
-    #     # binding.pry
         
     #   criteria_data = params[:criteriaSearchData]
     #   criteria_condition = CommonModule.get_criteria_condition(criteria_data)

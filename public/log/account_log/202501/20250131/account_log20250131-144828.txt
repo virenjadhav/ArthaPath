@@ -1,0 +1,6 @@
+Start Time - 2025-01-31 14:48:28
+Error - undefined local variable or method `ex' for main:Object
+
+                    log_file.puts("Error - #{ex.to_s}\n")
+                                             ^^
+End Time - 2025-01-31 14:48:38

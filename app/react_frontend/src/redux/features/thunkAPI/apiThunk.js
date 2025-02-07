@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosService, { configureAxios } from "../../../apis/axiosService";
+import { useSelector } from "react-redux";
 
 const apiThunk = (
   actionType,
@@ -25,6 +26,7 @@ const apiThunk = (
       //   session: session,
       //   id: id,
       // };
+
       const params =
         data instanceof FormData
           ? data

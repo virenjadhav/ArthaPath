@@ -199,7 +199,13 @@ export const useCommonServiceAction = () => {
   // const navigate = useNavigate();
   const handleCommonServiceHandler = (response) => {};
   const commonServiceAction = useCallback(
-    async (serviceId,payload=null, afterActionHandler = null, serviceDetail=null, axiosDetail = {baseURL: null, contentType:null}) => {
+    async (
+      serviceId,
+      payload = null,
+      afterActionHandler = null,
+      serviceDetail = null,
+      axiosDetail = { baseURL: null, contentType: null }
+    ) => {
       if (!payload) {
         console.error("record is missing.");
         return;
@@ -228,4 +234,3 @@ export const useCommonServiceAction = () => {
 
   return { commonServiceAction };
 };
-

@@ -13,6 +13,9 @@ Rails.application.configure do
   # config.eager_load = false
   config.eager_load = false
 
+  # config.logger = Logger.new(STDOUT)
+  # config.log_level = :debug  # You can set :info, :warn, etc., based on your need
+
   # Show full error reports.
   config.consider_all_requests_local = true
 

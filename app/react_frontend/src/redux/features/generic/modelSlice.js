@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import detailReducer from "./detailSlice";
 
 const modelSlice = createSlice({
   name: "model",
@@ -15,6 +16,10 @@ const modelSlice = createSlice({
     criteriaDataStru: null,
     searchCriteriaData: {},
     columnsData: null,
+    detail: detailReducer(undefined, {}), // Initialize message state from messageReducer
+    isDetailModel: false,
+    selectedMainRecord: null,
+    modelRecordType: "main",
   },
   reducers: {
     setData(state, action) {
@@ -47,6 +52,18 @@ const modelSlice = createSlice({
     setShowRecord(state, action) {
       state.showRecord = action.payload;
     },
+    setIsDetailModel(state, action) {
+      state.isDetailModel = action.payload;
+    },
+    setRecords(state, action) {
+      state.records = action.payload;
+    },
+    setSelectedMainRecord(state, action) {
+      state.selectedMainRecord = action.payload;
+    },
+    setModelRecordType(state, action) {
+      state.modelRecordType = action.payload;
+    },
     clearModelReducer(state) {
       state.data = null;
       state.isModelVisible = false;
@@ -58,6 +75,13 @@ const modelSlice = createSlice({
       state.criteriaDataStru = null;
       state.searchCriteriaData = {};
       state.columnsData = null;
+      state.detail = detailReducer(undefined, {});
+      state.isDetailModel = false;
+      state.selectedMainRecord = null;
+      state.modelRecordType = "main";
+    },
+    setDetailState(state, action) {
+      state.detail = detailReducer(state.detail, action.payload);
     },
   },
 });
@@ -74,5 +98,10 @@ export const {
   clearModelReducer,
   setColumnsData,
   setShowRecord,
+  setDetailState,
+  setIsDetailModel,
+  setRecords,
+  setSelectedMainRecord,
+  setModelRecordType,
 } = modelSlice.actions;
 export default modelSlice.reducer;

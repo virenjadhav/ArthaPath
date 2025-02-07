@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal, Form, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,7 +8,10 @@ import {
   setShowRecord,
 } from "../redux/features/generic/modelSlice";
 
-const FormComponent = ({ FormCustomComponent }) => {
+const FormComponent = ({
+  FormCustomComponent = null,
+  DetailFormCustomComponent = null,
+}) => {
   const [editingTransaction, setEditingTransaction] = useState(null);
   // const [isModalVisible, setIsModalVisible] = useState(false);
   const isModelVisible = useSelector((state) => state.model.isModelVisible);
@@ -24,6 +27,23 @@ const FormComponent = ({ FormCustomComponent }) => {
   const handleModalOk = () => {};
   const handleSaveTransaction = () => {};
   const selectedForm = useSelector((state) => state.model.selectedForm);
+  const isDetailModel = useSelector((state) => state.model.isDetailModel);
+  const [content, setContent] = useState(null);
+  useEffect(() => {
+    if (!isDetailModel) {
+      setContent(() => {
+        return FormCustomComponent ? (
+          <FormCustomComponent />
+        ) : (
+          <div>No Form Provided</div>
+        );
+      });
+    } else {
+      setContent(() => {
+        return DetailFormCustomComponent ? <DetailFormCustomComponent /> : null;
+      });
+    }
+  }, [isDetailModel, FormCustomComponent, DetailFormCustomComponent]);
   return (
     <div className="addEditComponent">
       {/* <Modal
@@ -33,7 +53,8 @@ const FormComponent = ({ FormCustomComponent }) => {
         onOk={handleSaveTransaction}
         footer={null}
       > */}
-      <FormCustomComponent />
+      {content}
+
       {/* <Form
             form={form}
             initialValues={editingTransaction || {}}

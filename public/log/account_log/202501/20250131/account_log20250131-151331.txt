@@ -1,0 +1,6 @@
+Start Time - 2025-01-31 15:13:31
+Error - uninitialized constant REPAYMENT_DEBT_PAYMENT_TYPE
+
+                                if payment_type&.upcase == REPAYMENT_DEBT_PAYMENT_TYPE&.upcase
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+End Time - 2025-01-31 15:47:57

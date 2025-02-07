@@ -32,7 +32,8 @@ const LookupComponent = ({
   type = null,
   onPressEnterHandler = null,
   autoFocus = null,
-  defaultValue = "",
+  // defaultDataValue = "",
+  // defaultLabelValue = "",
   onFocusHandler = null,
   onhandleFocusOut = null,
   loading = true,
@@ -61,6 +62,8 @@ const LookupComponent = ({
   customComponentProps = null,
   validationFlag = false,
   form = null,
+  changeValuesData = null,
+  onValidateHandle = null,
 }) => {
   const inputRef = useRef(null);
   const [isLookupModelVisible, setIsLookupModelVisible] = useState(false);
@@ -71,7 +74,13 @@ const LookupComponent = ({
   // const [labelValue, setLabelValue] = useState(null);
   const selectedRecord = useSelector((state) => state.model.selectedRecord);
   const isEditing = useSelector((state) => state.model.isEditing);
+  const isModelVisible = useSelector((state) => state.model.isModelVisible);
+  const userId = useSelector((state) => state.generic.user.user_id);
   const [savedInputValue, setSavedInputValue] = useState({});
+  const [changeValues, setChangeValues] = useState({
+    dataValue: null,
+    labelValue: null,
+  });
   // const form = get_form();
 
   const handleLookupClick = (e) => {
@@ -129,12 +138,10 @@ const LookupComponent = ({
     //   // window.dispatchEvent(customEvent);
     // }
     if (onhandleFocusOut) {
-      onhandleFocusOut();
+      onhandleFocusOut(upperValue);
     }
   };
   const validateLookup = async (value) => {
-    console.log("validateLookup");
-    console.log(value);
     if (value) {
       try {
         // const response = await dispatch(
@@ -153,6 +160,7 @@ const LookupComponent = ({
             filterKeyLabelName: filterKeyLabelName,
             filterKeyDataName: filterKeyDataName,
             lookupType: dataSourceName,
+            user_id: userId,
           },
         };
         await validateLookupRecordAction(
@@ -188,6 +196,9 @@ const LookupComponent = ({
       //   },
       // });
       // window.dispatchEvent(customEvent);
+      if (onValidateHandle) {
+        onValidateHandle(labelValue);
+      }
     }
   };
   const handelSaveClickHandler = (record) => {
@@ -279,7 +290,19 @@ const LookupComponent = ({
         //   labelValue: labelValue,
         // });
       }
-    } else {
+      // } else if (defaultDataValue || defaultLabelValue) {
+      //   setSavedInputValue({
+      //     [dataTag]: defaultDataValue,
+      //     [labelTag]: defaultLabelValue,
+      //   });
+    }
+    //  else if (changeValuesData?.dataValue || changeValuesData?.labelValue) {
+    //   setSavedInputValue({
+    //     [dataTag]: changeValuesData?.dataValue,
+    //     [labelTag]: changeValuesData?.labelValue,
+    //   });
+    // }
+    else {
       // setInputValue(null);
       setSavedInputValue({
         [dataTag]: null,
@@ -293,10 +316,48 @@ const LookupComponent = ({
       //   labelValue: null,
       // });
     }
-  }, [isEditing, selectedRecord]);
+    if (!isModelVisible) {
+      setChangeValues({ dataValue: null, labelValue: null });
+    }
+  }, [isEditing, selectedRecord, isModelVisible]);
+  useEffect(() => {
+    if (
+      !isEditing &&
+      !selectedRecord &&
+      (changeValuesData?.dataValue || changeValuesData?.labelValue)
+    ) {
+      let labelValue = changeValues?.labelValue;
+      let dataValue = changeValues?.dataValue;
+      // if (
+      //   !(
+      //     labelValue == changeValuesData?.labelValue ||
+      //     dataValue == changeValues?.dataValue
+      //   )
+      // ) {
+      setChangeValues(changeValuesData);
+      // }
+      // setSavedInputValue({
+      //   [dataTag]: changeValuesData?.dataValue,
+      //   [labelTag]: changeValuesData?.labelValue,
+      // });
+    }
+  }, [changeValuesData, isEditing]);
+
+  useEffect(() => {
+    let defaultDataValueData = changeValues?.dataValue;
+    let defaultLabelValueData = changeValues?.labelValue;
+    if (
+      isModelVisible &&
+      !(
+        (defaultLabelValueData && defaultLabelValueData == inputValue) ||
+        (defaultDataValueData && defaultDataValueData == inputValue)
+      )
+    ) {
+      validateLookup(defaultLabelValueData);
+    }
+  }, [changeValues]);
   useEffect(() => {
     let errors = [];
-
     if (form) {
       if (rules) {
         const [{ required, message }] = rules;
@@ -307,7 +368,6 @@ const LookupComponent = ({
         }
       }
       // form.setFieldsValue({ [name]: inputValue });
-
       form.setFields([
         {
           name: name,
@@ -319,6 +379,13 @@ const LookupComponent = ({
         },
       ]);
     }
+    // if (
+    //   (defaultLabelValue || defaultDataValue) &&
+    //   defaultLabelValue != inputValue &&
+    //   defaultDataValue != inputValue
+    // ) {
+    //   validateLookup(defaultLabelValue);
+    // }
   }, [inputValue, form, rules]);
 
   useEffect(() => {
@@ -326,9 +393,10 @@ const LookupComponent = ({
       let labelValue = savedInputValue[labelTag];
       let dataValue = savedInputValue[dataTag];
       let formSaved = savedInputValue?.formSaved;
-      console.log("savedInput");
-      console.log(savedInputValue);
       setInputValue(labelValue);
+      if (isEditing && selectedRecord) {
+        setChangeValues({ dataValue: dataValue, labelValue: labelValue });
+      }
       if (handleFormPropsChange) {
         handleFormPropsChange(name, {
           ...customComponentProps,
@@ -353,6 +421,9 @@ const LookupComponent = ({
       }
     } else {
       setInputValue(null);
+      if (isEditing && selectedRecord) {
+        setChangeValues({ dataValue: null, labelValue: null });
+      }
       if (handleFormPropsChange) {
         handleFormPropsChange(name, {
           ...customComponentProps,
@@ -407,7 +478,7 @@ const LookupComponent = ({
                 type={type}
                 onPressEnter={onPressEnterHandler}
                 autoFocus={autoFocus}
-                defaultValue={defaultValue}
+                // defaultValue={defaultValue}
                 onFocus={onFocusHandler}
                 loading={loading}
                 addonBefore={addonBefore}

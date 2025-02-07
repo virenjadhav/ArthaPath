@@ -1,17 +1,10 @@
 [
     {
-        "id": "createRecord",
-        "url": "user_category/create_user_category",
-        "key": "createRecord",
-        "name": "user_category/create_user_category",
+        "id": "createOrSaveRecord",
+        "url": "user_category/create_or_save_category",
+        "key": "createOrSaveRecord",
+        "name": "user_category/create_or_save_category",
         "method": "post"
-    },
-    {
-        "id": "updateRecord",
-        "url": "user_category/update_user_category",
-        "key": "updateRecord",
-        "name": "user_category/update_user_category",
-        "method": "put"
     },
     {
         "id": "getRecord",

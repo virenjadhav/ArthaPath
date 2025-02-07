@@ -4,6 +4,7 @@ import ModelComponent from "../../components/ModelComponent";
 import {
   setColumnsData,
   setCriteriaDataStru,
+  setSelectedMainRecord,
   setSelectedRecord,
   setServicesData,
 } from "../../redux/features/generic/modelSlice";
@@ -78,6 +79,7 @@ const CustomCategory = ({ title }) => {
   const handleSelectRow = (record) => {
     setSelectedRowKey(record.id);
     dispatch(setSelectedRecord(record));
+    dispatch(setSelectedMainRecord(record));
   };
   const columns = columnsData.map((column) => {
     // if (column.dataIndex === "trans_date") {
@@ -112,7 +114,7 @@ const CustomCategory = ({ title }) => {
     <>
       <ModelComponent
         data={data}
-        columns={columns}
+        columnsData={columnsData}
         FormCustomComponent={CustomCategoryAddEdit}
         deleteAction={null}
         navigatePath="/transactions" // Path to navigate after delete

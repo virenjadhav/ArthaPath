@@ -48,7 +48,15 @@ const LocationBasedContent = () => {
     ));
   };
   return (
-    <>
+    <div
+      style={{
+        // height: "100%", width: "100%"
+        height: "100vh", // Ensure full viewport height
+        width: "100%", // Full width
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <LoadingOverlay />
       <div style={{ position: "fixed", top: 0, width: "100%", zIndex: 2000 }}>
         <Message />
@@ -62,7 +70,7 @@ const LocationBasedContent = () => {
           ))}
         </Routes>
       </Layout>
-    </>
+    </div>
   );
 };
 

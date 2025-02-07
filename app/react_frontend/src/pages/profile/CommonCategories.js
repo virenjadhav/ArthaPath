@@ -100,10 +100,9 @@ const CommonCategories = () => {
       setSelectedRowKeys(newSelectedRowKeys);
     },
     // onSelect: (record, selected, selectedRows) => {
-    //   console.log(record, selected, selectedRows);
+
     // },
     // onSelectAll: (selected, selectedRows, changeRows) => {
-    //   console.log(selected, selectedRows, changeRows);
     // },
   };
   useEffect(() => {}, [selectedRowKeys]);
